@@ -1,0 +1,35 @@
+.PS
+
+box_width = 0.8;
+box_separation = 0.3;
+
+Timer: box width 0.5 height 0.25 "Timer";
+arrow box_separation;
+Sender: box width box_width "Sender";
+
+move to Sender.sw; down; move 0.75; right;
+CertStorage: box width box_width "CertStorage";
+move box_separation;
+KeyStorage: box width box_width "KeyStorage";
+move box_separation;
+CredStorage: box width box_width "CredStorage";
+
+move to KeyStorage.e; right; move box_separation/2;
+up; move 0.75;
+Receiver: box width box_width "Receiver";
+
+# Wire up the sender.
+move to CertStorage.n;
+arrow to Sender.s;
+
+# Wire up the receiver.
+move to Receiver.s;
+arrow to KeyStorage.n;
+move to Receiver.s;
+arrow to CredStorage.n;
+
+# Arrows representing the radio communications.
+move to Sender.n; up; arrow box_separation;
+move to Receiver.n; up; move box_separation; down; arrow box_separation;
+
+.PE

@@ -1,0 +1,2 @@
+InterestManagement = 1
+DataManagement = 2

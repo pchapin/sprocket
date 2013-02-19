@@ -1,0 +1,82 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILE    : main.tex
+% SUBJECT : Master document for the Sprocket reference manual.
+% AUTHOR  : (C) Copyright 2011 by Peter C. Chapin and Christan Skalka
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% --------
+% Packages
+% --------
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[english]{fp-autoref}
+\usepackage{fp-frame}
+\usepackage[latin1]{inputenc}
+\usepackage{mathpartir}
+\def\TirName#1{\text{\sc #1}}
+\usepackage{mathrsfs}
+\usepackage{hyperref}
+\usepackage{url}
+
+
+% ------------------
+% Layout adjustments
+% ------------------
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.75ex plus0.5ex minus0.5ex}
+
+
+% ------
+% Macros
+% ------
+\input{macros}
+
+
+\begin{document}
+
+% ----------
+% Title page
+% ----------
+\title{Sprocket Reference Manual}
+\author{Peter C. Chapin and Christian Skalka}
+\date{Summer 2011}
+\maketitle
+
+
+% -----------------
+% Table of contents
+% -----------------
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+
+% ----------------
+% Document content
+% ----------------
+\input{language}
+\input{usage}
+\input{implementation}
+
+
+% ------------------------------
+% Appendix and related materials
+% ------------------------------
+
+\bibliographystyle{plain}
+\hbadness=10000 % Don't tell us how bad the bibliography really looks. We do not want to know.
+{
+\small
+\bibliography{../references-WSN}
+}
+
+\end{document}
+

@@ -1,0 +1,219 @@
+//-----------------------------------------------------------------------
+// FILE    : NesCParserSuite.scala
+// SUBJECT : Tests of the nesC parser.
+// AUTHOR  : (C) Copyright 2012 by Peter C. Chapin <PChapin@vtc.vsc.edu>
+//
+//-----------------------------------------------------------------------
+package edu.uvm.nesc
+
+import org.scalatest.{Assertions, FunSuite}
+import org.scalatest.matchers.ShouldMatchers
+import java.io.{FileInputStream, File}
+import org.antlr.runtime.{CommonTokenStream, ANTLRInputStream}
+
+class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
+  
+  private val testRoot       = new File("testData")
+  private val testSyntax     = new File(testRoot, "Syntax")
+  private val syntaxPositive = new File(testSyntax, "Positive")
+  private val syntaxNegative = new File(testSyntax, "Negative")
+
+  /**
+   * Create a fresh, empty symbol table stack. We don't want global symbols discovered in one test to influence the next
+   * test. Unlike normal nesC, global symbols defined in one file should not be carried over to the next. Thus this
+   * method must be used before each appropriate test.
+   *
+   * @return A fresh, empty symbol table stack.
+   */
+  private def initializeEmptySymbols(): SymbolTableManager = {
+    return new SymbolTableManager
+  }
+
+
+  /**
+   * Create a fresh global symbol table stack that is preloaded with certain type names from the TinyOS library. This
+   * symbol table stack is used in tests that are intended to process entire, realistic files. Unlike normal nesC,
+   * global symbols defined in one file should not be carried over to the next. Thus this method must be used before
+   * each appropriate test.
+   *
+   * @return A fresh global symbol table stack preloaded with certain type names.
+   */
+  private def initializeGlobalSymbols(): SymbolTableManager = {
+    val globalTypes: Array[String] = Array("bool", "error_t", "message_t")
+    val globalSymbols: SymbolTableManager = new SymbolTableManager
+    for (typeName <- globalTypes) {
+      globalSymbols.addType(typeName)
+    }
+    return globalSymbols
+  }
+
+
+  /**
+   * Execute test cases.
+   * 
+   * @param testCaseNames An array of file names representing the test cases.
+   * @param symbolInitializer Function that returns an initial symbol table manager to use for each test case.
+   * @param doParse A function that takes a nesCParser and executes the parse at a particular start symbol.
+   */
+  private def doTests(testCaseNames    : Array[String],
+                      symbolInitializer: () => SymbolTableManager,
+                      doParse          : nesCParser => Unit) {
+    
+    for (testCaseName <- testCaseNames) {
+      val testCase = new File(syntaxPositive, testCaseName)
+      val testFile = new FileInputStream(testCase.getPath)
+      try {
+        val lex = new nesCLexer(new ANTLRInputStream(testFile))
+        val tokens = new CommonTokenStream(lex)
+        val parser = new nesCParser(tokens)
+        parser.setSymbols(symbolInitializer())
+        doParse(parser)
+      }
+      finally {
+        testFile.close()
+      }
+    }
+  }
+
+  private def doWholeFileTests(testCaseNames: Array[String]) {
+    doTests(testCaseNames, initializeGlobalSymbols, _.nesC_file())
+  }
+
+  private def doExpressionTests(testCaseNames: Array[String]) {
+    doTests(testCaseNames, initializeEmptySymbols, _.expression())
+  }
+
+  private def doStatementTests(testCaseNames: Array[String]) {
+    doTests(testCaseNames, initializeEmptySymbols, _.statement())
+  }
+
+  private def doDeclarationTests(testCaseNames: Array[String]) {
+    doTests(testCaseNames, initializeEmptySymbols, _.declaration())
+  }
+
+  test("Basic Interface Test") {
+    val testCaseNames =
+      Array("Interface0000.nc", "Interface0010.nc", "Interface0020.nc", "Interface0030.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Basic Configuration Test") {
+    val testCaseNames =
+      Array("Configuration0000.nc", "Configuration0010.nc", "Configuration0020.nc", "Configuration0030.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Configuration Specification Test") {
+    val testCaseNames =
+      Array("Configuration0100.nc", "Configuration0110.nc", "Configuration0120.nc", "Configuration0130.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Configuration Wiring Test") {
+    val testCaseNames =
+      Array("Configuration0200.nc", "Configuration0210.nc", "Configuration0220.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Complex Configuration Test") {
+    val testCaseNames =
+      Array("Configuration0300.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Casic Module Test") {
+    val testCaseNames =
+      Array("Module0000.nc", "Module0010.nc", "Module0020.nc", "Module0030.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Typedef Module Test") {
+    val testCaseNames =
+      Array("Module0100.nc", "Module0110.nc", "Module0120.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Complex Module Test") {
+    val testCaseNames =
+      Array("Module0200.nc", "Module0210.nc", "Module0220.nc", "Module0230.nc")
+    doWholeFileTests(testCaseNames)
+  }
+
+  test("Basic Expression Test") {
+    val testCaseNames =
+      Array("Expression0000.nc", "Expression0002.nc", "Expression0004.nc", "Expression0006.nc",
+            "Expression0008.nc", "Expression0010.nc", "Expression0012.nc", "Expression0014.nc",
+            "Expression0016.nc", "Expression0018.nc", "Expression0020.nc", "Expression0022.nc")
+    doExpressionTests(testCaseNames)
+  }
+
+  test("Assignment Expression Test") {
+    val testCaseNames =
+      Array("Expression0100.nc", "Expression0102.nc", "Expression0104.nc", "Expression0106.nc")
+    doExpressionTests(testCaseNames)
+  }
+
+  test("Function Call Expression Test") {
+    val testCaseNames =
+      Array("Expression0200.nc", "Expression0202.nc", "Expression0204.nc", "Expression0206.nc",
+            "Expression0208.nc")
+    doExpressionTests(testCaseNames)
+  }
+
+  test("Complex Expression Test") {
+    val testCaseNames =
+      Array("Expression0300.nc")
+    doExpressionTests(testCaseNames)
+  }
+
+  test("Basic Statement Test") {
+    val testCaseNames =
+      Array("Statement0000.nc", "Statement0005.nc", "Statement0010.nc", "Statement0015.nc",
+            "Statement0020.nc", "Statement0025.nc")
+    doStatementTests(testCaseNames)
+  }
+
+  test("Complex Statement Test") {
+    val testCaseNames =
+      Array("Statement0100.nc")
+    doStatementTests(testCaseNames)
+  }
+
+  test("Basic Declaration Test") {
+    val testCaseNames =
+      Array("Declaration0000.nc", "Declaration0010.nc", "Declaration0020.nc", "Declaration0030.nc")
+    doDeclarationTests(testCaseNames)
+  }
+
+  test("cv-Declaration Test") {
+    val testCaseNames =
+      Array("Declaration0100.nc", "Declaration0110.nc", "Declaration0120.nc")
+    doDeclarationTests(testCaseNames)
+  }
+
+  test("Structure Declaration Test") {
+    val testCaseNames =
+      Array("Declaration0200.nc", "Declaration0210.nc")
+    doDeclarationTests(testCaseNames)
+  }
+
+  test("Function Declaration Test") {
+    val testCaseNames =
+      Array("Declaration0300.nc", "Declaration0310.nc", "Declaration0320.nc")
+    doDeclarationTests(testCaseNames)
+  }
+
+  test("Typedef Declaration Test") {
+    val testCaseNames =
+      Array("Declaration0400.nc", "Declaration0410.nc", "Declaration0420.nc", "Declaration0430.nc")
+    doDeclarationTests(testCaseNames)
+  }
+
+  test("Sprocket Extensions Test") {
+    val testCaseNames =
+      Array("Extensions0000.nc", "Extensions0010.nc", "Extensions0020.nc", "Extensions0030.nc",
+            "Extensions0031.nc", "Extensions0032.nc", "Extensions0033.nc", "Extensions0040.nc",
+            "Extensions0050.nc")
+    doWholeFileTests(testCaseNames)
+  }
+}

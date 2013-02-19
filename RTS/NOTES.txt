@@ -1,0 +1,35 @@
+
+The Rijndael implemenation here is by Philip J. Erdelsky. See
+    http://www.efgh.com/software/rijndael.htm
+
+=====
+Using printf() under TinyOS:
+=====
+
+The following comments are from Simone Willett:
+
+<quote>
+There is a tutorial on Printf in the tinyos documentation. All you need is to #include
+"printf.h" and include CFLAGS+= -I$(TOSDIR)/lib/printf in the make file.
+
+Then in the command line run this:
+
+java net.tinyos.tools.PrintfClient -comm serial@/dev/tty.usbserial-M4AOLFQL:tmote
+
+Use the name of your own mote (as returned by the motelist command) before the tmote. It is just
+like using C's printf.
+
+The next thing to try is seeing the actual packets being sent with something like:
+
+java net.tinyos.tools.Listen -comm serial@/dev/tty.usbserial-M4AOLFQL:tmote
+</quote>
+
+I encountered a few complications when doing this (2011-06-03):
+
+1. The TinyOS documentation wiki does not work. The pages pertaining to printf are just blank
+(they contain no data at all... it's as if the web site is closing the connection without
+sending anything).
+
+2. The "usual" jar file at $TOSDIR/support/sdk/java/tinyos.jar does not actually contain
+net.tinyos.tools.PrintfClient class. However the jar file in the latest TinyOS Subversion head
+revision does. I believe I'm using official distribution of TinyOS v2.1.1.

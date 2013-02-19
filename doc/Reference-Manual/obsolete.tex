@@ -1,0 +1,508 @@
+
+%
+% The material in this file pertains to an older design of Spartan RPC. It is being retained
+% in case we later decide to try something like this again. Notice that this document is
+% divided into sections that reflect the sections of the main document. Obsolete text from
+% the various main sections is thus organized here in a parallel manner.
+%
+
+\section{Obsolete Language}
+
+\subsection{Role Declarations}
+
+The role names in a Spartan RPC program are constants that are declared \pcnote{how exactly?}
+There is a default role, named \texttt{Default}, that is always active, even without being
+explicitly activated. Note that by convention role names are lowercase with an initial uppercase
+letter.
+
+\pcnote{Should roles be ordered in some way? Currently the assumption is that they are not
+ordered and must match exactly when compared.}
+
+\pcnote{Describe the relationship between roles and cryptographic keys... or perhaps this is too
+implementation defined for this document.}
+
+\subsection{Requires Clauses}
+
+In module bodies function (command, event) definitions can be decorated with \texttt{requires}
+clauses that specify roles necessary invoking that command (event). For example
+\begin{verbatim}
+command void some_command(int arg) requires(High, Admin)
+{
+  // Command body.
+}
+\end{verbatim}
+
+Here \texttt{some\_command} can only be invoked by code possessing either the High \emph{or} the
+Admin role. Note that a program may have more than one role active at a time; the list of
+currently active roles is a dynamic entity. If any of the active roles match any of the roles in
+the \texttt{requires} clause, access to the function (command, event) is granted. Functions
+(commands, events) without a \texttt{requires} clause have an implicit \texttt{requires
+(Default)}. Such functions (commands, events) are thus accessible by all. It is permitted to
+specify an empty \texttt{requires} clause, in which case no role can be used to access the
+function (command, event), not even the default role. This is useful for disabling a function
+(command, event) without actually removing it from the program. This can also be used for
+testing control security error handling.
+
+Note that the roles in a \texttt{requires} clause are static. However, because the list of
+active roles is dynamic the check for access is, in general, done dynamically. In some cases the
+Spartan RPC compiler may be able to deduce that the run time checks will always succeed or
+always fail. In such cases the compiler may eliminate those checks and generate more efficient
+code as appropriate. However, no amount of static analysis will permit the elimination of the
+all run time checks\footnote{undecidable?} because often the caller of a function (command,
+event) will be a remote, untrusted node running a program for which the source code is
+unavailable. In addition, indirect calls to functions are permitted. Thus the local Spartan RPC
+compiler can not generally know what roles the caller might have active at any particular time.
+
+Note also that the role requirements specified by \texttt{requires} clauses must be honored even
+if the function (command, event) is called locally. Such calls may be made on behalf of a remote
+caller and thus the collection of active roles at the time of such a call are those of the
+remote caller plus any additional roles that might be activated by the local code [but see
+below]. To prevent inappropriate privilege escalation \texttt{requires} clauses must be enforced
+at all times and not just at the remote call boundaries.
+
+\pcnote{What, exactly, happens at run time if access is denied?}
+
+It is also permitted to place \texttt{requires} declarations on command (event) declarations
+in an interface specification. For example
+\begin{verbatim}
+interface I {
+  command void some_command(int arg) requires(High, Admin); 
+}
+\end{verbatim}
+
+Because \texttt{requires} clauses are checked at run time by the invoked code rather than the
+invoking code, the only purpose for decorating command (event) declarations in an interface
+specification is to provide the Spartan RPC compiler with information about the requirements of
+the commands (events) in the interface. Such declarations are always optional and may not even
+be appropriate in some cases. For example, we assume that different interface providers may have
+different security requirements. In general making uniform declarations of those requirements on
+an interface would be undesirable.
+
+Indeed, if the Spartan RPC compiler has access to all the modules that compose a program it
+infers specific requirements on interface commands (events) based on the \texttt{requires}
+clauses on the implementation of those commands (events), if any, together with the requirements
+on the code called by those commands (events) and the component wiring.
+
+However, in some cases the code that provides an interface is not known to the user of that
+interface. This occurs when the interface provider is in a different security domain. In such
+cases it may be desirable to declare the security requirements explicitly so that the Spartan
+RPC compiler has a basis from which it can conduct its security analysis.
+
+For example, consider the following definition of a component that uses the interface $I$
+declared above.
+\begin{verbatim}
+module ExampleC {
+  uses remote interface I;
+}
+implementation {
+  // ...
+  call I.some_command(0);
+  // ...
+}
+\end{verbatim}
+
+If the code that provides $I$ is not available, perhaps because it was written by another
+security domain, the Spartan RPC compiler can use the \texttt{requires} declarations in the
+interface specification to deduce that the code in the module needs either the High or Admin
+role activated before the call to \texttt{I.some\_command} will succeed. Presumably the
+\texttt{requires} declarations on the interface specification would be given administratively by
+the security domain that provides the interface. Alternatively it might be added by the local
+security domain to reflect the expectations of the local administrators.
+
+In cases where the implementation of interface $I$ is known to the Spartan RPC compiler, it will
+attempt to deduce the necessary requirements on the call to \texttt{I.some\_command} based on
+\texttt{requires} clauses in the implementation code itself. In that case \texttt{requires}
+declarations on the interface specification are unnecessary. If they are present they must match
+the deduced requirements or it is a compile time error.
+
+\subsection{Role Activation}
+
+Each node has a list of \newterm{potential roles} that are made available to the Spartan RPC
+program at deployment time\footnote{Or perhaps in some other way if dynamic key distribution is
+a possibility.}. The potential roles must be a superset of the roles mentioned in the Spartan
+RPC program's \texttt{requires} clauses or \texttt{activate} blocks (as described below). For
+each potential role the Spartan RPC program has associated key material.
+
+Initially\footnote{That is, when the TinyOS scheduler signals an event or starts a task.} only
+the \texttt{Default} role is active. Additional roles can be activated, however, by the
+execution of an \texttt{activate} block\footnote{\texttt{activate} seems more like a C reserved
+word than the earlier proposed \texttt{doPriv}.}. For example
+\begin{verbatim}
+command void I.some_command(int arg)
+{
+  // ...
+  activate (High, UVM) {
+    // Arbitrary code.
+  }
+  // ...
+}
+\end{verbatim}
+
+Multiple roles can be activated with a single \texttt{activate} block, although this is just
+syntactic sugar for immediately nested \texttt{activate} blocks. The list of roles mentioned in
+an \texttt{activate} block is static. The effect of the \texttt{activate} block is to add the
+specified roles to the dynamic list of active roles for the thread. Note that when the thread
+terminates by returning to the TinyOS scheduler the list of active roles is discarded. Consider
+for example
+\begin{verbatim}
+command void I.some_command(int arg)
+{
+  // ...
+  activate (High, UVM) {
+    post some_task();
+  }
+  // ...
+}
+\end{verbatim}
+
+Even though the task \texttt{some\_task} is posted inside an \texttt{activate} block, those
+roles are \emph{not} active when the task begins execution. The task will need to activate the
+roles again if it needs them. However, the list of active roles otherwise follows the flow
+of control. For example
+\begin{verbatim}
+command void I.some_command(int arg)
+{
+  // ...
+  activate (High, UVM) {
+    some_function();
+    call X.some_other_command();
+    signal Y.some_event();
+  }
+  // ...
+}
+\end{verbatim}
+
+Here the roles High and UVM are active inside the invocations of the function, command, and
+event. This association is dynamic so that the list of active roles inside a function (command,
+event) will depend on the context in which that function (command, event) is called. This is
+true even in the case of indirect calls via function pointers.
+
+When a remote invocation is made, the list of active roles in the invoked command (event) is the
+intersection of the list of active roles in the invoking code with the potential roles available
+to the invoked node. For example consider the following module definition running on a node
+with potential roles (High, Admin, VTC).
+\begin{verbatim}
+module Example {
+  provides remote command void some_command();
+}
+implementation {
+  command void some_command() requires(High, Admin)
+  {
+    // etc...
+  }
+}
+\end{verbatim}
+
+If this command is called remotely from code that has the roles (High, UVM) active, then the
+roles that are active inside the command's body are just (High). The UVM role is not propagated
+to the node since the node has no authority to act in the UVM role\footnote{The node does not
+have the necessary key material.}. However, if the command is called remotely from code that has
+the roles (Admin, VTC) active, the the roles that are active inside the command's body are
+(Admin, VTC). In this case the invoker conveys the VTC role to the node so that the node can act
+in that role on behalf of the invoker.
+
+Note that at any time the roles that are active are a subset of the set of potential roles on
+the local node. Thus even when calls are made locally the same rules apply as for remote calls,
+except that the rules are trivially satisfied in that case (the intersection of a subset with
+its parent set is the same subset).
+
+\subsection{Remote Declarations}
+
+In the specification of a component remote interfaces (commands, events) must be explicitly
+declared as such. All remote specification elements must be parameterized with their first
+parameter being a \texttt{uint16\_t} representing a node identifier. For example
+\begin{verbatim}
+module Example {
+  uses remote interface I[uint16_t nodeID];
+}
+implementation {
+  // ...
+  call I.some_command[node_number](arg);
+  // ...
+}
+\end{verbatim}
+
+Even though interface $I$ is not parameterized on each node, the collection of neighbor nodes
+together offer multiple instances of that interface that are, in effect, parameterized on the
+node ID. When a call is made on a command in such an interface, the calling code must specify,
+perhaps with a dynamic expression, which of these interfaces (neighbor nodes) is to be invoked.
+This allows the calling code to invoke commands on specific neighbors if desired.
+
+The Spartan RPC compiler defines two special node IDs for use in this context.
+\begin{enumerate}
+\item \textit{REMOTE\_ALL}. A broadcast to all neighbor nodes. Semantically this is
+similar to wiring the local component to every neighbor in a fan-out configuration.
+\item \textit{REMOTE\_ONE}. A single non-specific neighbor. In this case a ``discovery''
+protocol is run first and the call is made to the first neighbor that responds.
+\end{enumerate}
+
+It is permitted for a remote interface to be parametrized on each node as well. In that case
+the node ID is an additional parameter as seen by the user of that interface.
+
+When a interface is provided remotely, it need not specify any parameters (unless, of course
+it is a parameterized interface that is being provided). For example
+\begin{verbatim}
+module Example {
+  provides remote interface I;
+}
+implementation {
+  void I.some_command(int arg)
+  {
+    // Implementation of command.
+  }
+}
+\end{verbatim}
+
+If the command needs to know the node ID of the calling node, it can be passed as an argument in
+the usual way.
+
+Because the expression used to specify which node is called is a dynamic expression, this
+essential means that the inter-node wiring is dynamic. This is a significant departure from the
+usual nesC semantics, but it is necessary if Spartan RPC is to support the envisioned
+applications.
+
+Remote declarations are only allowed in component specifications. This is true even for
+example in configurations
+\begin{verbatim}
+configuration Example {
+  uses remote interface X[uint16_t nodeID];
+  provides remote interface Y;
+}
+implementation {
+  components A, B;
+  
+  Y   -> A.Y;
+  A.I -> B.I;
+  B.X -> X;
+}
+\end{verbatim}
+
+Interface $Y$ provided by $A$ is exported remotely and interface $X$ used by $B$ is attached to
+neighbor nodes. In this example, $B$ is aware of the existence of all the neighbors since $X$ is
+parameterized. However, following nesC rules, it is possible for $B$ to use a single instance of
+$X$ and be wired to a specific neighbor. In this case it is common to use the special node ID
+values mentioned earlier. For example
+\begin{verbatim}
+configuration Example {
+  uses remote interface X[uint16_t nodeID];
+  provides remote interface Y;
+}
+implementation {
+  components A, B;
+  
+  Y   -> A.Y;
+  A.I -> B.I;
+  B.X -> X[REMOTE_ALL];
+}
+\end{verbatim}
+
+The nesC language only allows constants in this context to specify interface arguments. However
+the special node IDs are constants so this usage is permitted.
+
+Note that the components $A$ and $B$ do not need to specify interfaces $Y$ and $X$ respectively
+as remote. We assume that in many applications components that are developed for general use
+will need to be wired to remote nodes. Spartan RPC allows this directly and does not require,
+for example, some sort of explicit thunk component\footnote{Thunks are used internally by the
+implementation.}. However, if the components of a configuration do specify their used or
+provided interfaces as remote then they must be wired to other remote interfaces. However, it is
+permitted for a node to connect two local components together via remote declared interfaces. In
+such a case the Spartan RPC compiler is allowed, but not required, to optimize away the
+overhead associated with remote invocations.
+
+In an ordinary nesC program the top level configuration of the program has no specification
+elements. This is because the program must necessarily be self-contained; the top level
+configuration can not reference ``external'' interfaces because there is nothing external to the
+top level.
+
+However, in a Spartan RPC program the top level configuration \emph{of a node} can reference
+remote interfaces and is thus not entirely self-contained. Thus the rule forbidding external
+interfaces in top level configurations is relaxed; such interfaces are allowed provided they are
+remote.
+
+
+\section{Obsolete Implementation}
+
+\subsection{Inter-component Tasks}
+
+In TinyOS v2 ordinary tasks (``basic tasks'' or, as we will call them, \newterm{intra-component}
+tasks) are implemented as events that are signaled by the TinyOS scheduler. The scheduler
+provides a parameterized collection of \texttt{TaskBasic} interfaces. With a module declares a
+task, the nesC compiler wires that module to the scheduler using a particular instance of the
+\texttt{TaskBasic} interface. Post operations in the module are converted to command invocations
+in the interface, and the task itself is converted to an event in the interface. Different tasks
+in the system, including different tasks in the same module, use different task identifiers as
+interface parameters. The scheduler records if each task has been posted with a boolean flag.
+This flag is cleared just before the task is dispatched. If a task is posted multiple times
+before it is run, the flag is only set once and the task only runs once. This behavior is
+intentional in the design of TinyOS v2. See TEP-106 for more information.
+
+Sprocket allows for \newterm{inter-component} tasks where the module posting the task is
+different than the module where the task is defined. In addition inter-component tasks, unlike
+intra-component tasks accept parameters. To support these features a custom scheduler is
+incorporated into every Sprocket program. This schedular provides the interface
+\texttt{TaskSprocket} defined as follows.
+\begin{verbatim}
+interface TaskSprocket {
+    command void postTask(uint8_t  taskID,
+                          uint8_t *parameters,
+                          uint8_t  length);
+}
+\end{verbatim}
+
+The \texttt{taskID} parameter is a number that uniquely identifies the task being posted. Here
+\texttt{parameters} and \texttt{length} define a region of memory containing the parameters of
+the task being posted. If the task has no parameters, \texttt{length} is zero. This approach for
+describing task parameters is generic in the sense that a single interface can handle post
+operations for all tasks regardless of the number and types of their parameters. It is not type
+safe, of course, but that is not a problem because ordinary users do not directly invoke
+\texttt{postTask}.
+
+In addition the custom scheduler also provides the interface \texttt{TaskRunSprocket} defined as
+follows.
+\begin{verbatim}
+interface TaskRunSprocket {
+    event void runTask(uint8_t  taskID,
+                       uint8_t *parameters,
+                       uint8_t  length);
+}
+\end{verbatim}
+
+When the task with ID \texttt{taskID} is to be run, the schedular will signal this event and
+pass task parameters, if any, to the task using \texttt{parameters} and \texttt{length}. Note
+that under this design the scheduler is obligated to store the task's parameters between the
+time the task is posted and the time it is run. The \texttt{postTask} command returns quickly so
+parameters must be copied from the \texttt{postTask} invoker's memory space by the scheduler. If
+this is not done the invoker might reuse the memory before the posted task actually executes.
+
+To see how this mechanism works consider the following example. In this example we imagine an
+interface containing a task with parameters.
+\begin{verbatim}
+interface I {
+    task do_work(int x, int y);
+}
+\end{verbatim}
+
+The original code using this interface might look something like the following.
+\begin{verbatim}
+module X {
+    uses interface I;
+}
+implementation {
+    ...
+    post I.do_work(1, 2);
+    ...
+}
+
+module Y {
+    provides interface I;
+}
+implementation {
+    task void I.do_work(int x, int y) { ... }
+}
+
+configuration App { }
+implementation {
+    components X, Y;
+    X.I -> Y.I;
+}
+\end{verbatim}
+
+Sprocket transforms this application into the following
+\begin{verbatim}
+module X {
+    uses interface TaskSprocket;
+}
+implementation {
+    ...
+    struct __do_work_parameters {
+        int x;
+        int y;
+    };
+    
+    __do_work_parameters __temp = { 1, 2 };
+    call TaskSprocket.postTask(0, &__temp, sizeof(__temp));
+    ...
+}
+
+module Y {
+    uses interface TaskRunSprocket;
+}
+implementation {
+    struct __do_work_params {
+        int x;
+        int y;
+    };
+    event void TaskRunSprocket.runTask(uint8_t  taskID,
+                                       uint8_t *parameters,
+                                       uint8_t  length)
+    {
+        int x = ((struct __do_work_params *)parameters) -> x;
+        int y = ((struct __do_work_params *)parameters) -> y;
+        ...
+    }
+}
+
+configuration App { }
+implementation {
+    components X, Y, SprocketScheduler;
+    X.TaskSprocket -> SprocketScheduler;
+    Y.TaskRunSprocket -> SprocketScheduler;
+}
+\end{verbatim}
+
+Notice that in the transformed program the original task interface is no longer used. Once the
+customized scheduler and the interfaces it provides are added to the program, all connections
+related to inter-component tasks are expressed in terms of those new interfaces. The original
+task interfaces can be removed.
+
+\subsection{Remote Tasks}
+
+\emph{Write me!}
+
+\subsection{Run Time Support}
+
+Sprocket translates a Spartan-RPC program into pure nesC. Accordingly various aspects of the RPC
+support must be provided by nesC components that interact with the radio and connect to the
+higher level components doing the RPC. This subsection describes the details of that support.
+
+Each RPC call can be divided into a client side and a server side. The client is the caller and
+the server is the callee. Note that servers are passive. They do not execute until a client
+initiates a call. In contrast clients are active entities that drive execution. In this respect
+the clients and servers are not symmetric. Certain aspects of the design of Sprocket's run time
+support library reflect this asymmetry. Notice that in nesC terms the caller of a command or the
+signaler of an event is a client. The node that implements the command being called or the event
+being signaled is the server. In the remainder of this section we use the word ``call'' to refer
+to what the client does. Thus at this level we say that event handlers are ``called.''
+
+Information about each RPC call is encapsulated in an active message payload and sent to remote
+notes using a specific active message ID. This ID is reserved in an application for Spartan RPC
+communication and should not be used for any other purpose.
+
+At the lowest level, the RPC communication must be formatted in a way that allows for easy
+encoding and decoding of the on-air packets. Each call is marshalled into a header with
+information about the call together with a payload containing the call's arguments. The layout
+of a call packet header is as follows:
+
+\begin{verbatim}
+typedef nx_struct call_header {
+    nx_uint8_t component_id;
+    nx_uint8_t interface_id;
+    nx_uint8_t command_id;
+} call_header;
+\end{verbatim}
+
+The call packet contains the component id on the receiving node and two hash values that
+identify the precise command being called. These hashes are computed in a uniform way from the
+interface and command names and are consistent between caller and callee. It should be possible
+to compute these hashes at compile time (using staged computation?). Notice that the hash values
+are only 8 bits so the possibility of collisions is considerable. However, the expectation is
+that only a few interfaces and commands will be made available remotely so collisions should be
+reasonably rare.
+
+All the arguments to the call are sent as a sequence of bytes following the header in the
+payload of the encapuslating active message packet. The arguments are always given in the same
+order in which they are declared.
+
+At the lowest level there is an RPC manager module that connects to the radio and sends or
+receives messages...
+

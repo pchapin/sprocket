@@ -1,0 +1,159 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILE         : pchapin-notes.tex
+% AUTHOR       : Peter C. Chapin <pchapin@cems.umv.edu>
+% SUBJECT      : A few thoughts on RPC based security in WSNs.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%+++++++++++++++++++++++++++++++++
+% Preamble and global declarations
+%+++++++++++++++++++++++++++++++++
+\documentclass{article}
+%\documentclass[12pt]{article}
+
+% Common packages. Uncomment as needed.
+%\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{amstext}
+%\usepackage{amsthm}
+%\usepackage{doublespace}
+%\usepackage{fullpage}
+%\usepackage[dvips]{graphics}
+%\usepackage{listings}
+%\usepackage{mathpartir}
+%\usepackage{url}
+%\usepackage{hyperref}
+
+% The following are settings for the listings package.
+%\lstset{language=Java,
+%        basicstyle=\small,
+%        stringstyle=\ttfamily,
+%        commentstyle=\ttfamily,
+%        xleftmargin=0.25in,
+%        showstringspaces=false}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.75ex plus0.5ex minus0.5ex}
+
+% Some handy macros.
+\newcommand{\todo}[1]{\textit{TODO: #1}}
+\newcommand{\po}{\preccurlyeq}
+
+%++++++++++++++++++++
+% The document itself
+%++++++++++++++++++++
+\begin{document}
+
+%-----------------------
+% Title page information
+%-----------------------
+\title{RPC Based Security in Wireless Sensor Networks}
+\author{Peter C. Chapin}
+\date{February 19, 2008}
+\maketitle
+
+\section{Introduction}
+
+This document is a somewhat random collection of thoughts and ideas I've had regarding the topic
+of RPC security in wireless sensor networks (WSNs).
+
+\section{Protection Domains, Components, and Guests}
+
+Liu and Smith describe an infrastructure for securing access to ``cells'' using SDSI/SPKI
+\cite{liu-smith-component-security-2002}. In their formulation a cell is a body of code that
+provides and uses interfaces, much like a nesC component, and that can be connected to other
+cells in an appropriate way. Their system applies access control at the boundary of each cell.
+Doing something similar in the WSN case would suggest that each component in a nesC program
+should have its own access policy. This is an interesting concept, but I believe it is much too
+fine-grained for practical use in the WSN case.
+
+Liu and Smith argue that cells are a natural boundary for security domains because they will
+probably reflect the political boundaries of the organizations using a distributed system.
+Another natural boundary, however, would be the nodes themselves. In this view, once access is
+granted to a node, all components on that node are accessible. This level of security might be
+too course grained for a large machine executing code for many security domains (for example a
+multi-user server run by a web hosting company). However, there is zero chance of a WSN node
+being used in this way.
+
+My feeling is that an individual node is still too fine grained to define an appropriate
+protection domain in the WSN case. An organization deploying a WSN will rarely deploy a single
+node. Instead WSN protection domains should be entire networks (or perhaps subnetworks) of
+nodes. In this respect how access control is managed between domains is, by its nature, a macro
+property of the network. That is... from a security analysis point of view, we are only
+interested in RPC calls from one network to another. RPC calls between individual nodes are
+interesting only to the extent that they support inter-domain calls.
+
+One important exception might be the base station. It is easy to imagine cases where a ``guest''
+base station wishes to interact with a deployed WSN. The guest may wish to query information
+known to the WSN (or visa-versa) and access control will have to be applied at that boundary.
+
+
+\section{Key Management}
+
+Due to limited computational resources on a WSN node, it is widely assumed that public key
+cryptography is not an option for WSNs. This introduces some problems, however. Let $A$ and $B$
+be two wireless sensor networks. Assume $A$ wishes to send an authenticated message to $B$.
+Without public key cryptography some sort of symmetric key method must be used, such as a
+message authentication code (MAC). To verify $A$'s MAC signature, $B$ will need a copy of $A$'s
+signing key. As a side effect this allows $B$ to forge $A$'s signature.
+
+In the usual scenario this isn't considered a problem because $A$ and $B$ are in the same
+security domain and thus trust each other. The point of $A$'s signature is to protect against
+packets being injected into the network from outsiders. However, if we now assume that $A$ and
+$B$ represent networks in two different security domains, things change. Now $A$ will not want
+$B$ to have a copy of her signing key since $A$ may not entirely trust $B$. Public key
+cryptography solves this issue, of course, and that is exactly why it is important.
+
+One possible way to deal with this is for $A$ and $B$ to use public key cryptography
+``off-line'' to negotiate a symmetric session key $K_{ab}$ for use when authenticating messages
+from $A$ to $B$. Note that for reasons that will be described shortly it will be necessary to
+negotiate two keys: $K_{ab}$ and $K_{ba}$, one for authentication in each direction.
+
+When I say off-line I mean that the managers of $A$'s security domain perform this negotiation
+with the managers of $B$'s security domain over the ordinary Internet using traditional computer
+systems. In practice this negotiation might occur automatically by the base stations of the two
+networks.
+\begin{enumerate}
+\item $A$ wishes to call a procedure in $B$ but will need to authenticate the call. If $A$
+  already has a $K_{ab}$, use that key and make the call normally.
+\item If $A$ does not have a $K_{ab}$, $A$ contacts her base station requesting a session key
+  for $B$.
+\item If the base station (or one of the intermediate nodes in $A$'s network) has a $K_{ab}$, it
+  is forwarded to the node that needs it.
+\item Otherwise the base station engages in a protocol with $B$'s domain (for example, with
+  $B$'s base station) to generate $K_{ab}$ and, if necessary, $K_{ba}$.
+\item The two base stations propagate these keys to their respective networks.
+\item Once $A$ gets $K_{ab}$, it makes the call normally.
+\end{enumerate}
+
+Note that the session keys should have a relatively long life span and should be shared among
+all the nodes in a WSN. Thus the protocol above should only have to execute rarely. In fact, if
+$A$ and $B$ know they are going to communicate ahead of time, the session key could be
+negotiated and distributed before the networks are even deployed.
+
+\subsection{Analysis}
+
+Here is some informal analysis of the security of this scheme.
+
+Assume $A$ is trying to communicate securely with two other WSNs $B$ and $C$. Since $K_{ab}$ and
+$K_{ac}$ are different, it is not possible for $B$ to send a message to $C$ pretending to come
+from $A$. That is, even though $B$ knows $K_{ab}$, that does not allow $B$ to find $K_{ac}$.
+This assumes the session key negotiation protocol authenticates both parties (using public key
+cryptography) so that $B$ can't execute that protocol pretending to be $C$ and thus convince $A$
+to give him $K_{ac}$.
+
+The nodes in $B$ are able to send forged messages (apparently coming from $A$) to each other
+since all nodes in $B$ know $K_{ab}$. However, the nodes in $B$ are assumed to trust each other
+so this is not a problem.
+
+Now consider the case when $B$ sends a message signed with $K_{ab}$ back into network $A$. Can
+$B$ confuse $A$ by sending it messages that appear to be coming from other nodes in $A$? $B$ can
+not do this. The nodes in $A$ understand that messages signed with $K_{ab}$ are intended for
+network $B$ and thus will ignore them. Messages from $B$ would be signed with a different key
+$K_{ba}$ and network $A$ understands that such messages do not originate from other nodes in
+$A$. This is why two session keys are necessary.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,15 @@
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\tcipher}[1]{\ttt{cipher}[#1]}
+\newcommand{\encrypt}[2]{\ttt{|}#1\ttt{|}\ttt{#2}}
+\newcommand{\decrypt}[5]{\encrypt{\ttt{#1}}{#2} \,\ttt{=}\, #3\ttt{?}#4\ttt{:}#5}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\filename}[1]{\texttt{#1}}
+\newcommand{\newterm}[1]{\textit{#1}}
+
+\long\def\csnote#1{\marginpar{CS}{\small \ \ $\langle\langle\langle$\
+{#1 - CS}\
+    $\rangle\rangle\rangle$\ \ }} 
+\long\def\pcnote#1{\marginpar{PC}{\small \ \ $\langle\langle\langle$\
+{#1 - PC}\
+    $\rangle\rangle\rangle$\ \ }} 

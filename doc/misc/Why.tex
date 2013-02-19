@@ -1,0 +1,203 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILE    : why.tex
+% AUTHOR  : Peter C. Chapin <pchapin@cems.uvm.edu>
+% SUBJECT : A few thoughts on RPC based security in WSNs.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%+++++++++++++++++++++++++++++++++
+% Preamble and global declarations
+%+++++++++++++++++++++++++++++++++
+\documentclass{article}
+%\documentclass[12pt]{article}
+
+% Common packages. Uncomment as needed.
+%\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{amstext}
+%\usepackage{amsthm}
+%\usepackage{doublespace}
+%\usepackage{fullpage}
+%\usepackage[dvips]{graphics}
+%\usepackage{listings}
+%\usepackage{mathpartir}
+%\usepackage{url}
+%\usepackage{hyperref}
+
+% The following are settings for the listings package.
+%\lstset{language=Java,
+%        basicstyle=\small,
+%        stringstyle=\ttfamily,
+%        commentstyle=\ttfamily,
+%        xleftmargin=0.25in,
+%        showstringspaces=false}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.75ex plus0.5ex minus0.5ex}
+
+% Some handy macros.
+\newcommand{\todo}[1]{\textit{TODO: #1}}
+\newcommand{\po}{\preccurlyeq}
+
+%++++++++++++++++++++
+% The document itself
+%++++++++++++++++++++
+\begin{document}
+
+%-----------------------
+% Title page information
+%-----------------------
+\title{Motivations}
+\author{Peter C. Chapin}
+\date{March 27, 2010}
+\maketitle
+
+\section{Introduction}
+
+Currently most wireless sensor network (WSN) applications are envisioned as single networks that
+are under the control of a single administrative domain. This domain includes all the network
+nodes as well as the base station(s) and any other devices that might request the services of
+the network. Consequently security concerns in WSNs have been largely focused on securing the
+network and its endpoints from external agents that have no legitimate business with the
+network.
+
+My work is of a different nature. I am concerned with the case where multiple security domains
+are involved. This can occur when there is more than one WSN operating in the same physical
+space so that nodes from multiple networks can interact directly. This can also occur when
+network endpoints (base stations or computationally powerful mobile devices) from one security
+domain enter the field of a another domain's network and wish to access that network.
+
+The systems I have been working with are designed to allow in-network security processing in
+these cases. However, one might reasonably ask why this is necessary. If each network is
+connected to a powerful machine that can act as a security gateway, then why can't networks from
+multiple domains interact via their gateways? Such an approach off loads the inter-domain
+security processing to machines with rich computational resources.
+
+The purpose of this white paper is to explore these issues in detail.
+
+\section{Definition of Terms}
+
+In this white paper I will often talk about wireless sensor networks in different security
+domains. For my purposes I will define a security domain as a collection of resources (often
+computational resources) that are managed and controlled by a single policy maker. I will
+normally assume that all machines in the same domain trust each other for some appropriate
+definition of trust.
+
+Let the nodes of a single domain wireless sensor network be defined by the pair $(N, E)$ where
+$N$ is the set of all nodes participating in mutual radio communication. The set $E \subseteq N$
+is the set of \emph{endpoint} nodes. An endpoint node is a computationally powerful system that
+serves as an external interface to the WSN. Many WSNs have fixed base stations as endpoints, but
+in some cases a hand held mobile unit can serve in this role. An endpoint might be directly
+associated with a human user or it might be a gateway to some other system such as the Internet.
+Notice that according to this definition the nodes in $E$ are in the same security domain as the
+nodes in $N$.
+
+Although I have defined a network's nodes $A = (N, E)$ it is convenient in many cases to refer
+to $A$ as if it was the set $N$ directly. That is, I will speak of a node $a \in A$ when I
+really mean that $a \in N_A$.
+
+Let $C_{AB}$ be the \emph{inter-domain connection relation from network $A$ to network $B$}. A
+pair of nodes $(a, b)$, with $a \in A$ and $b \in B$, are in this relation if and only if $b$
+can directly (that is, using a single hop) receive signals from $a$. Notice that because of
+asymmetries due to differences in transmitter power output, receiver sensitivity, or non-linear
+propagation effects, it is not the case that $(a, b) \in C_{AB} \rightarrow (b, a) \in C_{BA}$
+
+Network $A$ is \emph{connected} to network $B$ if and only if $(C_{AB} \ne \emptyset) \vee
+(C_{BA} \ne \emptyset)$. Informally two networks are connected if it is possible for
+communication to pass between them in at least one direction. Note that if $A$ is connected to
+$B$ then $B$ is connected to $A$ by this definition.
+
+Network $A$ is \emph{overlapping} network $B$ if and only if $(C_{AB} \ne \emptyset) \wedge
+(C_{BA} \ne \emptyset)$. Informally two networks are overlapping if bi-directional communication
+between the networks is possible.
+
+The \emph{degree of overlap} between $A$ and $B$ is $d_{AB} \equiv \min(|C_{AB}|, |C_{BA}|)$.
+Notice that if the networks are not overlapping the degree of overlap is zero. Also notice that
+if $A$ contains $n$ nodes and $B$ contains $m$ nodes, the maximum possible degree of overlap is
+$nm$. This occurs when every node in $A$ can communicate with every node in $B$ (in only one
+hop) and visa-versa.
+
+\section{Basic Scenario}
+
+To understand the fundamental issues associated with multiple domain WSNs consider a simple
+application where two overlapping networks $A$ and $B$ agree to share temperature data.
+Specifically temperature information at each node is periodically sent back to $A$'s base
+station. Here I assume that networks $A$ and $B$ have some private functionality that is not
+shared as well (otherwise why not just have a single security domain?).
+
+Sharing temperature data in the network can be avoided if $A$ and $B$ simply gather their own
+data independently and then share that information between Internet connected base stations.
+However, by working together in the field, complete data can potentially still be collected even
+if one of the networks is partitioned due to node failure. For example if $A$'s network is
+partitioned, the partition that would normally be inaccessible from $A$'s base station may be
+able to continue sending data through $B$'s network.
+
+What about power consumption? Assume that $A$ and $B$ compute an inter-domain routing tree
+rooted at $A$'s base station over which temperature data is sent. This routing tree would be
+independent of any internal routing tree created by $A$ and $B$ in support of their private
+functions. Assuming the temperature data can be aggregated in the network (for example, perhaps
+only the maximum temperature is needed), then each node must send exactly one message. This
+entails $n + m - 1$ total messages\footnote{$n = |N_A|$ and $m = |N_B|$}. In the case of
+independent networks a total of $n + m - 2$ messages are needed. Thus it would seem that there
+would be no power savings if the two networks worked together in the field.
+
+In fact, if the data can not be aggregated in the network, the two independent networks would
+probably save energy since the depth of the two routing trees for $A$ and $B$ alone would
+probably be less than that of the combined routine tree. \todo{Do the math.}
+
+However, if the degree of overlap is large, the combined routing tree would probably involve
+shorter hops on average than the individual routing trees. This could save energy by allowing
+the nodes to transmit with reduced power. \todo{Do the math. This could be an important point.}
+
+
+\section{Low Latency Scenario}
+
+Gathering temperature data independently and then sharing it over the network is fine. However,
+some algorithms have stringent latency requirements that could make the use of an Internet link
+difficult. One example is time synchronization algorithms. Suppose networks $A$ and $B$ agree to
+work together to synchronize time on their nodes. This might be done to increase the liklihood
+of a node finding a suitable partner with which to synchronize. However, the delays due to
+involving the Internet in such a protocol might be unacceptable. Nodes in $A$'s network need to
+interact directly with nodes in $B$'s network \emph{in the field} to execute such an algorithm
+successfully.
+
+
+\section{Cooperative Scenario}
+
+Some WSN algorithms require cooperation between adjacent nodes in the field. Algorithms for
+tracking objects, for example, need to wake up adjacent nodes and hand off tracking
+responsibility to them. Communication with adjacent nodes in another domain will be much more
+efficient (in terms of power consumption) if that communication is direct rather than via
+Internet connected endpoints that may be many hops away.
+
+
+\section{Free Floating Scenario}
+
+So far I've assumed that all WSNs have at least one Internet connected endpoint that can be used
+for communication with other WSNs. This might not be true in remote areas where Internet
+connectivity is expensive, but such areas are unlikely to have overlapping WSNs from multiple
+security domains.
+
+There is, however one important scenario to consider: that of the \emph{free floating network}.
+Such a network has no Internet connected endpoints, or even no endpoints at all. Instead it
+exists entirely to service requests from mobile devices \emph{from other security domains} that
+overlap with it. Consider for example a wireless network set up to monitor road conditions. A
+vehicle outfitted with an appropriate transceiver could interact with this network to give the
+driver up-to-minute information about poor road conditions ahead. While it might be
+theoretically possible for the on-board computers in the vehicle to communicate with the road
+network via the Internet, this might also be infeasible in many cases.
+
+Another example of a free floating network might be a battlefield WSN that gathers data on troop
+movement. Soldiers from the side deploying the network would like to access its information
+while in the field without granting access to that information by the enemy. In a combat
+situation it is unreasonable to assume that Internet connectivity would exist.
+
+Note that in the scenarios just described the WSN plays the role of a resource server only (as
+far as the mobile device is concerned). One could imagine the WSN playing the role of an RPC
+client as well... for example automatically detecting and using resources on the mobile devices
+as they move into the field of a WSN.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,228 @@
+\section{Introduction}
+
+\subsection{Motivation: the Need for Security}
+
+\subsection{WSN RPC is Fundamental}
+
+We believe that RPC is the right fundamental abstraction for defining control security in WSN
+applications. RPC will allow nodes to provide ``libraries'' of services to external
+applications, without the need for reprogramming. This latter point is important since in a
+heterogeneous trust environment, we expect that only node owners will be allowed to reprogram
+them. Indeed, we consider node reprogramming security outside the scope of our investigation.
+
+Rather than build an RPC mechanism from scratch, we plan to leverage existing technology. One
+previous system for ``anycast RPC'' is interesting, and provides a rich variety of RPC services
+\cite{bergstrom-pandey-mass07}. However, this approach is too heavyweight for our goal of
+providing fundamental features to support higher-level abstractions. Also, their system is
+designed for OS*, not nesC and TinyOS, whereas we aim to develop technology for the latter
+platform since currently it is prevalent. A more attractive option for our purposes is TinyRPC
+\cite{may-etal-mass05}, which is lighter weight and designed as an extension to nesC
+\cite{781133}.
+
+The language nesC is a component-based variant of C endowed with a component wiring language.
+More deeply, it employs a \emph{split-phase} semantics where function call-and-return is broken
+into two parts; a \emph{command} phase where functionality is invoked, and an \emph{event
+  handler} phase where callbacks are implemented. These phases can also be one-way, in the sense
+that a command need not be accompanied by a terminating event that must be handled, and events
+can be signaled independently of any preceding command. For a summary of nesC, we refer the
+reader to \cite{781133}.
+
+While TinyRPC adds powerful node communication features to nesC programming, it makes only a
+simple extension to the source language. Specifically, wiring configurations may refer to
+\texttt{remote} interfaces. For example, the wiring \texttt{M.I -> remote I[NODE\_ID, N]} will
+wire the local interface \texttt{I} used by the module \texttt{M} to the interface \texttt{I}
+provided by the module \texttt{MODULE\_ID} on node \texttt{NODE\_ID}, the node identifier being
+either statically defined or determined by a dynamic binding mechanism provided by the
+implementation. The details of wiring and node communication are handled transparently by the
+TinyRPC implementation. Since commands and events are invoked exclusively via interfaces in
+nesC, this remote wiring specification is sufficient to support the RPC abstraction. In the
+following, we hide some details of TinyRPC syntax for the sake of simplicity.
+
+\section{Data and Control Security}
+
+\section{Security Model}
+
+Choosing an appropriate security model is crucial to our system design. As usual for WSNs,
+efficiency is a central consideration. While modern authorization systems such as RT
+\cite{Li:DRBTMF} and SPKI/SDSI \cite{RFC-2693} provide a rich policy specification logic,
+computing authorization decisions at the node level in such systems is much too expensive to be
+feasible. Although rich policy specification logics may be useful at a higher, network
+programming level, we propose to compile such specifications down to a simpler underlying
+authorization system, as will be discussed in \autoref{section-macroprogramming}. Our goal in
+the design of SpartanRPC is to provide a low-level authorization mechanism that is sufficiently
+expressive to support higher-level specifications, but is still efficient enough for practical
+use in WSNs.
+
+To this end we propose a simple role based access control (RBAC) model \cite{Sandhu:RBACM}. In
+RBAC, roles are uniquely identified, and are associated with particular resources;
+\emph{membership} in a role is a necessary and sufficient condition to access those resources.
+
+In our system roles are arranged in a lattice structure along with an ordering relation $\po$.
+Informally $R_1 \po R_2$ means that role $R_1$ is less privileged than role $R_2$. However, the
+precise meaning and significance of the roles is left to the application to decide. For example,
+an application that is interested in integrity could define $R_1 \po R_2$ to mean that role
+$R_1$ is more trusted than role $R_2$. The bottom role $\bot$ corresponds to the case where no
+role is activated. Roles are combined using the usual least upper bound $\wedge$ and greatest
+lower bound $\vee$ operations. For efficiency reasons on a single role is active at any time.
+This prevents our system from dealing with an open ended set of roles during authorization
+computations.
+
+In order to obtain access to a resource, the requester must prove the relevant role membership.
+More expressive systems employ more complicated proof procedures, but typically proof of role
+membership is supplied via some collection of certificates \cite{Clarke:CCDSS,Li:DCDTM}. In our
+system, roles will be comparatively simple (i.e.~no ``attributes'' in the typical RBAC sense),
+and identified with particular symmetric cryptographic keys. Role membership will be proved by
+key signing.
+
+This scheme has a number of benefits. First, efficient symmetric key cryptography has been
+developed for WSNs \cite{rogaway-ocb-2003,1031515}, so this approach is realistic. And as will
+be discussed more in \autoref{section-spartanrpc-implementation}, the same symmetric key
+infrastructure can establish both data and control security, simplifying our implementation. In
+a more theoretical spirit, basing access control on certified role membership, rather than node
+identities, supports a data-centric communications model. And as will be discussed more in
+\autoref{section-macroprogramming}, this simple and highly efficient RBAC model can serve as an
+offline compilation target for more expressive policy languages.
+
+We assume that roles are defined statically and are not treated as first class values, and can't
+be passed as function or event parameters. This means that new keys aren't generated
+dynamically, and key distribution is handled at the same time as program distribution. This
+simplifies our security model, and will allow us to treat key distribution statically, using
+existing efficient systems for this purpose
+\cite{Eschenauer-keymanagement-2002,Huang-keymanagement-2004,du-keydistribution-2005,liu-keydistribution-2005,camtepe-bulent-05}.
+In this presentation we will use the security roles \texttt{Low}, \texttt{Medium}, and
+\texttt{High} to illustrate ideas, but instances of our system are free to name their own roles.
+
+\section{Language-Based Security Features} 
+
+\subsection{Specifying Control Security} 
+
+The split phase computational model of TinyOS is appropriate when control flows from a higher
+level region into a lower level region. High level code invokes functionality in low level code
+by issuing a command and receives the results from the code by way of an interrupt-like event.
+However, the nodes in a WSN are normally peers with neither node being clearly ``higher level''
+than the other. In addition, wireless communication is time consuming and unreliable. For these
+reasons SpartanRPC makes use of a task like model of remote procedure call. In SpartanRPC remote
+code is presented as \emph{duties} that are executed asynchronously and that produce no return
+value directly.
+
+In programming language-based security, an important issue is \emph{where} in programs policy
+should be specified. In SpartanRPC programs, two natural options are to allow policy annotations
+on interfaces where duties are specified, or on modules where they are implemented. Specifying
+security on interfaces is in keeping with modern software design principles \cite{503253};
+however, in a nesC setting, multiple modules may implement the same interface, so policy
+specifications on interfaces would constrain every module implementing a given interface to
+exhibit the same security policy. We therefore advocate policy specification in modules to allow
+greater flexibility in this regard. This approach is similar to Java stack inspection, where
+code is annotated with policies via privilege checks \cite{pottier-skalka-smith-toplas05}. And
+as we will discuss below, a component of our system will be a compile time type analysis that is
+able to \emph{infer} the security policies induced on components by function-level policy
+declarations and program control flow. Thus, induced security policies can be ``advertised''
+along with component specifications.
+
+For example, consider the following interface \texttt{TempSampleControl}, specifying a duty
+\texttt{set\_threshold} that allows the threshold of temperature sensing to be set. A companion
+interface \texttt{TempSample} specifies a duty that will receive the temperature information.
+\begin{verbatim}
+interface TempSampleControl {
+  duty void set_threshold(int threshold);
+}
+
+interface TempSample {
+  duty void temperature(int value);
+}
+\end{verbatim}
+
+A node that \texttt{provides TempSampleControl} may wish to protect the \texttt{set\_threshold}
+duty, since invocation will alter node operation. In our system, when implementing a module that
+\texttt{provides TempSampleControl}, the programmer can require that any poster of
+\texttt{set\_threshold} must be able to assume a \texttt{High} security role in the command
+code, via the \texttt{requires} command name modifier:
+\begin{verbatim}
+module TemperatureSensor { 
+  provides TempSampleControl;
+  ...
+  duty void TempSample.set_threshold(int threshold)
+    requires "High" { ... }
+}
+\end{verbatim}
+
+A node with a temperature sensor may wish to restrict the class of users who can control its
+temperature threshold. However, a node that receives temperature results may also wish to ensure
+that the sensor is properly authenticated as well.
+\begin{verbatim}
+module TemperatureUser {
+  provides TempSample;
+  ...
+  duty void TempSample.temperature(int value)
+    requires "Medium" { ... }
+}
+\end{verbatim}
+
+% TODO: I need to figure out how tasks are to be handled.
+More generally the definition of a function, command, event, or duty can be decorated with a
+\texttt{requires} clause that specifies the role that is must be active before that function,
+command, event, or duty can be executed. More precisely we define the notion of current role
+$R_c$. During execution the role specified on a definition $R$ must obey the relation $R \po
+R_c$.
+
+For local execution the requirements on role activation are ensured by way of a static control
+flow analysis. Roughly this analysis proceeds as follows.
+\begin{enumerate}
+\item The role requirement on each function $R_I$ is inferred from the functions that it calls.
+  The overall requirement is the least upper bound on all the roles that are required by the
+  functions that are called. However functions that are called inside a role activation block
+  (described below) are not considered. Role activation blocks are used to change roles based on
+  application defined criteria. For example a function that requires a low privilege might
+  activate a highly privileged role after validating the calling context to perform a sensitive
+  operation on behalf of the caller.
+\item If a function has a required role $R$ explicitly declared then it is a compile time
+  requirement that $R_I \po R$. That is, the required role must be at least as powerful as that
+  inferred by the function's code.
+\item Note that command and event invocations cross (static) wires and the control flow analysis
+  must use information in the configuration components to properly ascertain which functions are
+  actually invoked.
+\end{enumerate}
+
+Because of this static analysis no run time checking of roles is needed for code that executes
+entirely locally.
+
+\subsection{Using Secure Remote Modules} 
+
+So how does the poster of a duty assume a role in order to access a secured resource? At the
+language level, we provide a basic abstraction that is inspired by the Java stack inspection
+security model. Programmers will be able to specify ``secure regions'' in code via an
+\texttt{activate} construct\footnote{The use of ``activate'' is intended to evoke the notion of
+  RBAC role activation.}. For example, any code that \texttt{uses} a \texttt{TempSampleControl}
+interface with the expectation that it will be (dynamically) wired to a providing component can
+post the \texttt{set\_threshold} duty as follows:
+\begin{verbatim}
+   activate("High") { post TempSampleControl.set_threshold(...); }
+\end{verbatim}
+Similarly, to send a \texttt{temperature} event to the handler:
+\begin{verbatim}
+   activate("Medium") { post TempSample.temperature(...); }
+\end{verbatim}
+Any amount of code can be nested in a \texttt{activate} block. In the implementation of
+SpartanRPC, the details of which we discuss in \autoref{section-spartanrpc-implementation}, the
+identifiers \texttt{High} and \texttt{Medium} are transparently linked to cryptographic keys,
+and are semantically meaningful only if those keys are possessed by the node executing the
+secure region. The above post operations will be performed with these keys, and verified on the
+receiver for authorization.
+
+This approach has two distinct advantages. First, code will not run in a privileged state unless
+specified by the programmer, in keeping with the principle of least privilege. Second, modules
+can be defined that invoke secure duty postings, but which are \emph{not} wrapped in
+\texttt{activate} blocks. This will allow the definition of library code that makes use of
+secure remote services in an opaque manner, but which does not automatically authorize the use
+of remote services, or even require the presence of keys associated with roles at compile time.
+Of course, this library code itself must be wrapped in a \texttt{activate} block to be executed.
+
+\subsection{Examples}
+
+\section{Type Analysis}
+
+\subsection{Static Type Analysis}
+
+\subsection{RPC Type Analysis}
+
+\section{Applications: Secure Directed Diffusion}

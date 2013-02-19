@@ -1,0 +1,102 @@
+
+Ice (http://www.zeroc.com)
+--------------------------
+
+Ice is a middleware system based on CORBA. It was created by two CORBA experts who were
+frustrated with the political infighting in the Object Management Group and by the resulting
+unresponsiveness of the CORBA standardization process. I am impressed with Ice and I think it
+represents the state of the art in "real life" distributed programming systems. Here is how Ice
+handles asynchronous calls...
+
+Asynchronous method invocations (AMI) must be marked as such in the interface specifications.
+This is done using "metadata annotations" like so
+
+["ami"] interface I {
+  bool isValid();
+  float computeRate();
+}
+
+In the example above, every method in the interface is invoked asynchronously. It is also
+possible to decorate the individual methods with appropriate metadata to indicate that only that
+method is to be invoked asynchronously.
+
+One important concept is that asynchronous invocation is entirely an issue for the client side.
+The server is unaware that it is occuring and nothing is changed in the "over the wire" data
+exchange. This means that different clients can use different invocation models; it is possible
+for one client to make asychronous calls on a server while another client makes sychronous calls
+to the same service. I believe this is why the facility is provided as metadata and not, for
+example, as part of the type signature of the interface.
+
+In fact, methods decorated (directly or indirectly) with the "ami" metadata attribute are
+actually available in *both* synchronous and asynchronous forms. Two versions of such methods
+are made available to the client. The asynchronous form requires an addition argument that is
+not part of the formal interface but that is used as a "callback object." When the asynchronous
+invocation is complete and the return value is ready, a method on this object is called so that
+the return value can be reported. This mechanism exists because Ice interfaces do not have the
+command/event concept as nesC does.
+
+To implement this functionality, the Ice runtime on the client uses multiple threads internally.
+That is, when the client application wants to make an asynchronous call, the run time performs
+the call in a separate thread but the call itself is handled fundamentally the same way
+(sychronously over the wire). This basically relieves the client programmer from creating and
+managing threads for this purpose and thus is essentially just a convenience feature.
+
+Ice also provides "asynchronous method dispatch" (AMD) on the server side. It exists only to
+promote scalability. Normally if too many calls are made on a service simultaneously, the server
+might not be able to handle them in a timely manner if the invoked operations take a long time
+to complete. With AMD the server runs the invoked methods in separate threads so that it can
+continue to accept calls without delay. However, like AMI this behavior is entirely confined to
+the node; there are no visible differences between AMD and synchronous dispatch as seen by the
+client. Again, the feature is for the convenience of the programmer who would otherwise have to
+manage the threads explicitly.
+
+Ice does have the ability to invoke methods as "oneway." In that case they can not return a
+value (nor raise an exception). This means that the Ice run time does not expect any reply from
+the server and will not wait for the server's method invocation to complete. This is used as an
+optimization: oneway methods do not involve any network traffic from server back to client. They
+are also fundamentally asynchronous. Interestingly Ice oneway invocations are entirely a run
+time matter; there is no indication in the declaration of an interface or its methods that they
+are oneway. Instead the programmer makes this choice at the last minute by using a special way
+of invoking the method. The fact that an invocation is oneway is sent as a flag in the message
+itself so the server knows not to bother sending back any kind of reply message. Thus the server
+might recieve oneway invocations and normal invocations for the same service transparently. The
+method as written by the program is unaware that is being called with oneway semantics.
+
+In CORBA it is necessary to decorate the declaration of a method with a 'oneway' keyword to mark
+it as having oneway semantics. Thus all calls to a method are either oneway or not.
+
+The Ice documentation explains how one can simulate full asynchronous calls using oneway
+methods. In our terms, the documentation shows how to simulate nesC style interfaces with events
+using only plain interfaces with commands. Here is a nice quote from the Ice documentation about
+this:
+
+"The application could avoid this situation [previously described problems with synchronous
+calls] using oneway invocations (see Section 28.13), which by definition cannot return a value
+nor have any out parameters. Since the Ice run time does not expect a reply, the invocation
+blocks only as long as it takes to marshal and copy the message into the local transport buffer.
+However, the use of oneway invocations may require unacceptable changes to the interface
+definitions. For example, a twoway invocation that returns results or raises user exceptions
+must be converted into at least two operations: one for the client to invoke with oneway
+semantics that contains only in parameters, and one (or more) for the server to invoke to notify
+the client of the results."
+
+So instead of a single interface, two interfaces are required one for each direction of
+information flow. The Ice authors regard this is as an unacceptable burden on the programmer
+because the server must now be reorganized to support it, because it is no longer possible to
+make synchronous calls on the server, and because the clients must now also become servers.
+
+.NET
+----
+
+I am also impressed with the .NET framework and believe it is another example of a start of the
+art "real life" distributed programming system. I am less familiar with it, but based on my
+reading it appears to provide many of the same facilities as Ice.
+
+For example, it is possible to invoke a .NET web service synchronously or asynchronously at the
+client's (run time) discretion. This corresponds to Ice's AMI behavior. It is also possible to
+implement the service asynchronously in a manner analogous to Ice's AMD behavior. As with Ice
+the choice to asynchronous invocations or implementations is invisible to the other side and is
+regarded as a private implementation detail. In fact, aside from various syntactic differences,
+the behavior .NET web services appears to be essentially the same as the behavior of Ice.
+
+

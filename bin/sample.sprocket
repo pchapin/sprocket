@@ -1,0 +1,10 @@
+#
+# This is the Sprocket configuration file.
+#
+# Edit the file as appropriate and put it in your home directory under the name ".sprocket".
+# See the Sprocket Reference Manual (in the doc folder) for more information about Sprocket's
+# configuration options.
+#
+IncludePaths="\Users\Peter\prog\Sprocket\RTS:\cygwin\opt\tinyos-2.x\tos\lib\timer"
+TemplateFolder="\Users\Peter\prog\Sprocket\RTS"
+

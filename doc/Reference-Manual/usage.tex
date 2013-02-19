@@ -1,0 +1,209 @@
+\section{Usage}
+
+This section describes how to use Sprocket to build Spartan RPC enabled programs. It describes
+command line options, error messages, and issues regarding the interaction with nesC and the
+TinyOS build system.
+
+\subsection{Compilation Model}
+
+Sprocket is a preprocessor. It accepts an extended dialect of nesC and outputs pure nesC that is
+then subsequently translated with the regular nesC compiler. Sprocket does not (currently)
+invoke the back-end nesC compiler itself. You must do that manually or, more likely, with the
+help of a suitable makefile.
+
+Sprocket analyzes the entire program and makes transformations on wiring configurations that
+require knowledge of all parts of the program. Sprocket does not normally process individual
+files separately. Thus it is necessary for all the files composing a program to be in locations
+that are known to Sprocket. Currently all input files must reside in a single folder (but note
+that "library" components are given special handling). Sprocket must be run in this folder and
+it transforms the program into a pure nesC program that it writes to a different folder. The
+output folder need not exist when Sprocket starts, but if it does exist it is erased first. This
+is done to ensure that the final output folder only contains files from the current run and no
+files from previous runs.
+
+Sprocket first runs the standard C preprocessor over all the input files and places the
+resulting preprocessed files into a temporary folder. This allows preprocessor macros,
+\code{\#include} directives, and conditional compilation directives to all be honored before
+Sprocket begins its analysis. Sprocket then rewrites the program from this temporary folder to
+the final output folder. As with the output folder, if the temporary folder does not exist it is
+automatically created. If it already exists, it is erased first to avoid confusing Sprocket with
+leftover files from previous runs.
+
+It should be noted that fully preprocessing the input before compiling any files contradicts the
+compilation model of nesC. Unlike Sprocket, the nesC compiler interleaves preprocessing and
+compilation as it processes the components and interfaces that comprise a program. The effect of
+this is that Sprocket currently fails to compile certain programs that should be legal under
+nesC's compilation model. We hope to correct this in the future by integrating the preprocessing
+step into Sprocket in a manner similar to the way it is integrated into the normal nesC
+compiler. Right now this can be worked around using a suitable programming convention: macros
+and types needed by a component or interface should be included directly in the file defining
+that component or interface.
+
+By default Sprocket uses an output folder of \filename{Sprocket-Out} and a temporary folder of
+\filename{Sprocket-Tmp}, both in the current folder. However, these defaults can be overridden
+using the configuration file or command line options. See the sections below for more
+information.
+
+\subsection{Configuration File}
+
+Sprocket reads a configuration file where its settings can be defined. By default this file is
+named \filename{.sprocket} in the invoking user's home directory. However, this default name and
+location can be overridden using the \texttt{-config} command line option.
+
+The configuration file consists of a collection of \texttt{NAME="VALUE"} pairs. Each pair is
+defined on a single line. Leading spaces, trailing spaces, and spaces around the \texttt{=} are
+ignored. Names can consist of letters, digits, or underscores. Values can contain any character,
+but \emph{must} be quoted in all cases. Blank lines are ignored, and comments starting with a
+\texttt{\#} character and running to the end of the line are ignored.
+
+The following is a list of permitted configuration settings.
+
+\begin{description}
+
+\item[DebugMode] The value of this setting can be either ``true'' or ``false.'' When true
+  Sprocket enters a special debugging mode that is only of interest to Sprocket developers. In
+  this mode it only processes a single file as specified by the SourceFile configuration
+  setting. The default value of this setting is ``false.''
+
+\item[IncludePaths] The value of this setting is a colon separated list of folders used to
+  resolve \code{\#include} directives during preprocessing. This list is passed to the
+  preprocessor program.
+
+\item[InputFolder] The value of this setting specifies the path to the input folder. This folder
+  contains a complete Spartan RPC program for transformation. The default value of this setting
+  is the current folder.
+
+\item[NodeEntities] A comma separated list of entity names that the node can use. The first name
+  in the list is the default entity that is used on a dynamic wire without an \texttt{as}
+  clause.
+
+\item[OutputFolder] The value of this setting specifies the path to the output folder. This
+  folder will contain a pure nesC program that is the transformed result of the Spartan-RPC
+  program in the input folder. The output folder is created if it does not exist. It is erased
+  if it does exist. The default value of this setting is \filename{Sprocket-Out}.
+
+\item[Preprocessor] The value of this setting specifies the C preprocessor to use. The name can
+  be given with a path, either absolute or relative, or it can be found using the PATH
+  environment variable. However, the value of this setting is restricted to contain only the
+  name of a program. Do not include any additional options for the program here. The default
+  value of this setting is \filename{cpp}. We recommend that any preprocessor used be compatible
+  with \filename{cpp} in the sense of accepting the same command line options and producing the
+  same output with respect to \#line directives.
+
+\item[ShowSettings] The value of this setting can be either ``true'' or ``false.'' When true
+  Sprocket just displays its configuration settings and halts. It does not process any files.
+  This setting is useful for debugging Sprocket's configuration; it allows you to view the
+  overall configuration being used without committing yourself to any operations.
+
+\item[SourceFile] The value of this setting is the name of a single file for Sprocket to
+  process. It is only allowed in debug mode (and in fact, must be used in debug mode). Normally
+  Sprocket processes all the files in a program but during development it is sometimes useful to
+  exercise the program on a single input file.
+
+\item[TemplateFolder] The value of this setting specifies the path to Sprocket's library of run
+  time component templates. Sprocket uses these templates to generate the specialized run time
+  components needed to support the RPC abstraction. These templates are part of Sprocket's
+  distribution; they are not intended to be edited by end users. There is no default value for
+  this setting.
+
+\item[TemporaryFolder] The value of this setting specifies the path to the temporary folder.
+  This folder will contain the preprocessed version of the Spartan RPC program in the input
+  folder. The temporary folder is created if it does not exist. It is erased if it does exist.
+  The default value of this setting is \filename{Sprocket-Tmp}.
+
+\end{description}
+
+\subsection{Command Line Syntax}
+
+Sprocket is a Scala program and thus must be executed in a Java virtual machine. The general
+syntax is
+\begin{verbatim}
+java -jar Sprocket.jar [options]
+\end{verbatim}
+
+Without any options or non-default configuration settings, Sprocket transforms the Spartan-RPC
+program in the current folder into a pure nesC program in the subfolder \filename{Sprocket-Out}
+using a temporary subfolder \filename{Sprocket-Tmp}. If Sprocket encounters an error during the
+run, the program left in these folders may be incomplete. Note that the temporary folder is not
+deleted at the end of the run, allowing you to inspect the preprocessed version of your program.
+This is useful for debugging both your code and Sprocket itself.
+
+Options, if present, are prefixed with a dash character and normally have names consisting of a
+single letter. Some options may have parameters. Option parameters are separated from an
+option's name by an equals sign with no surrounding spaces. Each option is separated from the
+others by at least one space. The order in which options appear is not significant. Except as
+mentioned below, if the same option occurs more than once, the last occurrence is the one that
+is used. For example
+\begin{verbatim}
+java -jar Sprocket.jar \
+  -i=Sprocket-In -o=Result -n -i=Input
+\end{verbatim}
+The command above specifies an input folder of \filename{Input}, an output folder of
+\filename{Result} (both relative to the current folder), and the \texttt{-n} option.
+
+Note that without any options or explict configuration settings, Sprocket behaves as if it was
+given the command line
+\begin{verbatim}
+java -jar Sprocket.jar \
+  -i=. -t=Sprocket-Tmp -o=Sprocket-Out -p=cpp
+\end{verbatim}
+
+Before processing the command line, Sprocket can optionally read a configuration file (see the
+section above). The configuration file can be used to set many of Sprocket's options. If a
+command line option conflicts with a configuration file setting, the command line option
+overrides the configuation file.
+
+The following options are supported.
+
+\begin{description}
+
+\item[-config] Takes a parameter that specifies the path (relative or absolute) to the
+configuration file. If no configuration file is specified, the file \filename{.sprocket} in the
+user's home directory is used by default. The configuration file does not need to exist. If it
+does not, no error message is produced. Note that, if present, this option is processed first
+then the configuration file is read and finally the other command line options are processed.
+
+\item[-d] Activates Sprocket's \textit{debug mode}. The use of this mode is described in more
+detail in the following section.
+
+\item[-f] Provides the name of a single input file. This option is only used when Sprocket is in
+debug mode. See the following section for more information.
+
+\item[-i] Provides a value for the InputFolder configuration setting.
+
+\item[-I] Provides a value for the IncludePaths configuration setting. Note, however, that
+unlike the configuration setting multiple occurrences of \texttt{-I} on the command line are
+cumulative. Folders mentioned by later occurrences are appended to the list created by earlier
+occurrences. In addition, folders mentioned with \texttt{-I} are appended to the list specified
+by the \texttt{IncludePaths} configuration setting (instead of overridding that setting).
+
+\item[-m] Provides a value for the TemplateFolder configuration setting.
+
+\item[-n] Provides a value for the NodeEntities configuration setting.
+
+\item[-o] Provides a value for the OutputFolder configuration setting.
+
+\item[-p] Provides a value for the Preprocessor configuration setting.
+
+\item[-s] Displays the various configuration settings that would be used by Sprocket. No further
+processing is done. In particular, no files are erased and no files are read. This option can be
+useful for debugging to get a better understanding of what Sprocket is trying to do in a
+particular context. It shows the result of combining the configuration file settings with the
+command line options.
+
+\item[-t] Provides a value for the TemporaryFolder configuration setting.
+
+\end{description}
+
+\subsection{Debug Mode}
+
+Sprocket provides a special debug mode of operation that can be used by Sprocket developers to
+debug issues with Sprocket itself. This mode is not intended for use by end users. In debug
+mode, Sprocket accepts the name of a single file on the command line by way of the \texttt{-f}
+option. It preprocesses this one file to the temporary folder and then analyzes this file in the
+usual way (although certain aspects of the analysis may be incomplete since the entire program
+is not processed in this mode). After analyzing the file, Sprocket outputs certain internal
+information about the file and about Sprocket's state.
+
+Note that in debug mode, Sprocket does not use or erase the output folder.
+

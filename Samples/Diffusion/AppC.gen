@@ -1,0 +1,61 @@
+#include "/opt/tinyos-2.1.2/tos/lib/timer/Timer.h"
+configuration AppC  {
+}
+implementation {
+
+    // Replace (ACNullC and ASNullC) with (ACRT0C and ASRT0C) for security implementation.
+    
+    components new TimerMilliC (  ) as Timer0 ;
+    components MainC , DiffusionC , InterestManagerC , DataManagerC , NeighborManagerC ;
+    components RPCControlC;
+    components Spkt_InitializeC, ACRT0C, ASRT0C;
+    components Spkt_1 , Spkt_2 , Spkt_3 , Spkt_4, Spkt_5;
+    components new AMSenderC ( 8  ), new AMReceiverC( 8 );
+
+    // Explicit wirings and dynamic wire expansions....
+    
+    DiffusionC  -> MainC .Boot ;
+    DiffusionC .SpartanBoot -> RPCControlC;
+    DiffusionC .RPCControl -> RPCControlC;
+    DiffusionC .ICache -> InterestManagerC .ICache;
+    DiffusionC .DCache -> DataManagerC .DCache;
+    Spkt_1 .AuthorizationClient  -> ACRT0C .AuthorizationClient ;
+    DiffusionC .InterestManagement  -> Spkt_1 .InterestManagement ;
+    Spkt_1 .ComponentManager  -> DiffusionC .ComponentManager ;
+    Spkt_1 .Packet  -> AMSenderC .Packet ;
+    Spkt_1 .AMSend  -> AMSenderC .AMSend ;
+    RPCControlC. StubControl -> Spkt_1;
+
+    InterestManagerC .NeighborManagement  -> NeighborManagerC ;
+    InterestManagerC .DCache  -> DataManagerC ;
+    InterestManagerC .Timer0  -> Timer0 ;
+    Spkt_2 .AuthorizationClient  -> ACRT0C .AuthorizationClient ;
+    InterestManagerC .NeighborSensor  -> Spkt_2 .InterestManagement ;
+    Spkt_2 .ComponentManager  -> InterestManagerC .ComponentManager ;
+    Spkt_2 .Packet  -> AMSenderC .Packet ;
+    Spkt_2 .AMSend  -> AMSenderC .AMSend ;
+    RPCControlC .StubControl -> Spkt_2;
+
+    DataManagerC .NeighborManagement  -> NeighborManagerC ;
+    DataManagerC .ICache  -> InterestManagerC ;
+    DataManagerC .Timer0  -> Timer0 ;
+    Spkt_3 .AuthorizationClient  -> ACRT0C .AuthorizationClient ;
+    DataManagerC .NeighborSensor  -> Spkt_3 .DataManagement ;
+    Spkt_3 .ComponentManager  -> DataManagerC .ComponentManager ;
+    Spkt_3 .Packet  -> AMSenderC .Packet ;
+    Spkt_3 .AMSend  -> AMSenderC .AMSend ;
+    RPCControlC .StubControl -> Spkt_3;
+    
+    // Skeleton wirings...
+    
+    Spkt_4. InterestManagement -> InterestManagerC .InterestManagement;
+    Spkt_4. Receive -> AMReceiverC;
+    Spkt_4. AMPacket -> AMReceiverC;
+    Spkt_4. AuthorizationServer -> ASRT0C;
+    
+    Spkt_5. DataManagement -> DataManagerC .DataManagement;
+    Spkt_5. Receive -> AMReceiverC;
+    Spkt_5. AMPacket -> AMReceiverC;
+    Spkt_5. AuthorizationServer -> ASRT0C;
+}
+

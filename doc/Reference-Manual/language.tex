@@ -1,0 +1,248 @@
+\section{Language Reference}
+
+In this section we describe the specifics of the Spartan RPC language as an extension to nesC
+version 1.2 \cite{nesC12}. Note that at this time only the control flow security features of
+Spartan RPC are detailed here.
+
+\pcnote{Eventually include the syntax of the Spartan RPC extensions}.
+
+\subsection{Dynamic Wires}
+\label{sec:dynamic-wires}
+
+Each node has an ID that can be represented with a value of type \texttt{uint16\_t}. The way in
+which nodes are assigned their IDs is outside the scope of our system. \pcnote{However we should
+describe at least one plausible scenerio.} In addition each component on a node that can be
+directly reached by a remote node is given an ID from the type \texttt{uint8\_t}. Notice that
+this limits the number of remote-visible components on a node to 256. We do not expect this
+limitation to be a problem in any forseeable application.
+
+Component IDs are scoped by the ID of their node. Thus two different nodes can have components
+with a local ID value of, for example, zero without conflict. In a given network, components
+have unique IDs when this qualifcation is considered. This is represented by the following
+structure.
+\begin{verbatim}
+typedef struct {
+   uint16_t node_id;
+   uint8_t  local_id;
+} component_id;
+\end{verbatim}
+
+For convenience we define a type \texttt{component\_set} as a set of \texttt{component\_ids}.
+
+\begin{verbatim}
+typedef struct {
+    component_id *ids;
+    int           count;
+} component_set;
+\end{verbatim}
+
+The field \texttt{ids} points at the base of an array of \texttt{component\_id} structures. The
+field \texttt{count} is a count of the number of IDs in that array. The order of components in
+the \texttt{ids} array is not significant. Also it is up to the application to ensure that a
+particular component appears in the \texttt{ids} array only once. If a component appears more
+than once the behavior is undefined.
+
+A \textit{dynamic wire} is a ``fan out'' wiring where the programmer species a method for
+obtaining the \texttt{component\_set} identifying the wire's multiple remote endpoints. This
+method will be invoked at run time upon every dynamic traversal of that wire; the method may
+return a different set upon every invocation. Formally, we specify this via the ComponentManager
+interface.
+\begin{verbatim}
+interface ComponentManager
+{ 
+   command component_set elements();
+}
+\end{verbatim}
+
+A component that provides this interface can be used to identify dynamic wire endpoints. This is
+accomplished by first mentioning the component in the component-list of a configuration's
+implementation and then using the square brackets around the component in the wiring syntax.
+
+\begin{verbatim}
+components N, C;
+N.I -> [C].I;
+\end{verbatim}
+
+Here we connect N's used interface I with the I interfaces provided by all the components named
+dynamically by C. Contrast this with a static fan-out configuration as follows
+
+\begin{verbatim}
+components N, C1, C2, C3;
+N.I -> C1.I;
+N.I -> C2.I;
+N.I -> C3.I;
+\end{verbatim}
+    
+In the dynamic case it is not feasible to list all the components involved since their number
+may only be known at run time. Note the distinction in the two cases below:
+
+\begin{verbatim}
+components N, C;
+N.I -> C.I;
+N.I -> [C].I;
+\end{verbatim}
+
+In the first wiring N is connected to C's interface I. In the second wiring, N is connected to
+the I interfaces of the components selected by C. The precise components involved is determined
+each time a duty is posted over this wire and could be different from call to call.
+
+There are several restrictions on this mechanism that are intended to simplfy the
+implementation. First, only one level of indirection is allowed. For example the wiring
+\texttt{N.I -> [[C]].I} is illegal. Supporting such a facility would increase the expressive
+flexibility of the system by allowing dynamic wires to be specified by component manager
+components on remote nodes. However, using this mechanism would be expensive in terms of radio
+communication, and it does not seem worth the cost in energy and implementation complexity.
+
+An additional restriction is that only duties (described in section \ref{sec:duties}) can be
+posted over dynamic wires. There is no implementation support for call commands or signaling
+events. This limitation allows the implementation to avoid the problems of providing synchronous
+call behavior and of tracking the source of a dynamic wire so that replies can be returned.
+Managing this in the general case is a significant burden.
+
+Components that may be invoked over a dynamic wire must contain at least one remotable
+interface.
+
+\begin{verbatim}
+module ServerC {
+  provides remote interface I;
+}
+implementation {
+  ...
+}
+\end{verbatim}
+
+Note that generic components can not be remotable. If an instance of a generic component must be
+made remotable it must be wrapped in an ordinary configuration
+
+\begin{verbatim}
+configuration Wrapper {
+  provides remote interface I;
+}
+implementation {
+  components new Queue(1, int);
+  I = Queue.I;
+}
+\end{verbatim}
+
+\subsection{Duties}
+\label{sec:duties}
+
+We further extend the nesC language to allow task-like entities, called duties, to appear in
+interfaces and to be parameterized. Duties are declared in interfaces in a manner similar to
+commands or events. They can take parameters but the types of those parameters are restricted to
+``remotable types'' where a remotable type is defined inductively as follows:
+
+\begin{itemize}
+\item The integral types are remotable. Note that integral types include enumeration types.
+\item Structures containing only remotable types or arrays of remotable types are remotable.
+\end{itemize}
+
+It is important to notice that neither pointer types nor array types (that are not nested inside
+a structure) are remotable.
+
+Interfaces that contain duties can only contain duties. A simple example to illustrate the idea
+is the following:
+
+\begin{verbatim}
+interface Blink {
+  duty void flash_led(int seconds);
+}
+\end{verbatim}
+
+This interface describes a duty that when posted will cause one of the LEDs on the remote system
+to flash for the indicated number of seconds. Note that duties must have a return type of void.
+Their invocations may or may not occur, due to the inherent unreliability of wireless
+communication, so there is little point returning even an error indication from them.
+
+This duty can be posted in a manner similar to the way a task is posted except that arguments
+are provided for the parameters in the obvious way.
+
+\begin{verbatim}
+module ClientC {
+  uses interface Blink;
+}
+implementation {
+  ...
+  void f( )
+  {
+    ...
+    post Blink.flash_led(2);
+    ...
+  }
+  ...
+}
+\end{verbatim}
+
+The post operation will cause the duty to be posted on all remote nodes connected to this module
+via the dynamic wire specified in the appropriate configuration. Note that because of fan out
+wiring, it is possible for a single post operation to actually post multiple duties in different
+components. That is, each component to which the posting component is wired will post its own
+implementation of the provided duty. However, unlike ordinary nesC tasks, these duties
+potentially execute in parallel.
+
+The component that provides this interface implements all the duties in the interface in the
+usual away.
+
+\begin{verbatim}
+module ServerC {
+  provides remote interface Blink;
+}
+implementation {
+  ...
+  duty void Blink.flash_led(int seconds)
+  {
+    // Make it work here.
+  }
+  ...
+}
+\end{verbatim}
+
+\subsection{Access Control}
+\label{sec:access-control}
+
+Spartan RPC allows the programmer to control access to remotely exposed duties so that only
+authorized clients can post them. By default a duty is publically accessible to all clients.
+However, the programmer can restrict access to only those clients who can prove membership in a
+specific role as defined by the $RT_0$ trust management system [citation needed].
+
+\pcnote{Add a brief discussion of $RT_0$ here.}
+
+The server programmer declares the role requirements in the module that provides the remote
+interface. Note that security policy is defined by the providing module and not with the
+interface itself. For example:
+
+\begin{verbatim}
+module ServerC {
+  provides remote interface Blink requires "A.r";
+}
+implementation { ... }
+\end{verbatim}
+
+In this case the client must prove membership in role $A.r$ before any posting of duties in the
+interface will be honored. In this context $A$ is an $RT_0$ entity (represented by a public key)
+and $r$ is a role identifier.
+
+Clients indicate which roles they will activate on each dynamic wire by decorating the dynamic
+wire with a suitable ``auth'' indication. For example:
+
+\begin{verbatim}
+configuration AppC { }
+implementation {
+  components M, MyManagerC;
+  
+  auth "A.r" M.Blink -> [MyManagerC].Blink;
+}
+\end{verbatim}
+
+Each time a duty is posted over this dynamic wire, the client will send $RT_0$ credentials to
+the server that proves a particular public key $K$ is a member of role $A.r$. All subsequent
+duty postings will be signed with key $K$. To do this the client node must wield the private key
+that corresponds to $K$; this shows that the client is a legitmate member of the required role.
+
+It is important to notice that the role specifications (the policy) is statically defined.
+Spartan RPC does not provide any facility to dynamically compute role requirements. Also notice
+that the required roles are specified by the server(s) involved. A different collection of
+servers could provide the same interface but under different role requirements. However, every
+server accessed via a particular dynamic wire should have the same role requirements or else
+some servers will reject the corresponding duty postings.
+

@@ -1,0 +1,5 @@
+A.r <- E
+B.s <- A.r
+C.t <-B.s.r
+D.u <- C.t ^ A.r
+E.r <- E

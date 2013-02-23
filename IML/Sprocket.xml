@@ -1,0 +1,635 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="IML.xsl"?>
+
+<issue-set xmlns="http://vortex.cis.vtc.edu/xml/IML_0.0"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://vortex.cis.vtc.edu/xml/IML_0.0 IML.xsd">
+
+  <issue>
+    <summary>There are errors in the handling of typedef</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>The handling of typedef in the parser is not correct. There are at least two
+            problems (perhaps two tickets should be created). See the files Module0120.nc and
+            Module0230.nc in the nesC parser positive syntax test cases. The comments in those
+            files discuss the problems.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Preprocessing and parsing need to be directed by program structure</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>To be faithful to the specification of nesC, the parser should process
+            interface and component definitions as they are encountered. This means that
+            interfaces should be processed when they are seen in uses/provides declarations and
+            components should be processed when as they are mentioned in configuration
+            definitions.</xhtml:p>
+
+          <xhtml:p>The parser should start with the application's top level configuration and
+            recursively descend the program's high level structure, locating and processing
+            source files on demand. This is in contrast to what it currently does which is to
+            simply process each source file independently in an arbitrary order. The structured
+            approach is necessary so that any global types and macros defined by the interface
+            or component can be registered in the parser's symbol table before it processes the
+            rest of the &quot;calling&quot; component. Otherwise programmers will need to create
+            and manually include header files they should not be required to use. One
+            implication of this is that parser should interleave preprocessing with parsing, in
+            some cases saving some preprocessor state from one file to the next. The following
+            example illustrates a program that is acceptable to the nesC compiler but that
+            requires the kind of processing I'm talking about here. It consists of several files
+            that depend on each other.</xhtml:p>
+
+          <xhtml:pre>
+            <![CDATA[
+---> I.nc <---
+typedef int counter_t;
+#define MAX_COUNT 128
+            
+interface I {
+    command void setCounter(counter_t value);
+}
+            
+---> AppC.nc <---
+configuration AppC { }
+implementation {
+    components AC, BC;
+            
+    AC.I -> BC;
+}
+            
+---> AC.nc <---
+typedef int acounter_t;
+            
+module AC {
+    uses interface I;
+}
+implementation {
+    void f( )
+    {
+        // The following line is not an error. The type counter_t is known from interface I.
+        counter_t currentCount = 0;
+        call I.setCounter(currentCount);
+    }
+}
+            
+---> BC.nc <---
+module BC {
+    provides interface I;
+}
+implementation {
+    // The following line is not an error. The type counter_t is known from interface I.
+    command void I.setCounter(counter_t value)
+    {
+        // The following line is not an error. The type acounter_t is known from module AC.
+        // Note that module AC was processed before this module when AppC was processed.
+        acounter_t count;
+            
+        // The following line is not an error. The macro MAX_COUNT is known from interface I.
+        if( value < MAX_COUNT ) {
+            // etc...
+        }
+    }
+}           
+]]>
+          </xhtml:pre>
+
+          <xhtml:p>In the example above, the parser should process AppC.nc first and then
+            process AC.nc and BC.nc only when the need to do so is discovered (due to the
+            components line in AppC.nc). Furthermore global types introduced in I.nc need to be
+            made known to AC.nc and BC.nc simply by virtue of those files mentioning interface I
+            in their uses/provides specifications. Note that preprocessor macros are handled in
+            a similar way. Note also that global types defined in AC.nc are visible in BC.nc
+            because AC.nc is processed before BC.nc is read.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>nesC parser can't handle EOF-terminated single line comments</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>If the last line of the file is a single line comment such as</xhtml:p>
+
+          <xhtml:pre>
+            <![CDATA[
+// This is the last line.
+]]>
+          </xhtml:pre>
+
+          <xhtml:p>and if, furthermore, that line is not terminated with a normal line ending,
+            the parser (really the lexer) produces a message about a 'mismatched character
+            &lt;EOF&gt;'. Currently EOF is not considered a valid way to end single line
+            comments. The workaround is to be sure the last line in the file is terminated with
+            a proper line ending.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Add check on message size</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>The system should avoid creating messages that are too large. Right now with
+            the SimpleMAC system messages (header + arguments) are limited to 16 bytes. Sprocket
+            should verify that the size of the arguments is &quot;reasonable&quot; and then the
+            run time system should check that the actual size required (which depends on the
+            number of destination components) is in range. If the overall message size is too
+            large, the run time system should truncate the list of destination components. We
+            don't promise to post duties on remote nodes anyway so dropping a few from the list
+            would be acceptable.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Add support for low power listening</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>After upgrading to TinyOS v2.1.1 the old method I was using to activate low
+            power listening no longer worked. My first attempt at fixing it was not 100% right
+            either (the receiving node missed about 50% of the packets). To make testing easier
+            I removed low power listening support for now. It should be added back (correctly!)
+            at some point.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>CertificateSender component uses the same random sequence for broadcast intervals</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>In the Sprocket run time system, the CertificateSender component uses a
+            randomized broadcast interval to prevent adjacent nodes from colliding with each
+            other indefinitely. However, the seed for the random number generation is not
+            derived from a random source. Thus if two adjacent nodes boot at the same moment,
+            their certificate broadcasts will collide indefinitely anyway.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Implement ECC public key compression</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>The Sprocket runtime system should probably use compressed ECC public keys.
+            Doing so would reduce the size of certificates (saving radio transmission energy)
+            and save memory in the public key storage area. The cost is in the computation
+            required to expand the keys before use (this cost should be evaluated before
+            committing to the use of compressed keys).</xhtml:p>
+
+          <xhtml:p>This change will require adjustments to RTAdmin as well as the Sprocket
+            runtime system.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Dynamic wires do not handle multiple endpoints</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Sprocket's handling of dynamic wires does not handle multiple endpoints.
+            Right now a MAC is generated for only the first endpoint in the component set.
+            ACRT0C should be updated to create multiple MACs as needed. ASRT0C should be updated
+            to search the appended MACs to see if any one of them matches the expected
+            MAC.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Periodically received bad certificate causes repeated verification failures</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Suppose node A has a bad certificate that it broadcasts periodically. Suppose
+            a neighboring node B receives the certificate without error so the checksum is
+            correct. Node B will attempt to verify the signature on the certificate but that
+            verification will fail if the certificate is bad. Thus Node B discards the
+            certificate. The problem is that because node A is broadcasting the certificate
+            periodically node B will attempt to verify it repeatedly. This causes node B to do
+            excessive and unnecessary computation.</xhtml:p>
+
+          <xhtml:p>To deal with this the runtime system could keep a record of the the bad
+            certificate (checksum only). Obviously the bad certificate should not be used in the
+            construction of the local RT model. However, if it is received again it can be
+            discarded at once. Right now the credential storage area stores checksums of the
+            valid certificates so that a retransmission of a valid certificate can be ignored.
+            That facility should be extended so that checksums of even invalid certificates are
+            also stored.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Minimum model should include both deployed and received credentials</summary>
+    <creation-date>
+      <date>2012-01-22</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2012-01-22</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Right now the minimum model is computed using only credentials received from
+            other nodes. However, in order for the node policy to be considered, the minimum
+            model must also taken into account credentials deployed with the node. In the tests
+            I've done so far a node received its policy from a neighboring node running the same
+            program (and deployed with the same credentials). It obviously should not be
+            necessary for a node to receive its policy over the air from an identical
+            neighbor!</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Implement session key stealing</summary>
+    <creation-date>
+      <date>2012-01-22</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2012-01-22</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Because of the way the runtime system is designed the server can use the same
+            session key with multiple clients from the same domain. Thus it can skip the
+            Diffie-Hellman negotiation step when creating a session key for the second client.
+            Instead the server can just &quot;steal&quot; the existing session key that was
+            created for the first client. This optimization should be beneficial in the common
+            case when a server is talking to multiple client nodes in the same domain.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Authorization error for multi-entity clients</summary>
+    <creation-date>
+      <date>2012-02-13</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2012-02-13</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Suppose a client can post duties as either entity A or entity B. Suppose also
+            that the client tries to invoke a service over a dynamic wire &quot;as A.&quot; If
+            that invocation succeeds a session key is created between the client and server
+            nodes. Now suppose the client later tries to invoke the same service over a dynamic
+            wire &quot;as B.&quot; The session key created previously will be used
+              <xhtml:em>even if the B entity has no access to the service</xhtml:em>.</xhtml:p>
+
+          <xhtml:p>This is not a security problem from the server's point of view because the
+            client node holds private keys for both A and B (thus the client node is a member of
+            the &quot;A&quot; domain). However, it does mean a client that is purposely
+            selecting, for example, a potentially weaker entity for a particular invocation
+            might find that invocation succeeding when it should have failed.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Add support for multiple duties in an interface</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Currently only one duty is allowed in an interface. This is a significant
+            limitation and it should be removed.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>When generating stubs multiple dynamic wires cause duplicate component declarations</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>When generating stubs if there is more than one dynamic wire in a
+            configuration Sprocket will duplicate certain &quot;boiler plate&quot; component
+            declarations. This causes the nesC compilation to fail. Sprocket should review the
+            entire configuration and make a master list of all additional components required,
+            removing duplicates, before it starts to rewrite the configuration.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Generated stubs and skeletons do not install duty ID in message header</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Currently Sprocket does not install or check the duty ID in the message
+            header as it is documented to do so. This means that system currently only works for
+            interfaces that contain a single duty.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Skeleton wiring not added to top level configuration</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Currently when Sprocket generates a skeleton for a remotely provided
+            interface it does not modify the top level configuration of the application to
+            include the necessary skeleton components and related wirings. This is partly
+            because Sprocket does not know which configuration file to rewrite (the top level
+            configuration is not known to Sprocket).</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Sprocket requires specific name for top level configuration</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Currently Sprocket requires that the top level configuration be contained in
+            a file named AppC.nc. This is because the Makefile writer in Main.scala assumes this
+            name. This restriction should be removed. Doing this will require telling Sprocket
+            which file contains the top level configuration, perhaps using a command line
+            argument. This will be necessary anyway if Sprocket is changed to process the
+            program in structured order.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Sprocket should accept programs spread over multiple folders</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Currently Sprocket assumes the entire program (that needs to be processed by
+            Sprocket anyway) exists in a single folder. This is awkward, however, for the kind
+            of applications Sprocket is intended to support. The problem is that client and
+            server programs must share some information, in particular: remote interface
+            definitions. It would be convenient to have those definitions in a common space.
+            This implies that each program must be spread over at least two folders. Sprocket
+            should support this. Sprocket does allow (even expect) certain auxiliary data such
+            as component ID maps, interface ID maps, and key maps to be in a shared area. It
+            should allow source code to be similarly shared, ideally in a consistent
+            way.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Dynamic wires require interface name on target endpoint</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>Normally nesC allows the target endpoint of a wire to default to the same
+            interface as was used on the source endpoint. For example:</xhtml:p>
+
+          <xhtml:pre>
+            <![CDATA[
+configuration AppC { }
+implementation {
+    components A, B;
+
+    A.I -> B;  // Same as A.I -> B.I;
+}
+]]>
+          </xhtml:pre>
+
+          <xhtml:p>However, when a dynamic wire is used Sprocket does not allow this
+            abbreviation. For example:</xhtml:p>
+
+          <xhtml:pre>
+            <![CDATA[
+configuration AppC { }
+implementation {
+    components A, RemoteSelectorC;
+
+    A.I -> [RemoteSelectorC]; // Must use A.I -> [RemoteSelectorC].I;
+}
+]]>
+          </xhtml:pre>
+
+          <xhtml:p>The user would reasonably expect the abbreviated form to connect A to the I
+            interface on all components selected by the remote selector. Currently Sprocket
+            reports this as a rewriting error.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>RTAdmin should allow the import of public keys and foreign certificates</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>The RTAdmin tool believes it controls the private key of every entity it
+            knows about. It also assumes that it can sign every credential it has (meaning that
+            every credential is issued by an entity for which it has the private key). In
+            general these things are false. The tool should be able to import public keys for
+            &quot;external&quot; entities and foreign certificates signed by such entities. The
+            tool should allow its user to create credentials using external entities and to dump
+            foreign certificates into a node's run time system.</xhtml:p>
+
+          <xhtml:p>Probably some sort of key/certificate transfer format needs to be defined.
+            Imagine the case where an RTAdmin user downloads RT certificates from another
+            security domain's web site.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Create a time synchronization sample</summary>
+    <creation-date>
+      <date>2011-12-26</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2011-12-26</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>I think a time synchronization protocol would be a nice demonstration of
+            SpartanRPC. It might even be useful (necessary?) in the RT enabled version of the
+            system. When real certificates are used, it is desirable to check their expiration
+            times as part of certificate validation. This means the network will need a
+            reasonably accurate notion of time (although tight synchronization would not be
+            necessary).</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+  <issue>
+    <summary>Create system to automatically test samples</summary>
+    <creation-date>
+      <date>2012-09-06</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2012-09-06</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>It would be desirable to test the samples in an automatic or semi-automatic
+            way. This will likely require the use of some kind of simulator since automatically
+            downloading to hardware and verify proper operation on that hardware would be very
+            difficult.</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
+</issue-set>

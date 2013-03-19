@@ -82,12 +82,12 @@ object Main {
    */
   private def dumpSyntax(abstractSyntax: CommonTree) {
     val viewer = new SyntaxViewer(System.out, abstractSyntax)
-    System.out.println("*** AST ==> ")
+    println("*** AST ==> ")
     viewer.writeAST()
-    System.out.println()
-    System.out.println("*** REWRITE ==> ")
+    println()
+    println("*** REWRITE ==> ")
     viewer.rewrite()
-    System.out.println()
+    println()
   }
 
 
@@ -118,7 +118,7 @@ object Main {
     )
 
     for (line <- message) {
-      System.out.println(line)
+      println(line)
     }
   }
 
@@ -152,17 +152,17 @@ object Main {
    */
   private def displayConfiguration() {
     // TODO: This list is getting a little long for this hacked approach. Use a loop.
-    System.out.println("Sprocket Settings:\n")
-    System.out.println("DebugMode       = " + configurationValue("DebugMode"))
-    System.out.println("IncludePaths    = " + configurationValue("IncludePaths"))
-    System.out.println("InputFolder     = " + configurationValue("InputFolder"))
-    System.out.println("NodeEntities    = " + configurationValue("NodeEntities"))
-    System.out.println("OutputFolder    = " + configurationValue("OutputFolder"))
-    System.out.println("Preprocessor    = " + configurationValue("Preprocessor"))
-    System.out.println("ShowSettings    = " + configurationValue("ShowSettings"))
-    System.out.println("SourceFile      = " + configurationValue("SourceFile"))
-    System.out.println("TemplateFolder  = " + configurationValue("TemplateFolder"))
-    System.out.println("TemporaryFolder = " + configurationValue("TemporaryFolder"))
+    println("Sprocket Settings:\n")
+    println("DebugMode       = " + configurationValue("DebugMode"))
+    println("IncludePaths    = " + configurationValue("IncludePaths"))
+    println("InputFolder     = " + configurationValue("InputFolder"))
+    println("NodeEntities    = " + configurationValue("NodeEntities"))
+    println("OutputFolder    = " + configurationValue("OutputFolder"))
+    println("Preprocessor    = " + configurationValue("Preprocessor"))
+    println("ShowSettings    = " + configurationValue("ShowSettings"))
+    println("SourceFile      = " + configurationValue("SourceFile"))
+    println("TemplateFolder  = " + configurationValue("TemplateFolder"))
+    println("TemporaryFolder = " + configurationValue("TemporaryFolder"))
   }
     
     
@@ -391,10 +391,10 @@ object Main {
     for (fileName <- nesCFiles) {
       val inputName = new File(inputFolder, fileName)
       val outputName = new File(temporaryFolder, fileName)
-      System.out.println("PREPROCESSING " + inputName.getPath + " TO " + outputName.getPath)
+      println("PREPROCESSING " + inputName.getPath + " TO " + outputName.getPath)
 
       // Prepare the preprocessor command line.
-      val commandLine            = new ArrayList[String]()
+      val commandLine = new ArrayList[String]()
       val Some(preprocessorName) = settings("Preprocessor")
       commandLine.add(preprocessorName)
       settings("IncludePaths") match {
@@ -416,7 +416,7 @@ object Main {
       while ({ rawByte = errorStream.read(); rawByte != -1}) System.out.print(rawByte.toChar)
       val exitStatus = cpp.waitFor()
       if (exitStatus != 0) {
-        System.out.println("  *** previous operation failed! ***")
+        println("  *** previous operation failed! ***")
       }
     }
   }
@@ -440,7 +440,7 @@ object Main {
 
     for (fileName <- nesCFiles) {
       val inputName = new File(temporaryFolder, fileName)
-      System.out.println("PARSING " + inputName.getPath)
+      println("PARSING " + inputName.getPath)
 
       val lex = new nesCLexer(new ANTLRFileStream(inputName.getPath))
       val tokens = new CommonTokenStream(lex)
@@ -468,7 +468,7 @@ object Main {
 
     var processedResults = Map[String, CommonTree]()
     for ((fileName, antlrAbstractSyntax) <- parsedResults) {
-      System.out.println("PROCESSING " + fileName)
+      println("PROCESSING " + fileName)
       val abstractSyntax = TreeConverter.ANTLRToScala(antlrAbstractSyntax)
       val treeProcessor = TreeConverter.createProcessor(abstractSyntax)
       val processedAbstractSyntax = treeProcessor.process()
@@ -503,7 +503,7 @@ object Main {
 
     for ((fileName, antlrAbstractSyntax) <- processedResults) {
       val outputName = new File(outputFolder, fileName)
-      System.out.println("REWRITING " + outputName.getPath)
+      println("REWRITING " + outputName.getPath)
       val outputStream = new PrintStream(outputName)
       val viewer = new SyntaxViewer(outputStream, antlrAbstractSyntax)
       viewer.rewrite()
@@ -576,7 +576,7 @@ object Main {
       }
       val fileSelected = (settings("SourceFile") != None)
       if ((debugMode && !fileSelected) || (!debugMode && fileSelected)) {
-        System.out.println("\nERROR: Debug mode if and only if -f selected")
+        println("\nERROR: Debug mode if and only if -f selected")
         System.exit(1)
       }
             
@@ -590,16 +590,16 @@ object Main {
             if (debugMode) {
               System.out.print("\nDEBUG mode active! Processing file: ")
               val Some(fileName) = settings("SourceFile")
-              System.out.println(fileName)
+              println(fileName)
             }
-            System.out.println("\nNo further processing done: -s selected")
+            println("\nNo further processing done: -s selected")
             System.exit(1)
           }
       }
 
       // Make sure we know where the templates folder is located.
       if (settings("TemplateFolder") == None) {
-        System.out.println("\nERROR: 'TemplateFolder' not set. Unable to proceed!\n")
+        println("\nERROR: 'TemplateFolder' not set. Unable to proceed!\n")
         System.exit(1)
       }
 
@@ -622,34 +622,34 @@ object Main {
           Array(sourceFileName)
         }
             
-      System.out.println("\nPREPROCESSING")
-      System.out.println("=============")
+      println("\nPREPROCESSING")
+      println("=============")
       preprocess(inputFolder, nesCFiles, temporaryFolder)
            
-      System.out.println("\nPARSING")
-      System.out.println("=======")
+      println("\nPARSING")
+      println("=======")
       val parsedResults = parsingPhase(temporaryFolder, nesCFiles)
 
-      System.out.println("\nPROCESSING")
-      System.out.println("==========")
+      println("\nPROCESSING")
+      println("==========")
       val processedResults = processingPhase(outputFolder, parsedResults)
 
-      System.out.println("\nREWRITING")
-      System.out.println("=========")
+      println("\nREWRITING")
+      println("=========")
       rewritingPhase(outputFolder, processedResults)
     }
     catch {
       case e: CommandLineException => {
-        System.out.println("Bad Command Line: " + e.getMessage)
+        println("Bad Command Line: " + e.getMessage)
         displayUsage()
         returnCode = 1
       }
       case e: InvalidOutputFolderException => {
-        System.out.println("Bad Output Folder: " + e.getMessage)
+        println("Bad Output Folder: " + e.getMessage)
         returnCode = 1
       }
       case e: IOException => {
-        System.out.println("I/O Error: " + e.getMessage)
+        println("I/O Error: " + e.getMessage)
         returnCode = 1
       }
       case e: RecognitionException => {

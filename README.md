@@ -8,14 +8,13 @@ SpartanRPC and Sprocket are research projects at the University of Vermont.
 Prerequisites
 -------------
 
-* Java development kit (I used v1.7u07)
+* Java development kit (I used v1.7u15)
 * Scala (I used v2.10)
 * IntelliJ IDEA (I used v12.0.4)
 * LaTeX (required for building the documentation)
 
-Development is done on Linux but it is likely that most things will work on Windows (or any
-other platform that supports Scala and IntelliJ) as well. Some tweaking may be required on
-non-Linux platforms.
+Development is done on Linux but it is likely that most things will work on Windows or any other
+platform that supports Scala and IntelliJ. Some tweaking may be required on non-Linux platforms.
 
 
 Building Sprocket
@@ -25,8 +24,8 @@ Sprocket is written in Scala and built with IntelliJ IDEA. First install Java, S
 IntelliJ (Community Edition is fine). Once you have IntelliJ installed you will need to use its
 plugin manager to download and install the Scala plugin for IntelliJ. Note that Sprocket uses
 several third party libraries but they are provided as part of this repository. Once all these
-preliminaries have been handled, you should be able to build Sprocket simply by executing the
-appropriate commands from within IntelliJ.
+preliminaries have been handled, you should be able to build Sprocket simply by simply opening
+the project file (Sprocket.iml) and executing the appropriate commands from within IntelliJ.
 
 
 Other Resources
@@ -35,28 +34,34 @@ Other Resources
 The RTS directory contains Sprocket's runtime support files. These files must be made available
 to Sprocket in order for it to compile Spartan RPC programs. The easiest way to do this is to
 point the TemplateFolder configuration parameter at this location using Sprocket's configuration
-file. See the Reference Manual in the doc folder for more information.
+file. See the Reference Manual in the doc folder for more information about setting up the
+configuration file and about how to use Sprocket in general.
 
 The Samples directory contains various examples of Spartan RPC programs. See the README files
 associated with each example for more information.
 
+The files in the IML folder contain a list of known issues with Sprocket in "Issue Markup
+Language" format. This XML language is defined by the schema located in the repository here:
+
+    https://github.com/pchapin/IML
+
+If you clone this repository into a sibling folder named IML the relative paths in the XML
+documents will work and they can then be validated.
 
 nesC Grammar
 ------------
 
 The source code for the nesC parser is in the src folder in the package edu.uvm.nesc. The bulk
-of the code is an ANTLR v3 grammar in src/edu/uvm/nesC/nesC.g. This grammar produces the three
+of the code is an ANTLR v3 grammar in src/edu/uvm/nesc/nesC.g. This grammar produces the three
 files nesC.tokens, nesCLexer.java, and nesCParser.java. These files must be generated before the
-main program can be built.
+main program can be built. The current versions of these files are committed to the repository
+so they only need to be regenerated if the grammar is changed. Use the shell script build-parser
+(or the corresponding batch file) to generate the parser.
 
-The main program in that package is just a simple wrapper around the parser. It passes the file
-named on the command line to the parser and then outputs the abstract syntax tree that was
+The main program in the nesc package is just a simple wrapper around the parser. It passes the
+file named on the command line to the parser and then outputs the abstract syntax tree that was
 created (using ANTLR's AST notation). This program does not preprocess the input (that must be
 done separately if it is desired).
-
-The ANTLR parser generator is included in this repository. The two scripts 'build-parser.bat'
-(for Windows) and 'build-parser.sh' (for Linux) in the main source folder execute the ANTLR tool
-on this grammar to produce nesC.tokens, nesCLexer.java, and nesCParser.java.
 
 ### Known Issues
 

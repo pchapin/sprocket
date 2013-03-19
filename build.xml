@@ -10,7 +10,7 @@
   <property name="scala-compiler.jar" location="${scala.home}/lib/scala-compiler.jar"/>
   <property name="ANTLR.jar"          location="lib/antlr-3.4.jar"/>
   <property name="BouncyCastle.jar"   location="lib/bcprov-jdk16-145.jar"/>
-  <property name="scalatest.jar"      location="lib/scalatest-1.9.jar"/>
+  <property name="scalatest.jar"      location="lib/scalatest_2.10-1.9.1.jar"/>
 
   <target name="init">
     <!-- Get the Scala related tasks. -->

@@ -1,0 +1,37 @@
+
+configuration AppC  {
+}
+implementation {
+
+    // Replace (ACNullC and ASNullC) with (ACRT0C and ASRT0C) for security implementation.
+    
+    components MainC , DemoC , DisseminatorC , LedsC ;
+    components RPCControlC;
+    components Spkt_InitializeC, ACRT0C, ASRT0C;
+    components Spkt_1 , Spkt_2 ;
+    components new AMSenderC ( 8  ), new AMReceiverC( 8 );
+
+    // Explicit wirings and dynamic wire expansions....
+    
+    DemoC  -> MainC .Boot ;
+    DemoC .SpartanBoot -> RPCControlC;
+    DemoC .RPCControl -> RPCControlC;
+    DemoC .DisseminationUpdate -> DisseminatorC .DisseminationUpdate;
+    DemoC .DisseminationValue -> DisseminatorC .DisseminationValue;
+    DemoC .Leds -> LedsC .Leds;
+    
+    Spkt_1 .AuthorizationClient  -> ACRT0C .AuthorizationClient ;
+    DisseminatorC .NeighborUpdate  -> Spkt_1 .DisseminationUpdate ;
+    Spkt_1 .ComponentManager  -> DisseminatorC .ComponentManager ;
+    Spkt_1 .Packet  -> AMSenderC .Packet ;
+    Spkt_1 .AMSend  -> AMSenderC .AMSend ;
+    RPCControlC. StubControl -> Spkt_1;
+
+    // Skeleton wirings...
+    
+    Spkt_2. DisseminationUpdate -> DisseminatorC .DisseminationUpdate;
+    Spkt_2. Receive -> AMReceiverC;
+    Spkt_2. AMPacket -> AMReceiverC;
+    Spkt_2. AuthorizationServer -> ASRT0C;
+}
+

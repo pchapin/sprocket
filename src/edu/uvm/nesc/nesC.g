@@ -7,7 +7,7 @@ options {
 }
 
 tokens {
-    // C99 reserved words except float, double, _Bool, _Complex, and _Imaginary.
+    // C99 reserved words except _Bool, _Complex, and _Imaginary.
     AUTO           = 'auto';
     BREAK          = 'break';
     CASE           = 'case';
@@ -16,9 +16,11 @@ tokens {
     CONTINUE       = 'continue';
     DEFAULT        = 'default';
     DO             = 'do';
+    DOUBLE         = 'double';
     ELSE           = 'else';
     ENUM           = 'enum';
     EXTERN         = 'extern';
+    FLOAT          = 'float';
     FOR            = 'for';
     GOTO           = 'goto';
     IF             = 'if';
@@ -40,24 +42,27 @@ tokens {
     VOID           = 'void';
     VOLATILE       = 'volatile';
     WHILE          = 'while';
+
+    // gcc extensions needed by some programs.
+    GCCATTRIBUTE   = '__attribute__';
     
     // Are these type names built into the language?
-    INT8_T          = 'int8_t';
-    INT16_T         = 'int16_t';
-    INT32_T         = 'int32_t';
-    INT64_T         = 'int64_t';
-    UINT8_T         = 'uint8_t';
-    UINT16_T        = 'uint16_t';
-    UINT32_T        = 'uint32_t';
-    UINT64_T        = 'uint64_t';
-    NX_UINT8_T      = 'nx_uint8_t';
-    NX_UINT16_T     = 'nx_uint16_t';
-    NX_UINT32_T     = 'nx_uint32_t';
-    NX_UINT64_T     = 'nx_uint64_t';
-    NXLE_UINT8_T    = 'nxle_uint8_t';
-    NXLE_UINT16_T   = 'nxle_uint16_t';
-    NXLE_UINT32_T   = 'nxle_uint32_t';
-    NXLE_UINT64_T   = 'nxle_uint64_t';
+    INT8_T         = 'int8_t';
+    INT16_T        = 'int16_t';
+    INT32_T        = 'int32_t';
+    INT64_T        = 'int64_t';
+    UINT8_T        = 'uint8_t';
+    UINT16_T       = 'uint16_t';
+    UINT32_T       = 'uint32_t';
+    UINT64_T       = 'uint64_t';
+    NX_UINT8_T     = 'nx_uint8_t';
+    NX_UINT16_T    = 'nx_uint16_t';
+    NX_UINT32_T    = 'nx_uint32_t';
+    NX_UINT64_T    = 'nx_uint64_t';
+    NXLE_UINT8_T   = 'nxle_uint8_t';
+    NXLE_UINT16_T  = 'nxle_uint16_t';
+    NXLE_UINT32_T  = 'nxle_uint32_t';
+    NXLE_UINT64_T  = 'nxle_uint64_t';
     
     // nesC extensions to Standard C
     ABSTRACT       = 'abstract';       // Reserved for future use.
@@ -349,6 +354,7 @@ constant_expression
 // kinds of declarations. This is necessary because, during rewriting, function definitions are
 // not terminated with a ';' while other kinds of declarations are so terminated.
 //
+// TODO: Currently the gcc_attributes are not part of the AST.
 declaration
 scope { LinkedList<String> declaredNames;
         boolean inStructDeclaration; }
@@ -356,7 +362,7 @@ scope { LinkedList<String> declaredNames;
            $declaration::inStructDeclaration = false;
          }
          // The init_declarator_list is optional because of, for example, structure definitions.
-         declaration_specifiers init_declarator_list? ';'
+         declaration_specifiers gcc_attributes? init_declarator_list? ';'
              {
                // Inefficient, but how many declarators will be in a declaration, honestly?
                for (int i = 0; i < $declaration::declaredNames.size(); ++i) {
@@ -374,7 +380,7 @@ scope { LinkedList<String> declaredNames;
     |    { $declaration::declaredNames = new LinkedList<String>();
            $declaration::inStructDeclaration = false;
          }
-         TYPEDEF declaration_specifiers init_declarator_list ';'
+         TYPEDEF declaration_specifiers gcc_attributes? init_declarator_list gcc_attributes? ';'
              {
                // Inefficient, but how many declarators will be in a declaration, honestly?
                for (int i = 0; i < $declaration::declaredNames.size(); ++i) {
@@ -424,6 +430,8 @@ type_specifier
     |   LONG
     |   SIGNED
     |   UNSIGNED
+    |   FLOAT
+    |   DOUBLE
     |   INT8_T            // Temporary hack?
     |   INT16_T           // Temporary hack?
     |   INT32_T           // Temporary hack?
@@ -900,6 +908,18 @@ attributes
     
 attribute
     :    '@' identifier '(' initializer_list ')';
+
+// nesC programs are ultimately passed to gcc, and gcc-specific attributes are commonly used,
+// for example, in libraries (header files, etc).
+//
+gcc_attributes
+    :    GCCATTRIBUTE '(' '(' gcc_attribute_list ')' ')';
+
+gcc_attribute_list
+    :    gcc_attribute? (',' gcc_attribute)*;
+
+gcc_attribute
+    :    assignment_expression;
 
 identifier
     :   id=RAW_IDENTIFIER { !symbols.isType($id.text) }?;

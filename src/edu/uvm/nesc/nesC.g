@@ -481,7 +481,7 @@ struct_declaration
 //            -> ^(DECLARATION declarator attributes)
 //    |    declarator ':' constant_expression attributes ';'
 //            -> ^(DECLARATION declarator constant_expression attributes);
-    
+
 specifier_qualifier_list
     :    (type_specifier | type_qualifier)+;
     
@@ -621,8 +621,11 @@ initializer
     :    assignment_expression
     |    '{' initializer_list ','? '}' -> ^(INITIALIZER_LIST initializer_list);
     
+// Note that designated initializers are using the gcc form (rather than the C99 form).
+// TODO: The designators should be in the AST since they have semantic significance.
 initializer_list
-    :    initializer (',' initializer)* -> initializer+;
+    :    (RAW_IDENTIFIER ':')? initializer (',' (RAW_IDENTIFIER ':')? initializer)*
+            -> initializer+;
     
 /* ================= */
 /* Statement grammar */

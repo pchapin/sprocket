@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // FILE    : SymbolTable.java
 // SUBJECT : Class for handling symbol tables.
-// AUTHOR  : (C) Copyright 2010 by Peter C. Chapin <PChapin@vtc.vsc.edu>
+// AUTHOR  : (C) Copyright 2013 by Peter C. Chapin <PChapin@vtc.vsc.edu>
 //
 //-----------------------------------------------------------------------
 package edu.uvm.nesc;
@@ -9,11 +9,10 @@ package edu.uvm.nesc;
 import java.util.TreeSet;
 
 /**
- * This class records information about each name in a particular scope. Right now the only
- * information that is important is if the name specifies a type. Because of the possibility of
- * hiding it is necessary to record non-type names so that they can be found in inner scopes
- * properly. In a more serious language processing application such names would likely need to
- * be tracked for other reasons as well.
+ * This class records information about each name in a particular scope. Right now the only information that is
+ * important is if the name specifies a type. Because of the possibility of hiding it is necessary to record non-type
+ * names so that they can be found in inner scopes properly. In a more serious language processing application such
+ * names would likely need to be tracked for other reasons as well.
  *
  * @author Peter
  */
@@ -29,8 +28,8 @@ public class SymbolTable {
     }
 
     /**
-     * Exception class used to signal conflicting symbols in the same scope (symbols that are
-     * used as both type names and non-type names).
+     * Exception class used to signal conflicting symbols in the same scope (symbols that are used as both type names
+     * and non-type names).
      */
     public class SymbolConflictException extends Exception {
         public SymbolConflictException(String message)
@@ -62,8 +61,8 @@ public class SymbolTable {
 
 
     /**
-     * Adds an ordinary identifier (a non-type name) to the symbol table. Currently no attributes
-     * of the identifier are recorded.
+     * Adds an ordinary identifier (a non-type name) to the symbol table. Currently no attributes of the identifier are
+     * recorded.
      *
      * @param name The name of the identifier to add.
      */
@@ -84,8 +83,8 @@ public class SymbolTable {
      * Checks a name to see if it specifies a type.
      *
      * @param name The name to check.
-     * @return true if the given name specifies a type in this scope; false if the name specifies
-     * a non-type or if the name is not defined in this scope.
+     * @return true if the given name specifies a type in this scope; false if the name specifies a non-type or if the
+     * name is not defined in this scope.
      */
     public boolean isType(String name)
     {
@@ -96,8 +95,8 @@ public class SymbolTable {
     /**
      * Checks a name to see if it exists in this scope.
      * @param name The name to check.
-     * @return true if the name is defined in this specific scope as either a type name or an
-     * ordinary identifier; false otherwise.
+     * @return true if the name is defined in this specific scope as either a type name or an ordinary identifier; false
+     * otherwise.
      */
     public boolean isDefined(String name)
     {

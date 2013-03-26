@@ -193,7 +193,7 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
 
   test("Structure Declaration Test") {
     val testCaseNames =
-      Array("Declaration0200.nc", "Declaration0210.nc")
+      Array("Declaration0200.nc", "Declaration0210.nc", "Declaration0220.nc")
     doDeclarationTests(testCaseNames)
   }
 

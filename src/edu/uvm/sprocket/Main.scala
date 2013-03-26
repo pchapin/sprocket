@@ -397,6 +397,36 @@ object Main {
       val commandLine = new ArrayList[String]()
       val Some(preprocessorName) = settings("Preprocessor")
       commandLine.add(preprocessorName)
+
+      // This is hackish. I need to build up the same environment as the nesC compiler sees. Unfortunately the build
+      // scripts (Makefiles, etc) used with TinyOS are very complicated and hard to understand. Thus it's next to
+      // impossible (for me) to be sure I have this 100% correct. In any case it should be configurable so that users
+      // can specify different platforms with different "extras," to borrow a term from the TinyOS build scripts.
+      //
+      // Really the notion of separate preprocessing of nesC files is flawed anyway. The nesC compiler actually (in
+      // effect) alternates between preprocessing and compiling as it processes the top level configuration and all the
+      // components and interfaces it uses. In general you can't accurately preprocess nesC one file at a time like I'm
+      // trying to do here.
+      //
+
+      commandLine.add("-D__GNUC__=4")             // TODO: Does cpp have a command line option for setting __GNUC__?
+      commandLine.add("-D__MSP430_TI_HEADERS__")  // The nesC compiler appears to behave as if this is set.
+      commandLine.add("-D__MSP430_HAS_ADC12__")
+
+      val tosDir = "/opt/tinyos-2.1.2/tos"
+      commandLine.add(s"-I/usr/msp430/include")
+      commandLine.add(s"-I$tosDir/types")
+      commandLine.add(s"-I$tosDir/lib/serial")
+      commandLine.add(s"-I$tosDir/lib/mac/tkn154")
+      commandLine.add(s"-I$tosDir/chips/msp430/adc12")
+      commandLine.add(s"-I$tosDir/chips/stm25p")
+      commandLine.add(s"-I$tosDir/chips/cc2420_tkn154")
+      commandLine.add(s"-I$tosDir/platforms/telosb")
+      commandLine.add(s"-I$tosDir/platforms/telosb/mac/tkn154")
+      commandLine.add(s"-I$tosDir/platforms/telosb/mac/tkn154/timer")
+      commandLine.add(s"-Ibuild/telosb")
+
+      // Now add additional include paths specified in the configuration.
       settings("IncludePaths") match {
         case Some(includePathsString) =>
           val includePaths = includePathsString.split(":")

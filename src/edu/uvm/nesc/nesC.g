@@ -204,29 +204,29 @@ tokens {
         symbols = globalSymbols;
     }
 
-    // The following two magic methods, together with the @rulecatch section below cause the
-    // parser to exit immediately with an exception when an error is encountered. This is useful
-    // for testing but is probably not desired in a production system. I'm not sure right now
-    // how to provide both behaviors in the same executable. I'll figure that out later!
-    //
-    protected Object recoverFromMismatchedToken(IntStream input, int ttype, BitSet follow)
-        throws RecognitionException
-    {
-        throw new MismatchedTokenException(ttype, input);
-    }
-    
-    public Object recoverFromMismatchedSet(IntStream input, RecognitionException e, BitSet follow)
-        throws RecognitionException
-    {
-        throw e;
-    }
+//    // The following two magic methods, together with the @rulecatch section below cause the
+//    // parser to exit immediately with an exception when an error is encountered. This is useful
+//    // for testing but is probably not desired in a production system. I'm not sure right now
+//    // how to provide both behaviors in the same executable. I'll figure that out later!
+//    //
+//    protected Object recoverFromMismatchedToken(IntStream input, int ttype, BitSet follow)
+//        throws RecognitionException
+//    {
+//        throw new MismatchedTokenException(ttype, input);
+//    }
+//    
+//    public Object recoverFromMismatchedSet(IntStream input, RecognitionException e, BitSet follow)
+//        throws RecognitionException
+//    {
+//        throw e;
+//    }
 }
 
-@parser::rulecatch {
-    catch (RecognitionException e) {
-        throw e;
-    }
-}
+//@parser::rulecatch {
+//    catch (RecognitionException e) {
+//        throw e;
+//    }
+//}
 
 @lexer::members {
     // This is mostly just a placeholder.

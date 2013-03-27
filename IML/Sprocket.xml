@@ -632,4 +632,39 @@ implementation {
     </comments>
   </issue>
 
+  <issue>
+    <summary>The handling of generic component parameters needs work</summary>
+    <creation-date>
+      <date>2013-03-27</date>
+    </creation-date>
+    <comments>
+      <comment>
+        <reporter>Peter Chapin</reporter>
+        <comment-date>
+          <date>2013-03-27</date>
+        </comment-date>
+        <notes>
+          <xhtml:p>The generic parameters on a component are not parsed properly. Consider, for
+            example code such as:</xhtml:p>
+
+          <xhtml:pre>
+            <![CDATA[
+generic module queue(int n, typedef t) { ... }
+]]>
+          </xhtml:pre>
+
+          <xhtml:p>Right now the syntax of the first parameter must match parameter_declaration.
+            This is fine but the grammar assumes that such declarations are happening inside the
+            scope of an ordinary declaration. Thus the actions for the parameter_declaration
+            production try to access variables defined in that scope (variables inside the
+            parser) and fail, causing exceptions.</xhtml:p>
+
+          <xhtml:p>I'm unsure how to deal with this properly but it may require creating
+            "parallel" productions for generic component parameter declarations (I hope
+            not).</xhtml:p>
+        </notes>
+      </comment>
+    </comments>
+  </issue>
+
 </issue-set>

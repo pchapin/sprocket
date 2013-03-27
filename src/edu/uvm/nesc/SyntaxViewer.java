@@ -26,7 +26,7 @@ public class SyntaxViewer {
     // In this case the declarator '*p' should be parenthesized, but neither the declarator 'x' nor the overall
     // declarator needs to be. (Note that they could be, but that is ugly).
     //
-    private Stack<Integer> declaratorNestingLevels = new Stack<Integer>();
+    private Stack<Integer> declaratorNestingLevels = new Stack<>();
 
     // Used to prevent the top level expression from being parenthesized. For example, normally we have something like
     // this:
@@ -342,7 +342,7 @@ public class SyntaxViewer {
 
             // This handles 'default' in switch statements, but not in declarations.
             case nesCLexer.DEFAULT:
-                // Outdent the default lable.
+                // Outdent the default label.
                 --indentationLevel; indent(); sink.print("default:\n"); ++indentationLevel;
                 rewrite(t.getChild(0));
 
@@ -666,7 +666,7 @@ public class SyntaxViewer {
                     }
                     sink.print(";\n");
                 }
-                // Otherwise we are definining an interface type.
+                // Otherwise we are defining an interface type.
                 else {
                     sink.print("interface ");
                     sink.print(t.getChild(0));
@@ -680,18 +680,56 @@ public class SyntaxViewer {
                 }
                 break;
 
-            case nesCLexer.CONFIGURATION:
-                sink.print("configuration ");
-                rewrite(t.getChild(0));  // Name of the configuration.
-                rewrite(t.getChild(1));  // Specification.
-                if (t.getChildCount() == 3) rewrite(t.getChild(2));  // Implementation.
+            case nesCLexer.COMPONENT_DEFINITION:
+                rewrite(t.getChild(0));  // The kind of component.
+                rewrite(t.getChild(1));  // Name of the configuration.
+
+                // Component parameters, if present.
+                Tree componentParameters = null;
+                if (t.getChildCount() == 5) {
+                    componentParameters = t.getChild(4);
+                }
+                else if (t.getChildCount() == 4 && t.getChild(3).getType() == nesCLexer.COMPONENT_PARAMETER_LIST) {
+                    componentParameters = t.getChild(3);
+                }
+                if (componentParameters != null) rewrite(componentParameters);
+
+                rewrite(t.getChild(2));  // Specification.
+
+                // Implementation, if present.
+                if (t.getChildCount() >= 4 && t.getChild(3).getType() == nesCLexer.IMPLEMENTATION) {
+                    rewrite(t.getChild(3));
+                }
                 break;
 
-            case nesCLexer.MODULE:
-                sink.print("module ");
-                rewrite(t.getChild(0));  // Name of the module.
-                rewrite(t.getChild(1));  // Specification.
-                if (t.getChildCount() == 3) rewrite(t.getChild(2));  // Implementation.
+            case nesCLexer.COMPONENT_KIND:
+                switch (t.getChild(0).getType()) {
+                    case nesCLexer.CONFIGURATION:
+                        sink.print("configuration ");
+                        break;
+                    case nesCLexer.MODULE:
+                        sink.print("module ");
+                        break;
+                    case nesCLexer.GENERIC:
+                        switch (t.getChild(1).getType()) {
+                            case nesCLexer.CONFIGURATION:
+                                sink.print("generic configuration ");
+                                break;
+                            case nesCLexer.MODULE:
+                                sink.print("generic module ");
+                                break;
+                        }
+                        break;
+                }
+                break;
+
+            case nesCLexer.COMPONENT_PARAMETER_LIST:
+                sink.print("(");
+                for (int i = 0; i < t.getChildCount(); ++i) {
+                    if (i > 0) sink.print(", ");
+                    rewrite(t.getChild(i));
+                }
+                sink.print(") ");
                 break;
 
             case nesCLexer.SPECIFICATION:

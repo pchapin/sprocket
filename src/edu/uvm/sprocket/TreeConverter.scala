@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // FILE    : TreeConverter.scala
 // SUBJECT : Object to convert CommonTrees into SyntaxTrees.
-// AUTHOR  : (C) Copyright 2012 by Peter C. Chapin <PChapin@vtc.vsc.edu>
+// AUTHOR  : (C) Copyright 2013 by Peter C. Chapin <PChapin@vtc.vsc.edu>
 //
 //-----------------------------------------------------------------------
 package edu.uvm.sprocket
@@ -28,11 +28,11 @@ object TreeConverter {
    */
   def ANTLRToScala(t: Tree): ASTNode = {
     var childList = List[ASTNode]()
-    for (i <- 0 until t.getChildCount()) {
+    for (i <- 0 until t.getChildCount) {
       // I'm thinking there is probably a better way to do this.
       childList = childList ::: List(ANTLRToScala(t.getChild(i)))
     }
-    ASTNode(t.getType(), t.getText(), childList)
+    ASTNode(t.getType, t.getText, childList)
   }
 
 
@@ -46,12 +46,24 @@ object TreeConverter {
   def createProcessor(root: ASTNode): Processor = {
 
     def scanSubtree(node: ASTNode): Processor = {
-      val nullProcessor: Processor = null;
+      val nullProcessor: Processor = null
       node match {
         case ASTNode(nesCLexer.INTERFACE, _, children)
           if children(0).tokenType != nesCLexer.INTERFACE_TYPE => new InterfaceProcessor(root)
-        case ASTNode(nesCLexer.CONFIGURATION, _, _) => new ConfigurationProcessor(root)
-        case ASTNode(nesCLexer.MODULE, _, _) => new ModuleProcessor(root)
+        case ASTNode(nesCLexer.COMPONENT_DEFINITION, _, children) =>
+          children(0).tokenType match {
+            case nesCLexer.CONFIGURATION => new ConfigurationProcessor(root)
+            case nesCLexer.MODULE => new ModuleProcessor(root)
+
+            // Generic configurations are handled with the same processor as non-generic ones (for now).
+            case nesCLexer.GENERIC =>
+              children(1).tokenType match {
+                case nesCLexer.CONFIGURATION => new ConfigurationProcessor(root)
+                case nesCLexer.MODULE => new ModuleProcessor(root)
+                case _ => nullProcessor  // This should never arise for syntactically correct input.
+              }
+            case _ => nullProcessor      // This will be used for binary components (causing problems later).
+          }
         case ASTNode(_, _, children) =>
           (nullProcessor /: (children map scanSubtree)) ( (x, y) => if (x != null) x else y )
       }

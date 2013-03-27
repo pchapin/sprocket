@@ -19,9 +19,9 @@ class ModuleProcessor(root: ASTNode) extends Processor(root) {
     def processSubtree(node: ASTNode): ASTNode = {
       node match {
         // Record my name when I see it.
-        case ASTNode(nesCLexer.MODULE, text, children) => {
-            myName = children(0).text
-            ASTNode(nesCLexer.MODULE, text, children map processSubtree)
+        case ASTNode(nesCLexer.COMPONENT_DEFINITION, text, children) => {
+            myName = children(1).text
+            ASTNode(nesCLexer.COMPONENT_DEFINITION, text, children map processSubtree)
         }
 
         // Convert duty definitions into command definitions.

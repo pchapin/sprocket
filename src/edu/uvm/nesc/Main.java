@@ -19,17 +19,16 @@ public class Main {
     private static SymbolTableManager globalSymbols = new SymbolTableManager();
 
     /**
-     * This program provides a simple, semi-interactive interface to the parser. It can be used
-     * for testing or other experimentation. A real application would just use the parser class
-     * (see the code below for how to do that).
+     * This program provides a simple, semi-interactive interface to the parser. It can be used for testing or other
+     * experimentation. A real application would just use the parser class (see the code below for how to do that).
      *
      * @param args The command line arguments
      */
     public static void main(String[] args)
             throws java.io.IOException, org.antlr.runtime.RecognitionException
     {
-        // These are type names imported from the TinyOS library. When parsing just one file at
-        // a time, we need to "preload" the global symbol table with this information.
+        // These are type names imported from the TinyOS library. When parsing just one file at a time, we need to
+        // "pre-load" the global symbol table with this information.
         //
         String[] globalTypes = {
             "bool", "error_t", "message_t"
@@ -40,12 +39,11 @@ public class Main {
             System.exit(1);
         }
 
-        // Configure a global SymbolTableManager. This is necessary because nesC's global scope
-        // spans all files in the program. That is, global entities declared in one file are
-        // visible in all other files compiled afterward. Since this program is intended to
-        // parse just one nesC file at a time, we must preload the global symbol table with
-        // information on commonly used types from the TinyOS library. This is a bit of a hack,
-        // but it will allow the parser to be tested on non-trivial code examples.
+        // Configure a global SymbolTableManager. This is necessary because nesC's global scope spans all files in the
+        // program. That is, global entities declared in one file are visible in all other files compiled afterward.
+        // Since this program is intended to parse just one nesC file at a time, we must pre-load the global symbol
+        // table with information on commonly used types from the TinyOS library. This is a bit of a hack, but it will
+        // allow the parser to be tested on non-trivial code examples.
         //
         for (String typeName : globalTypes) {
             globalSymbols.addType(typeName);

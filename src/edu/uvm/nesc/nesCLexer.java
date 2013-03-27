@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nesC.g 2013-03-26 18:00:01
+// $ANTLR 3.4 nesC.g 2013-03-27 12:45:33
 
     package edu.uvm.nesc;
 
@@ -11,11 +11,11 @@ import java.util.ArrayList;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class nesCLexer extends Lexer {
     public static final int EOF=-1;
-    public static final int T__184=184;
-    public static final int T__185=185;
-    public static final int T__186=186;
     public static final int T__187=187;
     public static final int T__188=188;
+    public static final int T__189=189;
+    public static final int T__190=190;
+    public static final int T__191=191;
     public static final int ABSTRACT=4;
     public static final int ADDRESS_OF=5;
     public static final int AMP=6;
@@ -50,152 +50,155 @@ public class nesCLexer extends Lexer {
     public static final int COMPONENTS=35;
     public static final int COMPONENT_ARGUMENTS=36;
     public static final int COMPONENT_DECLARATION=37;
-    public static final int COMPONENT_INSTANTIATION=38;
-    public static final int COMPOUND_STATEMENT=39;
-    public static final int CONFIGURATION=40;
-    public static final int CONNECTION=41;
-    public static final int CONST=42;
-    public static final int CONSTANT=43;
-    public static final int CONTINUE=44;
-    public static final int DECLARATION=45;
-    public static final int DECLARATOR=46;
-    public static final int DECLARATOR_ARRAY_MODIFIER=47;
-    public static final int DECLARATOR_LIST=48;
-    public static final int DECLARATOR_PARAMETER_LIST_MODIFIER=49;
-    public static final int DEC_NUMBER=50;
-    public static final int DEFAULT=51;
-    public static final int DEREFERENCE=52;
-    public static final int DIGIT=53;
-    public static final int DIVASSIGN=54;
-    public static final int DIVIDE=55;
-    public static final int DO=56;
-    public static final int DOT=57;
-    public static final int DOUBLE=58;
-    public static final int DUTY=59;
-    public static final int DYNAMIC_IDENTIFIER_PATH=60;
-    public static final int ELSE=61;
-    public static final int ENABLE=62;
-    public static final int ENUM=63;
-    public static final int ENUMERATOR=64;
-    public static final int EQUAL=65;
-    public static final int EVENT=66;
-    public static final int EXTERN=67;
-    public static final int FILE=68;
-    public static final int FLOAT=69;
-    public static final int FOR=70;
-    public static final int FOR_CONDITION=71;
-    public static final int FOR_INITIALIZE=72;
-    public static final int FOR_ITERATION=73;
-    public static final int FUNCTION_DEFINITION=74;
-    public static final int GCCATTRIBUTE=75;
-    public static final int GENERIC=76;
-    public static final int GOTO=77;
-    public static final int GREATER=78;
-    public static final int GREATEREQUAL=79;
-    public static final int HASH=80;
-    public static final int HEX_DIGIT=81;
-    public static final int HEX_NUMBER=82;
-    public static final int IDENTIFIER_PATH=83;
-    public static final int IF=84;
-    public static final int IMPLEMENTATION=85;
-    public static final int INITIALIZER_LIST=86;
-    public static final int INIT_DECLARATOR=87;
-    public static final int INLINE=88;
-    public static final int INT=89;
-    public static final int INT16_T=90;
-    public static final int INT32_T=91;
-    public static final int INT64_T=92;
-    public static final int INT8_T=93;
-    public static final int INTERFACE=94;
-    public static final int INTERFACE_TYPE=95;
-    public static final int LABELED_STATEMENT=96;
-    public static final int LBRACE=97;
-    public static final int LBRACKET=98;
-    public static final int LESS=99;
-    public static final int LESSEQUAL=100;
-    public static final int LINE_DIRECTIVE=101;
-    public static final int LONG=102;
-    public static final int LPARENS=103;
-    public static final int LSHIFT=104;
-    public static final int LSHIFTASSIGN=105;
-    public static final int MINUS=106;
-    public static final int MINUSASSIGN=107;
-    public static final int MINUSMINUS=108;
-    public static final int MODASSIGN=109;
-    public static final int MODULE=110;
-    public static final int MODULUS=111;
-    public static final int MULASSIGN=112;
-    public static final int NEW=113;
-    public static final int NORACE=114;
-    public static final int NOT=115;
-    public static final int NOTEQUAL=116;
-    public static final int NULL=117;
-    public static final int NUMBER=118;
-    public static final int NUMBER_PREFIX=119;
-    public static final int NUMBER_SUFFIX=120;
-    public static final int NXLE_UINT16_T=121;
-    public static final int NXLE_UINT32_T=122;
-    public static final int NXLE_UINT64_T=123;
-    public static final int NXLE_UINT8_T=124;
-    public static final int NX_STRUCT=125;
-    public static final int NX_UINT16_T=126;
-    public static final int NX_UINT32_T=127;
-    public static final int NX_UINT64_T=128;
-    public static final int NX_UINT8_T=129;
-    public static final int NX_UNION=130;
-    public static final int OR=131;
-    public static final int PARAMETER=132;
-    public static final int PARAMETER_LIST=133;
-    public static final int PLUS=134;
-    public static final int PLUSASSIGN=135;
-    public static final int PLUSPLUS=136;
-    public static final int POINTER_QUALIFIER=137;
-    public static final int POST=138;
-    public static final int POSTFIX_EXPRESSION=139;
-    public static final int POST_DECREMENT=140;
-    public static final int POST_INCREMENT=141;
-    public static final int PRE_DECREMENT=142;
-    public static final int PRE_INCREMENT=143;
-    public static final int PROVIDES=144;
-    public static final int RAW_IDENTIFIER=145;
-    public static final int RBRACE=146;
-    public static final int RBRACKET=147;
-    public static final int REGISTER=148;
-    public static final int REMOTE=149;
-    public static final int REQUIRES=150;
-    public static final int RESTRICT=151;
-    public static final int RETURN=152;
-    public static final int RPARENS=153;
-    public static final int RSHIFT=154;
-    public static final int RSHIFTASSIGN=155;
-    public static final int SHORT=156;
-    public static final int SIGNAL=157;
-    public static final int SIGNED=158;
-    public static final int SIZEOF=159;
-    public static final int SIZEOF_EXPRESSION=160;
-    public static final int SIZEOF_TYPE=161;
-    public static final int SPECIFICATION=162;
-    public static final int STAR=163;
-    public static final int STATEMENT=164;
-    public static final int STATIC=165;
-    public static final int STRING_LITERAL=166;
-    public static final int STRUCT=167;
-    public static final int SWITCH=168;
-    public static final int TASK=169;
-    public static final int TYPEDEF=170;
-    public static final int UINT16_T=171;
-    public static final int UINT32_T=172;
-    public static final int UINT64_T=173;
-    public static final int UINT8_T=174;
-    public static final int UNARY_MINUS=175;
-    public static final int UNARY_PLUS=176;
-    public static final int UNION=177;
-    public static final int UNSIGNED=178;
-    public static final int USES=179;
-    public static final int VOID=180;
-    public static final int VOLATILE=181;
-    public static final int WHILE=182;
-    public static final int WHITESPACE=183;
+    public static final int COMPONENT_DEFINITION=38;
+    public static final int COMPONENT_INSTANTIATION=39;
+    public static final int COMPONENT_KIND=40;
+    public static final int COMPONENT_PARAMETER_LIST=41;
+    public static final int COMPOUND_STATEMENT=42;
+    public static final int CONFIGURATION=43;
+    public static final int CONNECTION=44;
+    public static final int CONST=45;
+    public static final int CONSTANT=46;
+    public static final int CONTINUE=47;
+    public static final int DECLARATION=48;
+    public static final int DECLARATOR=49;
+    public static final int DECLARATOR_ARRAY_MODIFIER=50;
+    public static final int DECLARATOR_LIST=51;
+    public static final int DECLARATOR_PARAMETER_LIST_MODIFIER=52;
+    public static final int DEC_NUMBER=53;
+    public static final int DEFAULT=54;
+    public static final int DEREFERENCE=55;
+    public static final int DIGIT=56;
+    public static final int DIVASSIGN=57;
+    public static final int DIVIDE=58;
+    public static final int DO=59;
+    public static final int DOT=60;
+    public static final int DOUBLE=61;
+    public static final int DUTY=62;
+    public static final int DYNAMIC_IDENTIFIER_PATH=63;
+    public static final int ELSE=64;
+    public static final int ENABLE=65;
+    public static final int ENUM=66;
+    public static final int ENUMERATOR=67;
+    public static final int EQUAL=68;
+    public static final int EVENT=69;
+    public static final int EXTERN=70;
+    public static final int FILE=71;
+    public static final int FLOAT=72;
+    public static final int FOR=73;
+    public static final int FOR_CONDITION=74;
+    public static final int FOR_INITIALIZE=75;
+    public static final int FOR_ITERATION=76;
+    public static final int FUNCTION_DEFINITION=77;
+    public static final int GCCATTRIBUTE=78;
+    public static final int GENERIC=79;
+    public static final int GOTO=80;
+    public static final int GREATER=81;
+    public static final int GREATEREQUAL=82;
+    public static final int HASH=83;
+    public static final int HEX_DIGIT=84;
+    public static final int HEX_NUMBER=85;
+    public static final int IDENTIFIER_PATH=86;
+    public static final int IF=87;
+    public static final int IMPLEMENTATION=88;
+    public static final int INITIALIZER_LIST=89;
+    public static final int INIT_DECLARATOR=90;
+    public static final int INLINE=91;
+    public static final int INT=92;
+    public static final int INT16_T=93;
+    public static final int INT32_T=94;
+    public static final int INT64_T=95;
+    public static final int INT8_T=96;
+    public static final int INTERFACE=97;
+    public static final int INTERFACE_TYPE=98;
+    public static final int LABELED_STATEMENT=99;
+    public static final int LBRACE=100;
+    public static final int LBRACKET=101;
+    public static final int LESS=102;
+    public static final int LESSEQUAL=103;
+    public static final int LINE_DIRECTIVE=104;
+    public static final int LONG=105;
+    public static final int LPARENS=106;
+    public static final int LSHIFT=107;
+    public static final int LSHIFTASSIGN=108;
+    public static final int MINUS=109;
+    public static final int MINUSASSIGN=110;
+    public static final int MINUSMINUS=111;
+    public static final int MODASSIGN=112;
+    public static final int MODULE=113;
+    public static final int MODULUS=114;
+    public static final int MULASSIGN=115;
+    public static final int NEW=116;
+    public static final int NORACE=117;
+    public static final int NOT=118;
+    public static final int NOTEQUAL=119;
+    public static final int NULL=120;
+    public static final int NUMBER=121;
+    public static final int NUMBER_PREFIX=122;
+    public static final int NUMBER_SUFFIX=123;
+    public static final int NXLE_UINT16_T=124;
+    public static final int NXLE_UINT32_T=125;
+    public static final int NXLE_UINT64_T=126;
+    public static final int NXLE_UINT8_T=127;
+    public static final int NX_STRUCT=128;
+    public static final int NX_UINT16_T=129;
+    public static final int NX_UINT32_T=130;
+    public static final int NX_UINT64_T=131;
+    public static final int NX_UINT8_T=132;
+    public static final int NX_UNION=133;
+    public static final int OR=134;
+    public static final int PARAMETER=135;
+    public static final int PARAMETER_LIST=136;
+    public static final int PLUS=137;
+    public static final int PLUSASSIGN=138;
+    public static final int PLUSPLUS=139;
+    public static final int POINTER_QUALIFIER=140;
+    public static final int POST=141;
+    public static final int POSTFIX_EXPRESSION=142;
+    public static final int POST_DECREMENT=143;
+    public static final int POST_INCREMENT=144;
+    public static final int PRE_DECREMENT=145;
+    public static final int PRE_INCREMENT=146;
+    public static final int PROVIDES=147;
+    public static final int RAW_IDENTIFIER=148;
+    public static final int RBRACE=149;
+    public static final int RBRACKET=150;
+    public static final int REGISTER=151;
+    public static final int REMOTE=152;
+    public static final int REQUIRES=153;
+    public static final int RESTRICT=154;
+    public static final int RETURN=155;
+    public static final int RPARENS=156;
+    public static final int RSHIFT=157;
+    public static final int RSHIFTASSIGN=158;
+    public static final int SHORT=159;
+    public static final int SIGNAL=160;
+    public static final int SIGNED=161;
+    public static final int SIZEOF=162;
+    public static final int SIZEOF_EXPRESSION=163;
+    public static final int SIZEOF_TYPE=164;
+    public static final int SPECIFICATION=165;
+    public static final int STAR=166;
+    public static final int STATEMENT=167;
+    public static final int STATIC=168;
+    public static final int STRING_LITERAL=169;
+    public static final int STRUCT=170;
+    public static final int SWITCH=171;
+    public static final int TASK=172;
+    public static final int TYPEDEF=173;
+    public static final int UINT16_T=174;
+    public static final int UINT32_T=175;
+    public static final int UINT64_T=176;
+    public static final int UINT8_T=177;
+    public static final int UNARY_MINUS=178;
+    public static final int UNARY_PLUS=179;
+    public static final int UNION=180;
+    public static final int UNSIGNED=181;
+    public static final int USES=182;
+    public static final int VOID=183;
+    public static final int VOLATILE=184;
+    public static final int WHILE=185;
+    public static final int WHITESPACE=186;
 
         // This is mostly just a placeholder.
         private final int VERSION = 1;
@@ -2999,80 +3002,15 @@ public class nesCLexer extends Lexer {
     }
     // $ANTLR end "WHILE"
 
-    // $ANTLR start "T__184"
-    public final void mT__184() throws RecognitionException {
-        try {
-            int _type = T__184;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:133:8: ( '...' )
-            // nesC.g:133:10: '...'
-            {
-            match("..."); 
-
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__184"
-
-    // $ANTLR start "T__185"
-    public final void mT__185() throws RecognitionException {
-        try {
-            int _type = T__185;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:134:8: ( ':' )
-            // nesC.g:134:10: ':'
-            {
-            match(':'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__185"
-
-    // $ANTLR start "T__186"
-    public final void mT__186() throws RecognitionException {
-        try {
-            int _type = T__186;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:135:8: ( ';' )
-            // nesC.g:135:10: ';'
-            {
-            match(';'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__186"
-
     // $ANTLR start "T__187"
     public final void mT__187() throws RecognitionException {
         try {
             int _type = T__187;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:136:8: ( '<-' )
-            // nesC.g:136:10: '<-'
+            // nesC.g:133:8: ( '...' )
+            // nesC.g:133:10: '...'
             {
-            match("<-"); 
+            match("..."); 
 
 
 
@@ -3092,6 +3030,71 @@ public class nesCLexer extends Lexer {
         try {
             int _type = T__188;
             int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:134:8: ( ':' )
+            // nesC.g:134:10: ':'
+            {
+            match(':'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "T__188"
+
+    // $ANTLR start "T__189"
+    public final void mT__189() throws RecognitionException {
+        try {
+            int _type = T__189;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:135:8: ( ';' )
+            // nesC.g:135:10: ';'
+            {
+            match(';'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "T__189"
+
+    // $ANTLR start "T__190"
+    public final void mT__190() throws RecognitionException {
+        try {
+            int _type = T__190;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:136:8: ( '<-' )
+            // nesC.g:136:10: '<-'
+            {
+            match("<-"); 
+
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "T__190"
+
+    // $ANTLR start "T__191"
+    public final void mT__191() throws RecognitionException {
+        try {
+            int _type = T__191;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
             // nesC.g:137:8: ( '?' )
             // nesC.g:137:10: '?'
             {
@@ -3106,15 +3109,15 @@ public class nesCLexer extends Lexer {
         	// do for sure before leaving
         }
     }
-    // $ANTLR end "T__188"
+    // $ANTLR end "T__191"
 
     // $ANTLR start "RAW_IDENTIFIER"
     public final void mRAW_IDENTIFIER() throws RecognitionException {
         try {
             int _type = RAW_IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:935:5: ( ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )* )
-            // nesC.g:935:10: ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
+            // nesC.g:949:5: ( ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )* )
+            // nesC.g:949:10: ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
             {
             if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
                 input.consume();
@@ -3126,7 +3129,7 @@ public class nesCLexer extends Lexer {
             }
 
 
-            // nesC.g:935:42: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
+            // nesC.g:949:42: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
             loop1:
             do {
                 int alt1=2;
@@ -3176,8 +3179,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = CONSTANT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:938:5: ( NUMBER )
-            // nesC.g:938:10: NUMBER
+            // nesC.g:952:5: ( NUMBER )
+            // nesC.g:952:10: NUMBER
             {
             mNUMBER(); 
 
@@ -3198,12 +3201,12 @@ public class nesCLexer extends Lexer {
         try {
             int _type = STRING_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:941:5: ( '\"' ( options {greedy=false; } : . )* '\"' )
-            // nesC.g:941:10: '\"' ( options {greedy=false; } : . )* '\"'
+            // nesC.g:955:5: ( '\"' ( options {greedy=false; } : . )* '\"' )
+            // nesC.g:955:10: '\"' ( options {greedy=false; } : . )* '\"'
             {
             match('\"'); 
 
-            // nesC.g:941:14: ( options {greedy=false; } : . )*
+            // nesC.g:955:14: ( options {greedy=false; } : . )*
             loop2:
             do {
                 int alt2=2;
@@ -3219,7 +3222,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // nesC.g:941:41: .
+            	    // nesC.g:955:41: .
             	    {
             	    matchAny(); 
 
@@ -3250,12 +3253,12 @@ public class nesCLexer extends Lexer {
         try {
             int _type = CHARACTER_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:944:5: ( '\\'' ( options {greedy=false; } : . )* '\\'' )
-            // nesC.g:944:10: '\\'' ( options {greedy=false; } : . )* '\\''
+            // nesC.g:958:5: ( '\\'' ( options {greedy=false; } : . )* '\\'' )
+            // nesC.g:958:10: '\\'' ( options {greedy=false; } : . )* '\\''
             {
             match('\''); 
 
-            // nesC.g:944:15: ( options {greedy=false; } : . )*
+            // nesC.g:958:15: ( options {greedy=false; } : . )*
             loop3:
             do {
                 int alt3=2;
@@ -3271,7 +3274,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // nesC.g:944:42: .
+            	    // nesC.g:958:42: .
             	    {
             	    matchAny(); 
 
@@ -3302,10 +3305,10 @@ public class nesCLexer extends Lexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:947:5: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+ )
-            // nesC.g:947:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
+            // nesC.g:961:5: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+ )
+            // nesC.g:961:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
             {
-            // nesC.g:947:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
+            // nesC.g:961:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
             int cnt4=0;
             loop4:
             do {
@@ -3362,14 +3365,14 @@ public class nesCLexer extends Lexer {
         try {
             int _type = COMMENT1;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:950:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // nesC.g:950:10: '/*' ( options {greedy=false; } : . )* '*/'
+            // nesC.g:964:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // nesC.g:964:10: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
 
 
-            // nesC.g:950:15: ( options {greedy=false; } : . )*
+            // nesC.g:964:15: ( options {greedy=false; } : . )*
             loop5:
             do {
                 int alt5=2;
@@ -3394,7 +3397,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // nesC.g:950:42: .
+            	    // nesC.g:964:42: .
             	    {
             	    matchAny(); 
 
@@ -3429,14 +3432,14 @@ public class nesCLexer extends Lexer {
         try {
             int _type = COMMENT2;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:953:5: ( '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' ) )
-            // nesC.g:953:10: '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' )
+            // nesC.g:967:5: ( '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' ) )
+            // nesC.g:967:10: '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' )
             {
             match("//"); 
 
 
 
-            // nesC.g:953:15: ( options {greedy=false; } : . )*
+            // nesC.g:967:15: ( options {greedy=false; } : . )*
             loop6:
             do {
                 int alt6=2;
@@ -3452,7 +3455,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt6) {
             	case 1 :
-            	    // nesC.g:953:42: .
+            	    // nesC.g:967:42: .
             	    {
             	    matchAny(); 
 
@@ -3491,7 +3494,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER"
     public final void mNUMBER() throws RecognitionException {
         try {
-            // nesC.g:964:5: ( DEC_NUMBER | HEX_NUMBER )
+            // nesC.g:978:5: ( DEC_NUMBER | HEX_NUMBER )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -3517,7 +3520,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // nesC.g:964:10: DEC_NUMBER
+                    // nesC.g:978:10: DEC_NUMBER
                     {
                     mDEC_NUMBER(); 
 
@@ -3525,7 +3528,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // nesC.g:965:10: HEX_NUMBER
+                    // nesC.g:979:10: HEX_NUMBER
                     {
                     mHEX_NUMBER(); 
 
@@ -3545,10 +3548,10 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "DEC_NUMBER"
     public final void mDEC_NUMBER() throws RecognitionException {
         try {
-            // nesC.g:968:5: ( ( DIGIT )+ ( NUMBER_SUFFIX )? )
-            // nesC.g:968:10: ( DIGIT )+ ( NUMBER_SUFFIX )?
+            // nesC.g:982:5: ( ( DIGIT )+ ( NUMBER_SUFFIX )? )
+            // nesC.g:982:10: ( DIGIT )+ ( NUMBER_SUFFIX )?
             {
-            // nesC.g:968:10: ( DIGIT )+
+            // nesC.g:982:10: ( DIGIT )+
             int cnt8=0;
             loop8:
             do {
@@ -3587,7 +3590,7 @@ public class nesCLexer extends Lexer {
             } while (true);
 
 
-            // nesC.g:968:21: ( NUMBER_SUFFIX )?
+            // nesC.g:982:21: ( NUMBER_SUFFIX )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -3596,7 +3599,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt9) {
                 case 1 :
-                    // nesC.g:968:23: NUMBER_SUFFIX
+                    // nesC.g:982:23: NUMBER_SUFFIX
                     {
                     mNUMBER_SUFFIX(); 
 
@@ -3620,13 +3623,13 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "HEX_NUMBER"
     public final void mHEX_NUMBER() throws RecognitionException {
         try {
-            // nesC.g:971:5: ( NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )? )
-            // nesC.g:971:10: NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )?
+            // nesC.g:985:5: ( NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )? )
+            // nesC.g:985:10: NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )?
             {
             mNUMBER_PREFIX(); 
 
 
-            // nesC.g:971:24: ( HEX_DIGIT )+
+            // nesC.g:985:24: ( HEX_DIGIT )+
             int cnt10=0;
             loop10:
             do {
@@ -3665,7 +3668,7 @@ public class nesCLexer extends Lexer {
             } while (true);
 
 
-            // nesC.g:971:39: ( NUMBER_SUFFIX )?
+            // nesC.g:985:39: ( NUMBER_SUFFIX )?
             int alt11=2;
             int LA11_0 = input.LA(1);
 
@@ -3674,7 +3677,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt11) {
                 case 1 :
-                    // nesC.g:971:41: NUMBER_SUFFIX
+                    // nesC.g:985:41: NUMBER_SUFFIX
                     {
                     mNUMBER_SUFFIX(); 
 
@@ -3698,7 +3701,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // nesC.g:974:5: ( '0' .. '9' )
+            // nesC.g:988:5: ( '0' .. '9' )
             // nesC.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
@@ -3724,7 +3727,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "HEX_DIGIT"
     public final void mHEX_DIGIT() throws RecognitionException {
         try {
-            // nesC.g:977:5: ( '0' .. '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
+            // nesC.g:991:5: ( '0' .. '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
             // nesC.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
@@ -3750,8 +3753,8 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER_PREFIX"
     public final void mNUMBER_PREFIX() throws RecognitionException {
         try {
-            // nesC.g:980:5: ( '0x' )
-            // nesC.g:980:10: '0x'
+            // nesC.g:994:5: ( '0x' )
+            // nesC.g:994:10: '0x'
             {
             match("0x"); 
 
@@ -3770,10 +3773,10 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER_SUFFIX"
     public final void mNUMBER_SUFFIX() throws RecognitionException {
         try {
-            // nesC.g:983:5: ( ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' ) )
-            // nesC.g:983:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
+            // nesC.g:997:5: ( ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' ) )
+            // nesC.g:997:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
             {
-            // nesC.g:983:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
+            // nesC.g:997:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
             int alt12=8;
             switch ( input.LA(1) ) {
             case 'l':
@@ -3834,35 +3837,35 @@ public class nesCLexer extends Lexer {
 
             switch (alt12) {
                 case 1 :
-                    // nesC.g:983:11: 'l'
+                    // nesC.g:997:11: 'l'
                     {
                     match('l'); 
 
                     }
                     break;
                 case 2 :
-                    // nesC.g:983:17: 'L'
+                    // nesC.g:997:17: 'L'
                     {
                     match('L'); 
 
                     }
                     break;
                 case 3 :
-                    // nesC.g:983:23: 'u'
+                    // nesC.g:997:23: 'u'
                     {
                     match('u'); 
 
                     }
                     break;
                 case 4 :
-                    // nesC.g:983:29: 'U'
+                    // nesC.g:997:29: 'U'
                     {
                     match('U'); 
 
                     }
                     break;
                 case 5 :
-                    // nesC.g:983:35: 'lu'
+                    // nesC.g:997:35: 'lu'
                     {
                     match("lu"); 
 
@@ -3871,7 +3874,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 6 :
-                    // nesC.g:983:42: 'ul'
+                    // nesC.g:997:42: 'ul'
                     {
                     match("ul"); 
 
@@ -3880,7 +3883,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 7 :
-                    // nesC.g:983:49: 'LU'
+                    // nesC.g:997:49: 'LU'
                     {
                     match("LU"); 
 
@@ -3889,7 +3892,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 8 :
-                    // nesC.g:983:56: 'UL'
+                    // nesC.g:997:56: 'UL'
                     {
                     match("UL"); 
 
@@ -3912,7 +3915,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR end "NUMBER_SUFFIX"
 
     public void mTokens() throws RecognitionException {
-        // nesC.g:1:8: ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__184 | T__185 | T__186 | T__187 | T__188 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE | COMMENT1 | COMMENT2 )
+        // nesC.g:1:8: ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__187 | T__188 | T__189 | T__190 | T__191 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE | COMMENT1 | COMMENT2 )
         int alt13=135;
         alt13 = dfa13.predict(input);
         switch (alt13) {
@@ -4901,41 +4904,41 @@ public class nesCLexer extends Lexer {
                 }
                 break;
             case 124 :
-                // nesC.g:1:983: T__184
-                {
-                mT__184(); 
-
-
-                }
-                break;
-            case 125 :
-                // nesC.g:1:990: T__185
-                {
-                mT__185(); 
-
-
-                }
-                break;
-            case 126 :
-                // nesC.g:1:997: T__186
-                {
-                mT__186(); 
-
-
-                }
-                break;
-            case 127 :
-                // nesC.g:1:1004: T__187
+                // nesC.g:1:983: T__187
                 {
                 mT__187(); 
 
 
                 }
                 break;
-            case 128 :
-                // nesC.g:1:1011: T__188
+            case 125 :
+                // nesC.g:1:990: T__188
                 {
                 mT__188(); 
+
+
+                }
+                break;
+            case 126 :
+                // nesC.g:1:997: T__189
+                {
+                mT__189(); 
+
+
+                }
+                break;
+            case 127 :
+                // nesC.g:1:1004: T__190
+                {
+                mT__190(); 
+
+
+                }
+                break;
+            case 128 :
+                // nesC.g:1:1011: T__191
+                {
+                mT__191(); 
 
 
                 }
@@ -5705,7 +5708,7 @@ public class nesCLexer extends Lexer {
             this.transition = DFA13_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__184 | T__185 | T__186 | T__187 | T__188 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE | COMMENT1 | COMMENT2 );";
+            return "1:1: Tokens : ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__187 | T__188 | T__189 | T__190 | T__191 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE | COMMENT1 | COMMENT2 );";
         }
     }
  

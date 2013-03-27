@@ -121,9 +121,9 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
     doWholeFileTests(testCaseNames)
   }
 
-  test("Casic Module Test") {
+  test("Basic Module Test") {
     val testCaseNames =
-      Array("Module0000.nc", "Module0010.nc", "Module0020.nc", "Module0030.nc")
+      Array("Module0000.nc", "Module0010.nc", "Module0020.nc", "Module0030.nc", "Module0040.nc")
     doWholeFileTests(testCaseNames)
   }
 

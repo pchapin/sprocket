@@ -150,7 +150,10 @@ tokens {
     COMPOUND_STATEMENT;
     COMPONENT_ARGUMENTS;
     COMPONENT_DECLARATION;
+    COMPONENT_DEFINITION;
     COMPONENT_INSTANTIATION;
+    COMPONENT_KIND;
+    COMPONENT_PARAMETER_LIST;
     CONNECTION;
     DECLARATION;
     DECLARATOR;
@@ -754,28 +757,39 @@ type_parameters
     
 type_parameter_list
     :    type_specifier attributes? (',' type_specifier attributes?)*;
-    
+  
+// The COMPONENT_DEFINITION pseudo-token introduces an entire component definition. The
+// complexities of COMPONENT_KIND are pushed into a child of this AST node.
+//
 component
-    :   comp_kind identifier comp_parameters? attributes?
+    :   component_kind identifier component_parameters? attributes?
         component_specification
-        implementation? -> ^(comp_kind identifier component_specification implementation?);
+        implementation? -> ^(COMPONENT_DEFINITION component_kind identifier component_specification implementation? component_parameters?);
 
-comp_kind
-    :    MODULE
-    |    CONFIGURATION
-    |    COMPONENT
-    |    GENERIC MODULE
-    |    GENERIC CONFIGURATION;
+// The COMPONENT_KIND pseudo-token provides a way to wrap up component kinds that are two words
+// such as 'generic module' and 'generic configuration.'
+//
+component_kind
+    :    MODULE                -> ^(COMPONENT_KIND MODULE)
+    |    CONFIGURATION         -> ^(COMPONENT_KIND CONFIGURATION)
+    |    COMPONENT             -> ^(COMPONENT_KIND COMPONENT)
+    |    GENERIC MODULE        -> ^(COMPONENT_KIND GENERIC MODULE)
+    |    GENERIC CONFIGURATION -> ^(COMPONENT_KIND GENERIC CONFIGURATION);
     
 implementation
     :    module_implementation
     |    configuration_implementation;
-    
-comp_parameters
-    :    '(' component_parameter_list ')';
+
+// The COMPONENT_PARAMETER_LIST pseudo-token is used to wrap all the parameters of a generic
+// component. This is so the parameters are well contained as a single child of the component
+// node.
+//    
+component_parameters
+    :    '(' component_parameter_list? ')'
+            -> ^(COMPONENT_PARAMETER_LIST component_parameter_list?);
     
 component_parameter_list
-    :    component_parameter (',' component_parameter)*;
+    :    component_parameter (',' component_parameter)* -> component_parameter+;
     
 component_parameter
     :    parameter_declaration

@@ -116,9 +116,9 @@ class ConfigurationProcessor(root: ASTNode) extends Processor(root) {
       node match {
 
         // Record my name when I see it.
-        case ASTNode(nesCLexer.CONFIGURATION, text, children) => {
-          myName = children(0).text
-          ASTNode(nesCLexer.CONFIGURATION, text, children map processSubtree)
+        case ASTNode(nesCLexer.COMPONENT_DEFINITION, text, children) => {
+          myName = children(1).text
+          ASTNode(nesCLexer.COMPONENT_DEFINITION, text, children map processSubtree)
         }
 
         case ASTNode(nesCLexer.CONNECTION, text, children) => {

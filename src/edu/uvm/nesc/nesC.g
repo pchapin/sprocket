@@ -46,7 +46,19 @@ tokens {
     // gcc extensions needed by some programs.
     GCCATTRIBUTE   = '__attribute__';
     
-    // Are these type names built into the language?
+    // The 'nx' types are built into the nesC compiler (they require special handling by the
+    // compiler). I'm not clear if the exact width types are built-in or not. However, the nesC
+    // compiler appears to be fine seeing 'typedef signed char int8_t;' Sprocket treats the
+    // exact width types as built-in, but has special handling of typedef to deal with the case
+    // above (otherwise it can't parse it because there are only type specifiers and no declared
+    // name).
+    //
+    // An alternative approach would be to not build in the exact width types and require the
+    // programmer to include <stdint.h> whenever they are needed. This appears to be contrary to
+    // normal nesC practice.
+    //
+    // If you change here, be sure to update the 'type_specifier' production.
+    //
     INT8_T         = 'int8_t';
     INT16_T        = 'int16_t';
     INT32_T        = 'int32_t';
@@ -55,6 +67,7 @@ tokens {
     UINT16_T       = 'uint16_t';
     UINT32_T       = 'uint32_t';
     UINT64_T       = 'uint64_t';
+
     NX_UINT8_T     = 'nx_uint8_t';
     NX_UINT16_T    = 'nx_uint16_t';
     NX_UINT32_T    = 'nx_uint32_t';
@@ -112,6 +125,7 @@ tokens {
     DIVASSIGN      = '/=';
     DIVIDE         = '/';
     DOT            = '.';
+    ELLIPSIS       = '...';
     EQUAL          = '==';
     GREATER        = '>';    // This token has multiple semantic purposes.
     GREATEREQUAL   = '>=';
@@ -383,14 +397,16 @@ scope { LinkedList<String> declaredNames;
     |    { $declaration::declaredNames = new LinkedList<String>();
            $declaration::inStructDeclaration = false;
          }
-         TYPEDEF declaration_specifiers gcc_attributes? init_declarator_list gcc_attributes? ';'
+         // The init_declarator_list is optional so 'typedef signed char int8_t;' will parse.
+         // See the comment in the 'tokens' section of this grammar near the INT8_T token.
+         TYPEDEF declaration_specifiers gcc_attributes? init_declarator_list? gcc_attributes? ';'
              {
                // Inefficient, but how many declarators will be in a declaration, honestly?
                for (int i = 0; i < $declaration::declaredNames.size(); ++i) {
                    symbols.addType($declaration::declaredNames.get(i));
                }
              }
-             -> ^(DECLARATION TYPEDEF declaration_specifiers init_declarator_list);
+             -> ^(DECLARATION TYPEDEF declaration_specifiers init_declarator_list?);
     
 declaration_specifiers
     :    (storage_class_specifier |
@@ -435,22 +451,25 @@ type_specifier
     |   UNSIGNED
     |   FLOAT
     |   DOUBLE
-    |   INT8_T            // Temporary hack?
-    |   INT16_T           // Temporary hack?
-    |   INT32_T           // Temporary hack?
-    |   INT64_T           // Temporary hack?
-    |   UINT8_T           // Temporary hack?
-    |   UINT16_T          // Temporary hack?
-    |   UINT32_T          // Temporary hack?
-    |   UINT64_T          // Temporary hack?
-    |   NX_UINT8_T        // Temporary hack?
-    |   NX_UINT16_T       // Temporary hack?
-    |   NX_UINT32_T       // Temporary hack?
-    |   NX_UINT64_T       // Temporary hack?
-    |   NXLE_UINT8_T      // Temporary hack?
-    |   NXLE_UINT16_T     // Temporary hack?
-    |   NXLE_UINT32_T     // Temporary hack?
-    |   NXLE_UINT64_T     // Temporary hack?
+
+    |   INT8_T
+    |   INT16_T
+    |   INT32_T
+    |   INT64_T
+    |   UINT8_T
+    |   UINT16_T
+    |   UINT32_T
+    |   UINT64_T
+
+    |   NX_UINT8_T
+    |   NX_UINT16_T
+    |   NX_UINT32_T
+    |   NX_UINT64_T
+    |   NXLE_UINT8_T
+    |   NXLE_UINT16_T
+    |   NXLE_UINT32_T
+    |   NXLE_UINT64_T
+
     |   struct_or_union_specifier
     |   enum_specifier
     |   typedef_name;
@@ -555,7 +574,7 @@ direct_declarator_identifier
 direct_declarator_modifier
     :   '[' constant_expression? ']'
             -> ^(DECLARATOR_ARRAY_MODIFIER constant_expression?)
-    |   ('[' gen=parameter_type_list ']')? '(' normal=parameter_type_list ')'
+    |   ('[' gen=parameter_list ']')? '(' normal=parameter_list ')'
             -> ^(DECLARATOR_PARAMETER_LIST_MODIFIER $normal);
 
 // The POINTER_QUALIFIER pseudo-token is needed to distinguish the use of '*' in declarations
@@ -569,17 +588,14 @@ pointer
 type_qualifier_list
     :    type_qualifier+;
     
-// BUG: Need to deal with the possibility of '...' in the AST more cleanly than this.
-parameter_type_list
-    :    parameter_list (',' '...')?;
-    
 // The PARAMETER_LIST pseudo-token is needed to properly deal with empty parameter lists (it
-// serves as a placeholder in that case). Also, direct_declarator_modifier entails two
-// parameter lists (one for generic parameters, etc) and they need to be distinguished.
+// serves as a placeholder in that case). Also, direct_declarator_modifier entails two parameter
+// lists (one for generic parameters, etc) and they need to be distinguished. Notice that
+// the ellipsis is only allowed if there is at least one ordinary parameter declaration.
 //
 parameter_list
-    :    parameter_declaration (',' parameter_declaration)*
-            -> ^(PARAMETER_LIST parameter_declaration+)
+    :    parameter_declaration (',' parameter_declaration)* (',' ELLIPSIS)?
+            -> ^(PARAMETER_LIST parameter_declaration+ ELLIPSIS?)
     |
             -> ^(PARAMETER_LIST) ;
 
@@ -606,8 +622,8 @@ abstract_declarator
 direct_abstract_declarator
     :    ('(' abstract_declarator    ')' |
           '[' assignment_expression? ']' |
-          '(' parameter_type_list?   ')')
-             ('[' assignment_expression? ']' | '(' parameter_type_list? ')')*;
+          '(' parameter_list?   ')')
+             ('[' assignment_expression? ']' | '(' parameter_list? ')')*;
         
 // Type names have to be handled in a special way. They are not just raw identifiers.
 typedef_name 
@@ -720,7 +736,7 @@ external_declaration
 // interface. This requires context sensitive lexical analysis. I haven't implemented that yet.
 //
 line_directive
-    :    '#' CONSTANT STRING_LITERAL CONSTANT? -> ^(LINE_DIRECTIVE STRING_LITERAL);
+    :    '#' CONSTANT STRING_LITERAL CONSTANT* -> ^(LINE_DIRECTIVE STRING_LITERAL);
     
 function_definition
     :    declaration_specifiers declarator attributes? compound_statement
@@ -918,7 +934,7 @@ type_arguments
     :    '<' type_name (',' type_name)* '>' -> type_name+;
     
 instance_parameters
-    :    '[' parameter_type_list ']';
+    :    '[' parameter_list ']';
     
 attributes
     :    attribute+;
@@ -945,6 +961,17 @@ identifier
 /* Lexer rules */
 /* =========== */
 
+COMMENT1
+    :    '/*' (options {greedy=false;} : .)* '*/' {$channel = HIDDEN;};
+    
+COMMENT2
+    :    '//' (options {greedy=false;} : .)* ('\r' | '\n') {$channel = HIDDEN;};
+
+// This is a gcc feature to mark expressions/declarations so -pedantic won't warn about them.
+// I just want to ignore it.
+COMMENT3
+    :    '__extension__' {$channel = HIDDEN;};
+
 RAW_IDENTIFIER
     :    ('_' | 'a' .. 'z' | 'A' .. 'Z') ('_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9')*;
     
@@ -960,12 +987,6 @@ CHARACTER_LITERAL
 WHITESPACE
     :    ( '\t' | ' ' | '\r' | '\n' | '\f' )+  {$channel = HIDDEN;};
     
-COMMENT1
-    :    '/*' (options {greedy=false;} : .)* '*/' {$channel = HIDDEN;};
-    
-COMMENT2
-    :    '//' (options {greedy=false;} : .)* ('\r' | '\n') {$channel = HIDDEN;};
-
 // Expose line directives to the parser for analysis. This is needed to reconstruct the
 // #include directives in the rewritten output. It will eventually also be needed to
 // produce better quality error messages (but there is a lot of other work to be done

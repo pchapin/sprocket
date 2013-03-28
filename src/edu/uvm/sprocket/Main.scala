@@ -28,8 +28,8 @@ object Main {
   private def initializeGlobalSymbols(): SymbolTableManager = {
     val globalSymbols = new SymbolTableManager()
 
-    // These are type names imported from the TinyOS library.
-    val globalTypes = Array("bool", "error_t", "message_t")
+    // These are type names imported from the TinyOS library or built into the compiler.
+    val globalTypes = Array("__builtin_va_list", "bool", "error_t", "message_t")
 
     // Configure a global SymbolTableManager. This is necessary because nesC's global scope spans all files in the
     // program. That is, global entities declared in one file are visible in all other files compiled afterward. Right

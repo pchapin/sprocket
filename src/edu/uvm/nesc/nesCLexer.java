@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nesC.g 2013-03-27 12:45:33
+// $ANTLR 3.4 nesC.g 2013-03-28 19:26:44
 
     package edu.uvm.nesc;
 
@@ -11,11 +11,10 @@ import java.util.ArrayList;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class nesCLexer extends Lexer {
     public static final int EOF=-1;
-    public static final int T__187=187;
-    public static final int T__188=188;
     public static final int T__189=189;
     public static final int T__190=190;
     public static final int T__191=191;
+    public static final int T__192=192;
     public static final int ABSTRACT=4;
     public static final int ADDRESS_OF=5;
     public static final int AMP=6;
@@ -46,159 +45,161 @@ public class nesCLexer extends Lexer {
     public static final int COMMAND=31;
     public static final int COMMENT1=32;
     public static final int COMMENT2=33;
-    public static final int COMPONENT=34;
-    public static final int COMPONENTS=35;
-    public static final int COMPONENT_ARGUMENTS=36;
-    public static final int COMPONENT_DECLARATION=37;
-    public static final int COMPONENT_DEFINITION=38;
-    public static final int COMPONENT_INSTANTIATION=39;
-    public static final int COMPONENT_KIND=40;
-    public static final int COMPONENT_PARAMETER_LIST=41;
-    public static final int COMPOUND_STATEMENT=42;
-    public static final int CONFIGURATION=43;
-    public static final int CONNECTION=44;
-    public static final int CONST=45;
-    public static final int CONSTANT=46;
-    public static final int CONTINUE=47;
-    public static final int DECLARATION=48;
-    public static final int DECLARATOR=49;
-    public static final int DECLARATOR_ARRAY_MODIFIER=50;
-    public static final int DECLARATOR_LIST=51;
-    public static final int DECLARATOR_PARAMETER_LIST_MODIFIER=52;
-    public static final int DEC_NUMBER=53;
-    public static final int DEFAULT=54;
-    public static final int DEREFERENCE=55;
-    public static final int DIGIT=56;
-    public static final int DIVASSIGN=57;
-    public static final int DIVIDE=58;
-    public static final int DO=59;
-    public static final int DOT=60;
-    public static final int DOUBLE=61;
-    public static final int DUTY=62;
-    public static final int DYNAMIC_IDENTIFIER_PATH=63;
-    public static final int ELSE=64;
-    public static final int ENABLE=65;
-    public static final int ENUM=66;
-    public static final int ENUMERATOR=67;
-    public static final int EQUAL=68;
-    public static final int EVENT=69;
-    public static final int EXTERN=70;
-    public static final int FILE=71;
-    public static final int FLOAT=72;
-    public static final int FOR=73;
-    public static final int FOR_CONDITION=74;
-    public static final int FOR_INITIALIZE=75;
-    public static final int FOR_ITERATION=76;
-    public static final int FUNCTION_DEFINITION=77;
-    public static final int GCCATTRIBUTE=78;
-    public static final int GENERIC=79;
-    public static final int GOTO=80;
-    public static final int GREATER=81;
-    public static final int GREATEREQUAL=82;
-    public static final int HASH=83;
-    public static final int HEX_DIGIT=84;
-    public static final int HEX_NUMBER=85;
-    public static final int IDENTIFIER_PATH=86;
-    public static final int IF=87;
-    public static final int IMPLEMENTATION=88;
-    public static final int INITIALIZER_LIST=89;
-    public static final int INIT_DECLARATOR=90;
-    public static final int INLINE=91;
-    public static final int INT=92;
-    public static final int INT16_T=93;
-    public static final int INT32_T=94;
-    public static final int INT64_T=95;
-    public static final int INT8_T=96;
-    public static final int INTERFACE=97;
-    public static final int INTERFACE_TYPE=98;
-    public static final int LABELED_STATEMENT=99;
-    public static final int LBRACE=100;
-    public static final int LBRACKET=101;
-    public static final int LESS=102;
-    public static final int LESSEQUAL=103;
-    public static final int LINE_DIRECTIVE=104;
-    public static final int LONG=105;
-    public static final int LPARENS=106;
-    public static final int LSHIFT=107;
-    public static final int LSHIFTASSIGN=108;
-    public static final int MINUS=109;
-    public static final int MINUSASSIGN=110;
-    public static final int MINUSMINUS=111;
-    public static final int MODASSIGN=112;
-    public static final int MODULE=113;
-    public static final int MODULUS=114;
-    public static final int MULASSIGN=115;
-    public static final int NEW=116;
-    public static final int NORACE=117;
-    public static final int NOT=118;
-    public static final int NOTEQUAL=119;
-    public static final int NULL=120;
-    public static final int NUMBER=121;
-    public static final int NUMBER_PREFIX=122;
-    public static final int NUMBER_SUFFIX=123;
-    public static final int NXLE_UINT16_T=124;
-    public static final int NXLE_UINT32_T=125;
-    public static final int NXLE_UINT64_T=126;
-    public static final int NXLE_UINT8_T=127;
-    public static final int NX_STRUCT=128;
-    public static final int NX_UINT16_T=129;
-    public static final int NX_UINT32_T=130;
-    public static final int NX_UINT64_T=131;
-    public static final int NX_UINT8_T=132;
-    public static final int NX_UNION=133;
-    public static final int OR=134;
-    public static final int PARAMETER=135;
-    public static final int PARAMETER_LIST=136;
-    public static final int PLUS=137;
-    public static final int PLUSASSIGN=138;
-    public static final int PLUSPLUS=139;
-    public static final int POINTER_QUALIFIER=140;
-    public static final int POST=141;
-    public static final int POSTFIX_EXPRESSION=142;
-    public static final int POST_DECREMENT=143;
-    public static final int POST_INCREMENT=144;
-    public static final int PRE_DECREMENT=145;
-    public static final int PRE_INCREMENT=146;
-    public static final int PROVIDES=147;
-    public static final int RAW_IDENTIFIER=148;
-    public static final int RBRACE=149;
-    public static final int RBRACKET=150;
-    public static final int REGISTER=151;
-    public static final int REMOTE=152;
-    public static final int REQUIRES=153;
-    public static final int RESTRICT=154;
-    public static final int RETURN=155;
-    public static final int RPARENS=156;
-    public static final int RSHIFT=157;
-    public static final int RSHIFTASSIGN=158;
-    public static final int SHORT=159;
-    public static final int SIGNAL=160;
-    public static final int SIGNED=161;
-    public static final int SIZEOF=162;
-    public static final int SIZEOF_EXPRESSION=163;
-    public static final int SIZEOF_TYPE=164;
-    public static final int SPECIFICATION=165;
-    public static final int STAR=166;
-    public static final int STATEMENT=167;
-    public static final int STATIC=168;
-    public static final int STRING_LITERAL=169;
-    public static final int STRUCT=170;
-    public static final int SWITCH=171;
-    public static final int TASK=172;
-    public static final int TYPEDEF=173;
-    public static final int UINT16_T=174;
-    public static final int UINT32_T=175;
-    public static final int UINT64_T=176;
-    public static final int UINT8_T=177;
-    public static final int UNARY_MINUS=178;
-    public static final int UNARY_PLUS=179;
-    public static final int UNION=180;
-    public static final int UNSIGNED=181;
-    public static final int USES=182;
-    public static final int VOID=183;
-    public static final int VOLATILE=184;
-    public static final int WHILE=185;
-    public static final int WHITESPACE=186;
+    public static final int COMMENT3=34;
+    public static final int COMPONENT=35;
+    public static final int COMPONENTS=36;
+    public static final int COMPONENT_ARGUMENTS=37;
+    public static final int COMPONENT_DECLARATION=38;
+    public static final int COMPONENT_DEFINITION=39;
+    public static final int COMPONENT_INSTANTIATION=40;
+    public static final int COMPONENT_KIND=41;
+    public static final int COMPONENT_PARAMETER_LIST=42;
+    public static final int COMPOUND_STATEMENT=43;
+    public static final int CONFIGURATION=44;
+    public static final int CONNECTION=45;
+    public static final int CONST=46;
+    public static final int CONSTANT=47;
+    public static final int CONTINUE=48;
+    public static final int DECLARATION=49;
+    public static final int DECLARATOR=50;
+    public static final int DECLARATOR_ARRAY_MODIFIER=51;
+    public static final int DECLARATOR_LIST=52;
+    public static final int DECLARATOR_PARAMETER_LIST_MODIFIER=53;
+    public static final int DEC_NUMBER=54;
+    public static final int DEFAULT=55;
+    public static final int DEREFERENCE=56;
+    public static final int DIGIT=57;
+    public static final int DIVASSIGN=58;
+    public static final int DIVIDE=59;
+    public static final int DO=60;
+    public static final int DOT=61;
+    public static final int DOUBLE=62;
+    public static final int DUTY=63;
+    public static final int DYNAMIC_IDENTIFIER_PATH=64;
+    public static final int ELLIPSIS=65;
+    public static final int ELSE=66;
+    public static final int ENABLE=67;
+    public static final int ENUM=68;
+    public static final int ENUMERATOR=69;
+    public static final int EQUAL=70;
+    public static final int EVENT=71;
+    public static final int EXTERN=72;
+    public static final int FILE=73;
+    public static final int FLOAT=74;
+    public static final int FOR=75;
+    public static final int FOR_CONDITION=76;
+    public static final int FOR_INITIALIZE=77;
+    public static final int FOR_ITERATION=78;
+    public static final int FUNCTION_DEFINITION=79;
+    public static final int GCCATTRIBUTE=80;
+    public static final int GENERIC=81;
+    public static final int GOTO=82;
+    public static final int GREATER=83;
+    public static final int GREATEREQUAL=84;
+    public static final int HASH=85;
+    public static final int HEX_DIGIT=86;
+    public static final int HEX_NUMBER=87;
+    public static final int IDENTIFIER_PATH=88;
+    public static final int IF=89;
+    public static final int IMPLEMENTATION=90;
+    public static final int INITIALIZER_LIST=91;
+    public static final int INIT_DECLARATOR=92;
+    public static final int INLINE=93;
+    public static final int INT=94;
+    public static final int INT16_T=95;
+    public static final int INT32_T=96;
+    public static final int INT64_T=97;
+    public static final int INT8_T=98;
+    public static final int INTERFACE=99;
+    public static final int INTERFACE_TYPE=100;
+    public static final int LABELED_STATEMENT=101;
+    public static final int LBRACE=102;
+    public static final int LBRACKET=103;
+    public static final int LESS=104;
+    public static final int LESSEQUAL=105;
+    public static final int LINE_DIRECTIVE=106;
+    public static final int LONG=107;
+    public static final int LPARENS=108;
+    public static final int LSHIFT=109;
+    public static final int LSHIFTASSIGN=110;
+    public static final int MINUS=111;
+    public static final int MINUSASSIGN=112;
+    public static final int MINUSMINUS=113;
+    public static final int MODASSIGN=114;
+    public static final int MODULE=115;
+    public static final int MODULUS=116;
+    public static final int MULASSIGN=117;
+    public static final int NEW=118;
+    public static final int NORACE=119;
+    public static final int NOT=120;
+    public static final int NOTEQUAL=121;
+    public static final int NULL=122;
+    public static final int NUMBER=123;
+    public static final int NUMBER_PREFIX=124;
+    public static final int NUMBER_SUFFIX=125;
+    public static final int NXLE_UINT16_T=126;
+    public static final int NXLE_UINT32_T=127;
+    public static final int NXLE_UINT64_T=128;
+    public static final int NXLE_UINT8_T=129;
+    public static final int NX_STRUCT=130;
+    public static final int NX_UINT16_T=131;
+    public static final int NX_UINT32_T=132;
+    public static final int NX_UINT64_T=133;
+    public static final int NX_UINT8_T=134;
+    public static final int NX_UNION=135;
+    public static final int OR=136;
+    public static final int PARAMETER=137;
+    public static final int PARAMETER_LIST=138;
+    public static final int PLUS=139;
+    public static final int PLUSASSIGN=140;
+    public static final int PLUSPLUS=141;
+    public static final int POINTER_QUALIFIER=142;
+    public static final int POST=143;
+    public static final int POSTFIX_EXPRESSION=144;
+    public static final int POST_DECREMENT=145;
+    public static final int POST_INCREMENT=146;
+    public static final int PRE_DECREMENT=147;
+    public static final int PRE_INCREMENT=148;
+    public static final int PROVIDES=149;
+    public static final int RAW_IDENTIFIER=150;
+    public static final int RBRACE=151;
+    public static final int RBRACKET=152;
+    public static final int REGISTER=153;
+    public static final int REMOTE=154;
+    public static final int REQUIRES=155;
+    public static final int RESTRICT=156;
+    public static final int RETURN=157;
+    public static final int RPARENS=158;
+    public static final int RSHIFT=159;
+    public static final int RSHIFTASSIGN=160;
+    public static final int SHORT=161;
+    public static final int SIGNAL=162;
+    public static final int SIGNED=163;
+    public static final int SIZEOF=164;
+    public static final int SIZEOF_EXPRESSION=165;
+    public static final int SIZEOF_TYPE=166;
+    public static final int SPECIFICATION=167;
+    public static final int STAR=168;
+    public static final int STATEMENT=169;
+    public static final int STATIC=170;
+    public static final int STRING_LITERAL=171;
+    public static final int STRUCT=172;
+    public static final int SWITCH=173;
+    public static final int TASK=174;
+    public static final int TYPEDEF=175;
+    public static final int UINT16_T=176;
+    public static final int UINT32_T=177;
+    public static final int UINT64_T=178;
+    public static final int UINT8_T=179;
+    public static final int UNARY_MINUS=180;
+    public static final int UNARY_PLUS=181;
+    public static final int UNION=182;
+    public static final int UNSIGNED=183;
+    public static final int USES=184;
+    public static final int VOID=185;
+    public static final int VOLATILE=186;
+    public static final int WHILE=187;
+    public static final int WHITESPACE=188;
 
         // This is mostly just a placeholder.
         private final int VERSION = 1;
@@ -1006,13 +1007,36 @@ public class nesCLexer extends Lexer {
     }
     // $ANTLR end "DUTY"
 
+    // $ANTLR start "ELLIPSIS"
+    public final void mELLIPSIS() throws RecognitionException {
+        try {
+            int _type = ELLIPSIS;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:45:10: ( '...' )
+            // nesC.g:45:12: '...'
+            {
+            match("..."); 
+
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "ELLIPSIS"
+
     // $ANTLR start "ELSE"
     public final void mELSE() throws RecognitionException {
         try {
             int _type = ELSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:45:6: ( 'else' )
-            // nesC.g:45:8: 'else'
+            // nesC.g:46:6: ( 'else' )
+            // nesC.g:46:8: 'else'
             {
             match("else"); 
 
@@ -1034,8 +1058,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = ENABLE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:46:8: ( 'enable' )
-            // nesC.g:46:10: 'enable'
+            // nesC.g:47:8: ( 'enable' )
+            // nesC.g:47:10: 'enable'
             {
             match("enable"); 
 
@@ -1057,8 +1081,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = ENUM;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:47:6: ( 'enum' )
-            // nesC.g:47:8: 'enum'
+            // nesC.g:48:6: ( 'enum' )
+            // nesC.g:48:8: 'enum'
             {
             match("enum"); 
 
@@ -1080,8 +1104,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:48:7: ( '==' )
-            // nesC.g:48:9: '=='
+            // nesC.g:49:7: ( '==' )
+            // nesC.g:49:9: '=='
             {
             match("=="); 
 
@@ -1103,8 +1127,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = EVENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:49:7: ( 'event' )
-            // nesC.g:49:9: 'event'
+            // nesC.g:50:7: ( 'event' )
+            // nesC.g:50:9: 'event'
             {
             match("event"); 
 
@@ -1126,8 +1150,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = EXTERN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:50:8: ( 'extern' )
-            // nesC.g:50:10: 'extern'
+            // nesC.g:51:8: ( 'extern' )
+            // nesC.g:51:10: 'extern'
             {
             match("extern"); 
 
@@ -1149,8 +1173,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = FLOAT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:51:7: ( 'float' )
-            // nesC.g:51:9: 'float'
+            // nesC.g:52:7: ( 'float' )
+            // nesC.g:52:9: 'float'
             {
             match("float"); 
 
@@ -1172,8 +1196,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = FOR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:52:5: ( 'for' )
-            // nesC.g:52:7: 'for'
+            // nesC.g:53:5: ( 'for' )
+            // nesC.g:53:7: 'for'
             {
             match("for"); 
 
@@ -1195,8 +1219,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = GCCATTRIBUTE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:53:14: ( '__attribute__' )
-            // nesC.g:53:16: '__attribute__'
+            // nesC.g:54:14: ( '__attribute__' )
+            // nesC.g:54:16: '__attribute__'
             {
             match("__attribute__"); 
 
@@ -1218,8 +1242,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = GENERIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:54:9: ( 'generic' )
-            // nesC.g:54:11: 'generic'
+            // nesC.g:55:9: ( 'generic' )
+            // nesC.g:55:11: 'generic'
             {
             match("generic"); 
 
@@ -1241,8 +1265,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = GOTO;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:55:6: ( 'goto' )
-            // nesC.g:55:8: 'goto'
+            // nesC.g:56:6: ( 'goto' )
+            // nesC.g:56:8: 'goto'
             {
             match("goto"); 
 
@@ -1264,8 +1288,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = GREATER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:56:9: ( '>' )
-            // nesC.g:56:11: '>'
+            // nesC.g:57:9: ( '>' )
+            // nesC.g:57:11: '>'
             {
             match('>'); 
 
@@ -1285,8 +1309,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = GREATEREQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:57:14: ( '>=' )
-            // nesC.g:57:16: '>='
+            // nesC.g:58:14: ( '>=' )
+            // nesC.g:58:16: '>='
             {
             match(">="); 
 
@@ -1308,8 +1332,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = HASH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:58:6: ( '#' )
-            // nesC.g:58:8: '#'
+            // nesC.g:59:6: ( '#' )
+            // nesC.g:59:8: '#'
             {
             match('#'); 
 
@@ -1329,8 +1353,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = IF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:59:4: ( 'if' )
-            // nesC.g:59:6: 'if'
+            // nesC.g:60:4: ( 'if' )
+            // nesC.g:60:6: 'if'
             {
             match("if"); 
 
@@ -1352,8 +1376,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = IMPLEMENTATION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:60:16: ( 'implementation' )
-            // nesC.g:60:18: 'implementation'
+            // nesC.g:61:16: ( 'implementation' )
+            // nesC.g:61:18: 'implementation'
             {
             match("implementation"); 
 
@@ -1375,8 +1399,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = INLINE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:61:8: ( 'inline' )
-            // nesC.g:61:10: 'inline'
+            // nesC.g:62:8: ( 'inline' )
+            // nesC.g:62:10: 'inline'
             {
             match("inline"); 
 
@@ -1398,8 +1422,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:62:5: ( 'int' )
-            // nesC.g:62:7: 'int'
+            // nesC.g:63:5: ( 'int' )
+            // nesC.g:63:7: 'int'
             {
             match("int"); 
 
@@ -1421,8 +1445,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = INT16_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:63:9: ( 'int16_t' )
-            // nesC.g:63:11: 'int16_t'
+            // nesC.g:64:9: ( 'int16_t' )
+            // nesC.g:64:11: 'int16_t'
             {
             match("int16_t"); 
 
@@ -1444,8 +1468,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = INT32_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:64:9: ( 'int32_t' )
-            // nesC.g:64:11: 'int32_t'
+            // nesC.g:65:9: ( 'int32_t' )
+            // nesC.g:65:11: 'int32_t'
             {
             match("int32_t"); 
 
@@ -1467,8 +1491,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = INT64_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:65:9: ( 'int64_t' )
-            // nesC.g:65:11: 'int64_t'
+            // nesC.g:66:9: ( 'int64_t' )
+            // nesC.g:66:11: 'int64_t'
             {
             match("int64_t"); 
 
@@ -1490,8 +1514,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = INT8_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:66:8: ( 'int8_t' )
-            // nesC.g:66:10: 'int8_t'
+            // nesC.g:67:8: ( 'int8_t' )
+            // nesC.g:67:10: 'int8_t'
             {
             match("int8_t"); 
 
@@ -1513,8 +1537,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = INTERFACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:67:11: ( 'interface' )
-            // nesC.g:67:13: 'interface'
+            // nesC.g:68:11: ( 'interface' )
+            // nesC.g:68:13: 'interface'
             {
             match("interface"); 
 
@@ -1536,8 +1560,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LBRACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:68:8: ( '{' )
-            // nesC.g:68:10: '{'
+            // nesC.g:69:8: ( '{' )
+            // nesC.g:69:10: '{'
             {
             match('{'); 
 
@@ -1557,8 +1581,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:69:10: ( '[' )
-            // nesC.g:69:12: '['
+            // nesC.g:70:10: ( '[' )
+            // nesC.g:70:12: '['
             {
             match('['); 
 
@@ -1578,8 +1602,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LESS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:70:6: ( '<' )
-            // nesC.g:70:8: '<'
+            // nesC.g:71:6: ( '<' )
+            // nesC.g:71:8: '<'
             {
             match('<'); 
 
@@ -1599,8 +1623,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LESSEQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:71:11: ( '<=' )
-            // nesC.g:71:13: '<='
+            // nesC.g:72:11: ( '<=' )
+            // nesC.g:72:13: '<='
             {
             match("<="); 
 
@@ -1622,8 +1646,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LONG;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:72:6: ( 'long' )
-            // nesC.g:72:8: 'long'
+            // nesC.g:73:6: ( 'long' )
+            // nesC.g:73:8: 'long'
             {
             match("long"); 
 
@@ -1645,8 +1669,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LPARENS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:73:9: ( '(' )
-            // nesC.g:73:11: '('
+            // nesC.g:74:9: ( '(' )
+            // nesC.g:74:11: '('
             {
             match('('); 
 
@@ -1666,8 +1690,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LSHIFT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:74:8: ( '<<' )
-            // nesC.g:74:10: '<<'
+            // nesC.g:75:8: ( '<<' )
+            // nesC.g:75:10: '<<'
             {
             match("<<"); 
 
@@ -1689,8 +1713,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = LSHIFTASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:75:14: ( '<<=' )
-            // nesC.g:75:16: '<<='
+            // nesC.g:76:14: ( '<<=' )
+            // nesC.g:76:16: '<<='
             {
             match("<<="); 
 
@@ -1712,8 +1736,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = MINUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:76:7: ( '-' )
-            // nesC.g:76:9: '-'
+            // nesC.g:77:7: ( '-' )
+            // nesC.g:77:9: '-'
             {
             match('-'); 
 
@@ -1733,8 +1757,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = MINUSASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:77:13: ( '-=' )
-            // nesC.g:77:15: '-='
+            // nesC.g:78:13: ( '-=' )
+            // nesC.g:78:15: '-='
             {
             match("-="); 
 
@@ -1756,8 +1780,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = MINUSMINUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:78:12: ( '--' )
-            // nesC.g:78:14: '--'
+            // nesC.g:79:12: ( '--' )
+            // nesC.g:79:14: '--'
             {
             match("--"); 
 
@@ -1779,8 +1803,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = MODASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:79:11: ( '%=' )
-            // nesC.g:79:13: '%='
+            // nesC.g:80:11: ( '%=' )
+            // nesC.g:80:13: '%='
             {
             match("%="); 
 
@@ -1802,8 +1826,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = MODULE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:80:8: ( 'module' )
-            // nesC.g:80:10: 'module'
+            // nesC.g:81:8: ( 'module' )
+            // nesC.g:81:10: 'module'
             {
             match("module"); 
 
@@ -1825,8 +1849,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = MODULUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:81:9: ( '%' )
-            // nesC.g:81:11: '%'
+            // nesC.g:82:9: ( '%' )
+            // nesC.g:82:11: '%'
             {
             match('%'); 
 
@@ -1846,8 +1870,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = MULASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:82:11: ( '*=' )
-            // nesC.g:82:13: '*='
+            // nesC.g:83:11: ( '*=' )
+            // nesC.g:83:13: '*='
             {
             match("*="); 
 
@@ -1869,8 +1893,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NEW;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:83:5: ( 'new' )
-            // nesC.g:83:7: 'new'
+            // nesC.g:84:5: ( 'new' )
+            // nesC.g:84:7: 'new'
             {
             match("new"); 
 
@@ -1892,8 +1916,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NORACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:84:8: ( 'norace' )
-            // nesC.g:84:10: 'norace'
+            // nesC.g:85:8: ( 'norace' )
+            // nesC.g:85:10: 'norace'
             {
             match("norace"); 
 
@@ -1915,8 +1939,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:85:5: ( '!' )
-            // nesC.g:85:7: '!'
+            // nesC.g:86:5: ( '!' )
+            // nesC.g:86:7: '!'
             {
             match('!'); 
 
@@ -1936,8 +1960,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NOTEQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:86:10: ( '!=' )
-            // nesC.g:86:12: '!='
+            // nesC.g:87:10: ( '!=' )
+            // nesC.g:87:12: '!='
             {
             match("!="); 
 
@@ -1959,8 +1983,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NXLE_UINT16_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:87:15: ( 'nxle_uint16_t' )
-            // nesC.g:87:17: 'nxle_uint16_t'
+            // nesC.g:88:15: ( 'nxle_uint16_t' )
+            // nesC.g:88:17: 'nxle_uint16_t'
             {
             match("nxle_uint16_t"); 
 
@@ -1982,8 +2006,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NXLE_UINT32_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:88:15: ( 'nxle_uint32_t' )
-            // nesC.g:88:17: 'nxle_uint32_t'
+            // nesC.g:89:15: ( 'nxle_uint32_t' )
+            // nesC.g:89:17: 'nxle_uint32_t'
             {
             match("nxle_uint32_t"); 
 
@@ -2005,8 +2029,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NXLE_UINT64_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:89:15: ( 'nxle_uint64_t' )
-            // nesC.g:89:17: 'nxle_uint64_t'
+            // nesC.g:90:15: ( 'nxle_uint64_t' )
+            // nesC.g:90:17: 'nxle_uint64_t'
             {
             match("nxle_uint64_t"); 
 
@@ -2028,8 +2052,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NXLE_UINT8_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:90:14: ( 'nxle_uint8_t' )
-            // nesC.g:90:16: 'nxle_uint8_t'
+            // nesC.g:91:14: ( 'nxle_uint8_t' )
+            // nesC.g:91:16: 'nxle_uint8_t'
             {
             match("nxle_uint8_t"); 
 
@@ -2051,8 +2075,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NX_STRUCT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:91:11: ( 'nx_struct' )
-            // nesC.g:91:13: 'nx_struct'
+            // nesC.g:92:11: ( 'nx_struct' )
+            // nesC.g:92:13: 'nx_struct'
             {
             match("nx_struct"); 
 
@@ -2074,8 +2098,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NX_UINT16_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:92:13: ( 'nx_uint16_t' )
-            // nesC.g:92:15: 'nx_uint16_t'
+            // nesC.g:93:13: ( 'nx_uint16_t' )
+            // nesC.g:93:15: 'nx_uint16_t'
             {
             match("nx_uint16_t"); 
 
@@ -2097,8 +2121,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NX_UINT32_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:93:13: ( 'nx_uint32_t' )
-            // nesC.g:93:15: 'nx_uint32_t'
+            // nesC.g:94:13: ( 'nx_uint32_t' )
+            // nesC.g:94:15: 'nx_uint32_t'
             {
             match("nx_uint32_t"); 
 
@@ -2120,8 +2144,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NX_UINT64_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:94:13: ( 'nx_uint64_t' )
-            // nesC.g:94:15: 'nx_uint64_t'
+            // nesC.g:95:13: ( 'nx_uint64_t' )
+            // nesC.g:95:15: 'nx_uint64_t'
             {
             match("nx_uint64_t"); 
 
@@ -2143,8 +2167,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NX_UINT8_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:95:12: ( 'nx_uint8_t' )
-            // nesC.g:95:14: 'nx_uint8_t'
+            // nesC.g:96:12: ( 'nx_uint8_t' )
+            // nesC.g:96:14: 'nx_uint8_t'
             {
             match("nx_uint8_t"); 
 
@@ -2166,8 +2190,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = NX_UNION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:96:10: ( 'nx_union' )
-            // nesC.g:96:12: 'nx_union'
+            // nesC.g:97:10: ( 'nx_union' )
+            // nesC.g:97:12: 'nx_union'
             {
             match("nx_union"); 
 
@@ -2189,8 +2213,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = OR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:97:4: ( '||' )
-            // nesC.g:97:6: '||'
+            // nesC.g:98:4: ( '||' )
+            // nesC.g:98:6: '||'
             {
             match("||"); 
 
@@ -2212,8 +2236,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = PLUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:98:6: ( '+' )
-            // nesC.g:98:8: '+'
+            // nesC.g:99:6: ( '+' )
+            // nesC.g:99:8: '+'
             {
             match('+'); 
 
@@ -2233,8 +2257,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = PLUSASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:99:12: ( '+=' )
-            // nesC.g:99:14: '+='
+            // nesC.g:100:12: ( '+=' )
+            // nesC.g:100:14: '+='
             {
             match("+="); 
 
@@ -2256,8 +2280,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = PLUSPLUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:100:10: ( '++' )
-            // nesC.g:100:12: '++'
+            // nesC.g:101:10: ( '++' )
+            // nesC.g:101:12: '++'
             {
             match("++"); 
 
@@ -2279,8 +2303,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = POST;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:101:6: ( 'post' )
-            // nesC.g:101:8: 'post'
+            // nesC.g:102:6: ( 'post' )
+            // nesC.g:102:8: 'post'
             {
             match("post"); 
 
@@ -2302,8 +2326,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = PROVIDES;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:102:10: ( 'provides' )
-            // nesC.g:102:12: 'provides'
+            // nesC.g:103:10: ( 'provides' )
+            // nesC.g:103:12: 'provides'
             {
             match("provides"); 
 
@@ -2325,8 +2349,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RBRACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:103:8: ( '}' )
-            // nesC.g:103:10: '}'
+            // nesC.g:104:8: ( '}' )
+            // nesC.g:104:10: '}'
             {
             match('}'); 
 
@@ -2346,8 +2370,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:104:10: ( ']' )
-            // nesC.g:104:12: ']'
+            // nesC.g:105:10: ( ']' )
+            // nesC.g:105:12: ']'
             {
             match(']'); 
 
@@ -2367,8 +2391,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = REGISTER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:105:10: ( 'register' )
-            // nesC.g:105:12: 'register'
+            // nesC.g:106:10: ( 'register' )
+            // nesC.g:106:12: 'register'
             {
             match("register"); 
 
@@ -2390,8 +2414,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = REMOTE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:106:8: ( 'remote' )
-            // nesC.g:106:10: 'remote'
+            // nesC.g:107:8: ( 'remote' )
+            // nesC.g:107:10: 'remote'
             {
             match("remote"); 
 
@@ -2413,8 +2437,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = REQUIRES;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:107:10: ( 'requires' )
-            // nesC.g:107:12: 'requires'
+            // nesC.g:108:10: ( 'requires' )
+            // nesC.g:108:12: 'requires'
             {
             match("requires"); 
 
@@ -2436,8 +2460,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RESTRICT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:108:10: ( 'restrict' )
-            // nesC.g:108:12: 'restrict'
+            // nesC.g:109:10: ( 'restrict' )
+            // nesC.g:109:12: 'restrict'
             {
             match("restrict"); 
 
@@ -2459,8 +2483,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RETURN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:109:8: ( 'return' )
-            // nesC.g:109:10: 'return'
+            // nesC.g:110:8: ( 'return' )
+            // nesC.g:110:10: 'return'
             {
             match("return"); 
 
@@ -2482,8 +2506,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RPARENS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:110:9: ( ')' )
-            // nesC.g:110:11: ')'
+            // nesC.g:111:9: ( ')' )
+            // nesC.g:111:11: ')'
             {
             match(')'); 
 
@@ -2503,8 +2527,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RSHIFT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:111:8: ( '>>' )
-            // nesC.g:111:10: '>>'
+            // nesC.g:112:8: ( '>>' )
+            // nesC.g:112:10: '>>'
             {
             match(">>"); 
 
@@ -2526,8 +2550,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RSHIFTASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:112:14: ( '>>=' )
-            // nesC.g:112:16: '>>='
+            // nesC.g:113:14: ( '>>=' )
+            // nesC.g:113:16: '>>='
             {
             match(">>="); 
 
@@ -2549,8 +2573,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = SHORT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:113:7: ( 'short' )
-            // nesC.g:113:9: 'short'
+            // nesC.g:114:7: ( 'short' )
+            // nesC.g:114:9: 'short'
             {
             match("short"); 
 
@@ -2572,8 +2596,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = SIGNAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:114:8: ( 'signal' )
-            // nesC.g:114:10: 'signal'
+            // nesC.g:115:8: ( 'signal' )
+            // nesC.g:115:10: 'signal'
             {
             match("signal"); 
 
@@ -2595,8 +2619,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = SIGNED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:115:8: ( 'signed' )
-            // nesC.g:115:10: 'signed'
+            // nesC.g:116:8: ( 'signed' )
+            // nesC.g:116:10: 'signed'
             {
             match("signed"); 
 
@@ -2618,8 +2642,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = SIZEOF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:116:8: ( 'sizeof' )
-            // nesC.g:116:10: 'sizeof'
+            // nesC.g:117:8: ( 'sizeof' )
+            // nesC.g:117:10: 'sizeof'
             {
             match("sizeof"); 
 
@@ -2641,8 +2665,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = STAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:117:6: ( '*' )
-            // nesC.g:117:8: '*'
+            // nesC.g:118:6: ( '*' )
+            // nesC.g:118:8: '*'
             {
             match('*'); 
 
@@ -2662,8 +2686,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = STATIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:118:8: ( 'static' )
-            // nesC.g:118:10: 'static'
+            // nesC.g:119:8: ( 'static' )
+            // nesC.g:119:10: 'static'
             {
             match("static"); 
 
@@ -2685,8 +2709,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = STRUCT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:119:8: ( 'struct' )
-            // nesC.g:119:10: 'struct'
+            // nesC.g:120:8: ( 'struct' )
+            // nesC.g:120:10: 'struct'
             {
             match("struct"); 
 
@@ -2708,8 +2732,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = SWITCH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:120:8: ( 'switch' )
-            // nesC.g:120:10: 'switch'
+            // nesC.g:121:8: ( 'switch' )
+            // nesC.g:121:10: 'switch'
             {
             match("switch"); 
 
@@ -2731,8 +2755,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = TASK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:121:6: ( 'task' )
-            // nesC.g:121:8: 'task'
+            // nesC.g:122:6: ( 'task' )
+            // nesC.g:122:8: 'task'
             {
             match("task"); 
 
@@ -2754,8 +2778,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = TYPEDEF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:122:9: ( 'typedef' )
-            // nesC.g:122:11: 'typedef'
+            // nesC.g:123:9: ( 'typedef' )
+            // nesC.g:123:11: 'typedef'
             {
             match("typedef"); 
 
@@ -2777,8 +2801,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = UINT16_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:123:10: ( 'uint16_t' )
-            // nesC.g:123:12: 'uint16_t'
+            // nesC.g:124:10: ( 'uint16_t' )
+            // nesC.g:124:12: 'uint16_t'
             {
             match("uint16_t"); 
 
@@ -2800,8 +2824,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = UINT32_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:124:10: ( 'uint32_t' )
-            // nesC.g:124:12: 'uint32_t'
+            // nesC.g:125:10: ( 'uint32_t' )
+            // nesC.g:125:12: 'uint32_t'
             {
             match("uint32_t"); 
 
@@ -2823,8 +2847,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = UINT64_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:125:10: ( 'uint64_t' )
-            // nesC.g:125:12: 'uint64_t'
+            // nesC.g:126:10: ( 'uint64_t' )
+            // nesC.g:126:12: 'uint64_t'
             {
             match("uint64_t"); 
 
@@ -2846,8 +2870,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = UINT8_T;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:126:9: ( 'uint8_t' )
-            // nesC.g:126:11: 'uint8_t'
+            // nesC.g:127:9: ( 'uint8_t' )
+            // nesC.g:127:11: 'uint8_t'
             {
             match("uint8_t"); 
 
@@ -2869,8 +2893,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = UNION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:127:7: ( 'union' )
-            // nesC.g:127:9: 'union'
+            // nesC.g:128:7: ( 'union' )
+            // nesC.g:128:9: 'union'
             {
             match("union"); 
 
@@ -2892,8 +2916,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = UNSIGNED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:128:10: ( 'unsigned' )
-            // nesC.g:128:12: 'unsigned'
+            // nesC.g:129:10: ( 'unsigned' )
+            // nesC.g:129:12: 'unsigned'
             {
             match("unsigned"); 
 
@@ -2915,8 +2939,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = USES;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:129:6: ( 'uses' )
-            // nesC.g:129:8: 'uses'
+            // nesC.g:130:6: ( 'uses' )
+            // nesC.g:130:8: 'uses'
             {
             match("uses"); 
 
@@ -2938,8 +2962,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = VOID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:130:6: ( 'void' )
-            // nesC.g:130:8: 'void'
+            // nesC.g:131:6: ( 'void' )
+            // nesC.g:131:8: 'void'
             {
             match("void"); 
 
@@ -2961,8 +2985,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = VOLATILE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:131:10: ( 'volatile' )
-            // nesC.g:131:12: 'volatile'
+            // nesC.g:132:10: ( 'volatile' )
+            // nesC.g:132:12: 'volatile'
             {
             match("volatile"); 
 
@@ -2984,8 +3008,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = WHILE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:132:7: ( 'while' )
-            // nesC.g:132:9: 'while'
+            // nesC.g:133:7: ( 'while' )
+            // nesC.g:133:9: 'while'
             {
             match("while"); 
 
@@ -3002,59 +3026,15 @@ public class nesCLexer extends Lexer {
     }
     // $ANTLR end "WHILE"
 
-    // $ANTLR start "T__187"
-    public final void mT__187() throws RecognitionException {
-        try {
-            int _type = T__187;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:133:8: ( '...' )
-            // nesC.g:133:10: '...'
-            {
-            match("..."); 
-
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__187"
-
-    // $ANTLR start "T__188"
-    public final void mT__188() throws RecognitionException {
-        try {
-            int _type = T__188;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:134:8: ( ':' )
-            // nesC.g:134:10: ':'
-            {
-            match(':'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__188"
-
     // $ANTLR start "T__189"
     public final void mT__189() throws RecognitionException {
         try {
             int _type = T__189;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:135:8: ( ';' )
-            // nesC.g:135:10: ';'
+            // nesC.g:134:8: ( ':' )
+            // nesC.g:134:10: ':'
             {
-            match(';'); 
+            match(':'); 
 
             }
 
@@ -3072,12 +3052,10 @@ public class nesCLexer extends Lexer {
         try {
             int _type = T__190;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:136:8: ( '<-' )
-            // nesC.g:136:10: '<-'
+            // nesC.g:135:8: ( ';' )
+            // nesC.g:135:10: ';'
             {
-            match("<-"); 
-
-
+            match(';'); 
 
             }
 
@@ -3095,6 +3073,29 @@ public class nesCLexer extends Lexer {
         try {
             int _type = T__191;
             int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:136:8: ( '<-' )
+            // nesC.g:136:10: '<-'
+            {
+            match("<-"); 
+
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "T__191"
+
+    // $ANTLR start "T__192"
+    public final void mT__192() throws RecognitionException {
+        try {
+            int _type = T__192;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
             // nesC.g:137:8: ( '?' )
             // nesC.g:137:10: '?'
             {
@@ -3109,295 +3110,46 @@ public class nesCLexer extends Lexer {
         	// do for sure before leaving
         }
     }
-    // $ANTLR end "T__191"
-
-    // $ANTLR start "RAW_IDENTIFIER"
-    public final void mRAW_IDENTIFIER() throws RecognitionException {
-        try {
-            int _type = RAW_IDENTIFIER;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:949:5: ( ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )* )
-            // nesC.g:949:10: ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
-            {
-            if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
-                input.consume();
-            }
-            else {
-                MismatchedSetException mse = new MismatchedSetException(null,input);
-                recover(mse);
-                throw mse;
-            }
-
-
-            // nesC.g:949:42: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
-            loop1:
-            do {
-                int alt1=2;
-                int LA1_0 = input.LA(1);
-
-                if ( ((LA1_0 >= '0' && LA1_0 <= '9')||(LA1_0 >= 'A' && LA1_0 <= 'Z')||LA1_0=='_'||(LA1_0 >= 'a' && LA1_0 <= 'z')) ) {
-                    alt1=1;
-                }
-
-
-                switch (alt1) {
-            	case 1 :
-            	    // nesC.g:
-            	    {
-            	    if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
-            	        input.consume();
-            	    }
-            	    else {
-            	        MismatchedSetException mse = new MismatchedSetException(null,input);
-            	        recover(mse);
-            	        throw mse;
-            	    }
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop1;
-                }
-            } while (true);
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "RAW_IDENTIFIER"
-
-    // $ANTLR start "CONSTANT"
-    public final void mCONSTANT() throws RecognitionException {
-        try {
-            int _type = CONSTANT;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:952:5: ( NUMBER )
-            // nesC.g:952:10: NUMBER
-            {
-            mNUMBER(); 
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "CONSTANT"
-
-    // $ANTLR start "STRING_LITERAL"
-    public final void mSTRING_LITERAL() throws RecognitionException {
-        try {
-            int _type = STRING_LITERAL;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:955:5: ( '\"' ( options {greedy=false; } : . )* '\"' )
-            // nesC.g:955:10: '\"' ( options {greedy=false; } : . )* '\"'
-            {
-            match('\"'); 
-
-            // nesC.g:955:14: ( options {greedy=false; } : . )*
-            loop2:
-            do {
-                int alt2=2;
-                int LA2_0 = input.LA(1);
-
-                if ( (LA2_0=='\"') ) {
-                    alt2=2;
-                }
-                else if ( ((LA2_0 >= '\u0000' && LA2_0 <= '!')||(LA2_0 >= '#' && LA2_0 <= '\uFFFF')) ) {
-                    alt2=1;
-                }
-
-
-                switch (alt2) {
-            	case 1 :
-            	    // nesC.g:955:41: .
-            	    {
-            	    matchAny(); 
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop2;
-                }
-            } while (true);
-
-
-            match('\"'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "STRING_LITERAL"
-
-    // $ANTLR start "CHARACTER_LITERAL"
-    public final void mCHARACTER_LITERAL() throws RecognitionException {
-        try {
-            int _type = CHARACTER_LITERAL;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:958:5: ( '\\'' ( options {greedy=false; } : . )* '\\'' )
-            // nesC.g:958:10: '\\'' ( options {greedy=false; } : . )* '\\''
-            {
-            match('\''); 
-
-            // nesC.g:958:15: ( options {greedy=false; } : . )*
-            loop3:
-            do {
-                int alt3=2;
-                int LA3_0 = input.LA(1);
-
-                if ( (LA3_0=='\'') ) {
-                    alt3=2;
-                }
-                else if ( ((LA3_0 >= '\u0000' && LA3_0 <= '&')||(LA3_0 >= '(' && LA3_0 <= '\uFFFF')) ) {
-                    alt3=1;
-                }
-
-
-                switch (alt3) {
-            	case 1 :
-            	    // nesC.g:958:42: .
-            	    {
-            	    matchAny(); 
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop3;
-                }
-            } while (true);
-
-
-            match('\''); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "CHARACTER_LITERAL"
-
-    // $ANTLR start "WHITESPACE"
-    public final void mWHITESPACE() throws RecognitionException {
-        try {
-            int _type = WHITESPACE;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:961:5: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+ )
-            // nesC.g:961:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
-            {
-            // nesC.g:961:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
-            int cnt4=0;
-            loop4:
-            do {
-                int alt4=2;
-                int LA4_0 = input.LA(1);
-
-                if ( ((LA4_0 >= '\t' && LA4_0 <= '\n')||(LA4_0 >= '\f' && LA4_0 <= '\r')||LA4_0==' ') ) {
-                    alt4=1;
-                }
-
-
-                switch (alt4) {
-            	case 1 :
-            	    // nesC.g:
-            	    {
-            	    if ( (input.LA(1) >= '\t' && input.LA(1) <= '\n')||(input.LA(1) >= '\f' && input.LA(1) <= '\r')||input.LA(1)==' ' ) {
-            	        input.consume();
-            	    }
-            	    else {
-            	        MismatchedSetException mse = new MismatchedSetException(null,input);
-            	        recover(mse);
-            	        throw mse;
-            	    }
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    if ( cnt4 >= 1 ) break loop4;
-                        EarlyExitException eee =
-                            new EarlyExitException(4, input);
-                        throw eee;
-                }
-                cnt4++;
-            } while (true);
-
-
-            _channel = HIDDEN;
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "WHITESPACE"
+    // $ANTLR end "T__192"
 
     // $ANTLR start "COMMENT1"
     public final void mCOMMENT1() throws RecognitionException {
         try {
             int _type = COMMENT1;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:964:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // nesC.g:964:10: '/*' ( options {greedy=false; } : . )* '*/'
+            // nesC.g:965:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // nesC.g:965:10: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
 
 
-            // nesC.g:964:15: ( options {greedy=false; } : . )*
-            loop5:
+            // nesC.g:965:15: ( options {greedy=false; } : . )*
+            loop1:
             do {
-                int alt5=2;
-                int LA5_0 = input.LA(1);
+                int alt1=2;
+                int LA1_0 = input.LA(1);
 
-                if ( (LA5_0=='*') ) {
-                    int LA5_1 = input.LA(2);
+                if ( (LA1_0=='*') ) {
+                    int LA1_1 = input.LA(2);
 
-                    if ( (LA5_1=='/') ) {
-                        alt5=2;
+                    if ( (LA1_1=='/') ) {
+                        alt1=2;
                     }
-                    else if ( ((LA5_1 >= '\u0000' && LA5_1 <= '.')||(LA5_1 >= '0' && LA5_1 <= '\uFFFF')) ) {
-                        alt5=1;
+                    else if ( ((LA1_1 >= '\u0000' && LA1_1 <= '.')||(LA1_1 >= '0' && LA1_1 <= '\uFFFF')) ) {
+                        alt1=1;
                     }
 
 
                 }
-                else if ( ((LA5_0 >= '\u0000' && LA5_0 <= ')')||(LA5_0 >= '+' && LA5_0 <= '\uFFFF')) ) {
-                    alt5=1;
+                else if ( ((LA1_0 >= '\u0000' && LA1_0 <= ')')||(LA1_0 >= '+' && LA1_0 <= '\uFFFF')) ) {
+                    alt1=1;
                 }
 
 
-                switch (alt5) {
+                switch (alt1) {
             	case 1 :
-            	    // nesC.g:964:42: .
+            	    // nesC.g:965:42: .
             	    {
             	    matchAny(); 
 
@@ -3405,7 +3157,7 @@ public class nesCLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop5;
+            	    break loop1;
                 }
             } while (true);
 
@@ -3432,30 +3184,30 @@ public class nesCLexer extends Lexer {
         try {
             int _type = COMMENT2;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:967:5: ( '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' ) )
-            // nesC.g:967:10: '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' )
+            // nesC.g:968:5: ( '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' ) )
+            // nesC.g:968:10: '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' )
             {
             match("//"); 
 
 
 
-            // nesC.g:967:15: ( options {greedy=false; } : . )*
-            loop6:
+            // nesC.g:968:15: ( options {greedy=false; } : . )*
+            loop2:
             do {
-                int alt6=2;
-                int LA6_0 = input.LA(1);
+                int alt2=2;
+                int LA2_0 = input.LA(1);
 
-                if ( (LA6_0=='\n'||LA6_0=='\r') ) {
-                    alt6=2;
+                if ( (LA2_0=='\n'||LA2_0=='\r') ) {
+                    alt2=2;
                 }
-                else if ( ((LA6_0 >= '\u0000' && LA6_0 <= '\t')||(LA6_0 >= '\u000B' && LA6_0 <= '\f')||(LA6_0 >= '\u000E' && LA6_0 <= '\uFFFF')) ) {
-                    alt6=1;
+                else if ( ((LA2_0 >= '\u0000' && LA2_0 <= '\t')||(LA2_0 >= '\u000B' && LA2_0 <= '\f')||(LA2_0 >= '\u000E' && LA2_0 <= '\uFFFF')) ) {
+                    alt2=1;
                 }
 
 
-                switch (alt6) {
+                switch (alt2) {
             	case 1 :
-            	    // nesC.g:967:42: .
+            	    // nesC.g:968:42: .
             	    {
             	    matchAny(); 
 
@@ -3463,7 +3215,7 @@ public class nesCLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop6;
+            	    break loop2;
                 }
             } while (true);
 
@@ -3491,10 +3243,284 @@ public class nesCLexer extends Lexer {
     }
     // $ANTLR end "COMMENT2"
 
+    // $ANTLR start "COMMENT3"
+    public final void mCOMMENT3() throws RecognitionException {
+        try {
+            int _type = COMMENT3;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:973:5: ( '__extension__' )
+            // nesC.g:973:10: '__extension__'
+            {
+            match("__extension__"); 
+
+
+
+            _channel = HIDDEN;
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "COMMENT3"
+
+    // $ANTLR start "RAW_IDENTIFIER"
+    public final void mRAW_IDENTIFIER() throws RecognitionException {
+        try {
+            int _type = RAW_IDENTIFIER;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:976:5: ( ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )* )
+            // nesC.g:976:10: ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
+            {
+            if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
+                input.consume();
+            }
+            else {
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                recover(mse);
+                throw mse;
+            }
+
+
+            // nesC.g:976:42: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
+            loop3:
+            do {
+                int alt3=2;
+                int LA3_0 = input.LA(1);
+
+                if ( ((LA3_0 >= '0' && LA3_0 <= '9')||(LA3_0 >= 'A' && LA3_0 <= 'Z')||LA3_0=='_'||(LA3_0 >= 'a' && LA3_0 <= 'z')) ) {
+                    alt3=1;
+                }
+
+
+                switch (alt3) {
+            	case 1 :
+            	    // nesC.g:
+            	    {
+            	    if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
+            	        input.consume();
+            	    }
+            	    else {
+            	        MismatchedSetException mse = new MismatchedSetException(null,input);
+            	        recover(mse);
+            	        throw mse;
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop3;
+                }
+            } while (true);
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "RAW_IDENTIFIER"
+
+    // $ANTLR start "CONSTANT"
+    public final void mCONSTANT() throws RecognitionException {
+        try {
+            int _type = CONSTANT;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:979:5: ( NUMBER )
+            // nesC.g:979:10: NUMBER
+            {
+            mNUMBER(); 
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "CONSTANT"
+
+    // $ANTLR start "STRING_LITERAL"
+    public final void mSTRING_LITERAL() throws RecognitionException {
+        try {
+            int _type = STRING_LITERAL;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:982:5: ( '\"' ( options {greedy=false; } : . )* '\"' )
+            // nesC.g:982:10: '\"' ( options {greedy=false; } : . )* '\"'
+            {
+            match('\"'); 
+
+            // nesC.g:982:14: ( options {greedy=false; } : . )*
+            loop4:
+            do {
+                int alt4=2;
+                int LA4_0 = input.LA(1);
+
+                if ( (LA4_0=='\"') ) {
+                    alt4=2;
+                }
+                else if ( ((LA4_0 >= '\u0000' && LA4_0 <= '!')||(LA4_0 >= '#' && LA4_0 <= '\uFFFF')) ) {
+                    alt4=1;
+                }
+
+
+                switch (alt4) {
+            	case 1 :
+            	    // nesC.g:982:41: .
+            	    {
+            	    matchAny(); 
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop4;
+                }
+            } while (true);
+
+
+            match('\"'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "STRING_LITERAL"
+
+    // $ANTLR start "CHARACTER_LITERAL"
+    public final void mCHARACTER_LITERAL() throws RecognitionException {
+        try {
+            int _type = CHARACTER_LITERAL;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:985:5: ( '\\'' ( options {greedy=false; } : . )* '\\'' )
+            // nesC.g:985:10: '\\'' ( options {greedy=false; } : . )* '\\''
+            {
+            match('\''); 
+
+            // nesC.g:985:15: ( options {greedy=false; } : . )*
+            loop5:
+            do {
+                int alt5=2;
+                int LA5_0 = input.LA(1);
+
+                if ( (LA5_0=='\'') ) {
+                    alt5=2;
+                }
+                else if ( ((LA5_0 >= '\u0000' && LA5_0 <= '&')||(LA5_0 >= '(' && LA5_0 <= '\uFFFF')) ) {
+                    alt5=1;
+                }
+
+
+                switch (alt5) {
+            	case 1 :
+            	    // nesC.g:985:42: .
+            	    {
+            	    matchAny(); 
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop5;
+                }
+            } while (true);
+
+
+            match('\''); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "CHARACTER_LITERAL"
+
+    // $ANTLR start "WHITESPACE"
+    public final void mWHITESPACE() throws RecognitionException {
+        try {
+            int _type = WHITESPACE;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:988:5: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+ )
+            // nesC.g:988:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
+            {
+            // nesC.g:988:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
+            int cnt6=0;
+            loop6:
+            do {
+                int alt6=2;
+                int LA6_0 = input.LA(1);
+
+                if ( ((LA6_0 >= '\t' && LA6_0 <= '\n')||(LA6_0 >= '\f' && LA6_0 <= '\r')||LA6_0==' ') ) {
+                    alt6=1;
+                }
+
+
+                switch (alt6) {
+            	case 1 :
+            	    // nesC.g:
+            	    {
+            	    if ( (input.LA(1) >= '\t' && input.LA(1) <= '\n')||(input.LA(1) >= '\f' && input.LA(1) <= '\r')||input.LA(1)==' ' ) {
+            	        input.consume();
+            	    }
+            	    else {
+            	        MismatchedSetException mse = new MismatchedSetException(null,input);
+            	        recover(mse);
+            	        throw mse;
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    if ( cnt6 >= 1 ) break loop6;
+                        EarlyExitException eee =
+                            new EarlyExitException(6, input);
+                        throw eee;
+                }
+                cnt6++;
+            } while (true);
+
+
+            _channel = HIDDEN;
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "WHITESPACE"
+
     // $ANTLR start "NUMBER"
     public final void mNUMBER() throws RecognitionException {
         try {
-            // nesC.g:978:5: ( DEC_NUMBER | HEX_NUMBER )
+            // nesC.g:999:5: ( DEC_NUMBER | HEX_NUMBER )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -3520,7 +3546,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // nesC.g:978:10: DEC_NUMBER
+                    // nesC.g:999:10: DEC_NUMBER
                     {
                     mDEC_NUMBER(); 
 
@@ -3528,7 +3554,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // nesC.g:979:10: HEX_NUMBER
+                    // nesC.g:1000:10: HEX_NUMBER
                     {
                     mHEX_NUMBER(); 
 
@@ -3548,10 +3574,10 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "DEC_NUMBER"
     public final void mDEC_NUMBER() throws RecognitionException {
         try {
-            // nesC.g:982:5: ( ( DIGIT )+ ( NUMBER_SUFFIX )? )
-            // nesC.g:982:10: ( DIGIT )+ ( NUMBER_SUFFIX )?
+            // nesC.g:1003:5: ( ( DIGIT )+ ( NUMBER_SUFFIX )? )
+            // nesC.g:1003:10: ( DIGIT )+ ( NUMBER_SUFFIX )?
             {
-            // nesC.g:982:10: ( DIGIT )+
+            // nesC.g:1003:10: ( DIGIT )+
             int cnt8=0;
             loop8:
             do {
@@ -3590,7 +3616,7 @@ public class nesCLexer extends Lexer {
             } while (true);
 
 
-            // nesC.g:982:21: ( NUMBER_SUFFIX )?
+            // nesC.g:1003:21: ( NUMBER_SUFFIX )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -3599,7 +3625,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt9) {
                 case 1 :
-                    // nesC.g:982:23: NUMBER_SUFFIX
+                    // nesC.g:1003:23: NUMBER_SUFFIX
                     {
                     mNUMBER_SUFFIX(); 
 
@@ -3623,13 +3649,13 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "HEX_NUMBER"
     public final void mHEX_NUMBER() throws RecognitionException {
         try {
-            // nesC.g:985:5: ( NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )? )
-            // nesC.g:985:10: NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )?
+            // nesC.g:1006:5: ( NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )? )
+            // nesC.g:1006:10: NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )?
             {
             mNUMBER_PREFIX(); 
 
 
-            // nesC.g:985:24: ( HEX_DIGIT )+
+            // nesC.g:1006:24: ( HEX_DIGIT )+
             int cnt10=0;
             loop10:
             do {
@@ -3668,7 +3694,7 @@ public class nesCLexer extends Lexer {
             } while (true);
 
 
-            // nesC.g:985:39: ( NUMBER_SUFFIX )?
+            // nesC.g:1006:39: ( NUMBER_SUFFIX )?
             int alt11=2;
             int LA11_0 = input.LA(1);
 
@@ -3677,7 +3703,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt11) {
                 case 1 :
-                    // nesC.g:985:41: NUMBER_SUFFIX
+                    // nesC.g:1006:41: NUMBER_SUFFIX
                     {
                     mNUMBER_SUFFIX(); 
 
@@ -3701,7 +3727,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // nesC.g:988:5: ( '0' .. '9' )
+            // nesC.g:1009:5: ( '0' .. '9' )
             // nesC.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
@@ -3727,7 +3753,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "HEX_DIGIT"
     public final void mHEX_DIGIT() throws RecognitionException {
         try {
-            // nesC.g:991:5: ( '0' .. '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
+            // nesC.g:1012:5: ( '0' .. '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
             // nesC.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
@@ -3753,8 +3779,8 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER_PREFIX"
     public final void mNUMBER_PREFIX() throws RecognitionException {
         try {
-            // nesC.g:994:5: ( '0x' )
-            // nesC.g:994:10: '0x'
+            // nesC.g:1015:5: ( '0x' )
+            // nesC.g:1015:10: '0x'
             {
             match("0x"); 
 
@@ -3773,10 +3799,10 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER_SUFFIX"
     public final void mNUMBER_SUFFIX() throws RecognitionException {
         try {
-            // nesC.g:997:5: ( ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' ) )
-            // nesC.g:997:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
+            // nesC.g:1018:5: ( ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' ) )
+            // nesC.g:1018:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
             {
-            // nesC.g:997:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
+            // nesC.g:1018:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
             int alt12=8;
             switch ( input.LA(1) ) {
             case 'l':
@@ -3837,35 +3863,35 @@ public class nesCLexer extends Lexer {
 
             switch (alt12) {
                 case 1 :
-                    // nesC.g:997:11: 'l'
+                    // nesC.g:1018:11: 'l'
                     {
                     match('l'); 
 
                     }
                     break;
                 case 2 :
-                    // nesC.g:997:17: 'L'
+                    // nesC.g:1018:17: 'L'
                     {
                     match('L'); 
 
                     }
                     break;
                 case 3 :
-                    // nesC.g:997:23: 'u'
+                    // nesC.g:1018:23: 'u'
                     {
                     match('u'); 
 
                     }
                     break;
                 case 4 :
-                    // nesC.g:997:29: 'U'
+                    // nesC.g:1018:29: 'U'
                     {
                     match('U'); 
 
                     }
                     break;
                 case 5 :
-                    // nesC.g:997:35: 'lu'
+                    // nesC.g:1018:35: 'lu'
                     {
                     match("lu"); 
 
@@ -3874,7 +3900,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 6 :
-                    // nesC.g:997:42: 'ul'
+                    // nesC.g:1018:42: 'ul'
                     {
                     match("ul"); 
 
@@ -3883,7 +3909,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 7 :
-                    // nesC.g:997:49: 'LU'
+                    // nesC.g:1018:49: 'LU'
                     {
                     match("LU"); 
 
@@ -3892,7 +3918,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 8 :
-                    // nesC.g:997:56: 'UL'
+                    // nesC.g:1018:56: 'UL'
                     {
                     match("UL"); 
 
@@ -3915,8 +3941,8 @@ public class nesCLexer extends Lexer {
     // $ANTLR end "NUMBER_SUFFIX"
 
     public void mTokens() throws RecognitionException {
-        // nesC.g:1:8: ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__187 | T__188 | T__189 | T__190 | T__191 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE | COMMENT1 | COMMENT2 )
-        int alt13=135;
+        // nesC.g:1:8: ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELLIPSIS | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__189 | T__190 | T__191 | T__192 | COMMENT1 | COMMENT2 | COMMENT3 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE )
+        int alt13=136;
         alt13 = dfa13.predict(input);
         switch (alt13) {
             case 1 :
@@ -4200,801 +4226,809 @@ public class nesCLexer extends Lexer {
                 }
                 break;
             case 36 :
-                // nesC.g:1:274: ELSE
+                // nesC.g:1:274: ELLIPSIS
+                {
+                mELLIPSIS(); 
+
+
+                }
+                break;
+            case 37 :
+                // nesC.g:1:283: ELSE
                 {
                 mELSE(); 
 
 
                 }
                 break;
-            case 37 :
-                // nesC.g:1:279: ENABLE
+            case 38 :
+                // nesC.g:1:288: ENABLE
                 {
                 mENABLE(); 
 
 
                 }
                 break;
-            case 38 :
-                // nesC.g:1:286: ENUM
+            case 39 :
+                // nesC.g:1:295: ENUM
                 {
                 mENUM(); 
 
 
                 }
                 break;
-            case 39 :
-                // nesC.g:1:291: EQUAL
+            case 40 :
+                // nesC.g:1:300: EQUAL
                 {
                 mEQUAL(); 
 
 
                 }
                 break;
-            case 40 :
-                // nesC.g:1:297: EVENT
+            case 41 :
+                // nesC.g:1:306: EVENT
                 {
                 mEVENT(); 
 
 
                 }
                 break;
-            case 41 :
-                // nesC.g:1:303: EXTERN
+            case 42 :
+                // nesC.g:1:312: EXTERN
                 {
                 mEXTERN(); 
 
 
                 }
                 break;
-            case 42 :
-                // nesC.g:1:310: FLOAT
+            case 43 :
+                // nesC.g:1:319: FLOAT
                 {
                 mFLOAT(); 
 
 
                 }
                 break;
-            case 43 :
-                // nesC.g:1:316: FOR
+            case 44 :
+                // nesC.g:1:325: FOR
                 {
                 mFOR(); 
 
 
                 }
                 break;
-            case 44 :
-                // nesC.g:1:320: GCCATTRIBUTE
+            case 45 :
+                // nesC.g:1:329: GCCATTRIBUTE
                 {
                 mGCCATTRIBUTE(); 
 
 
                 }
                 break;
-            case 45 :
-                // nesC.g:1:333: GENERIC
+            case 46 :
+                // nesC.g:1:342: GENERIC
                 {
                 mGENERIC(); 
 
 
                 }
                 break;
-            case 46 :
-                // nesC.g:1:341: GOTO
+            case 47 :
+                // nesC.g:1:350: GOTO
                 {
                 mGOTO(); 
 
 
                 }
                 break;
-            case 47 :
-                // nesC.g:1:346: GREATER
+            case 48 :
+                // nesC.g:1:355: GREATER
                 {
                 mGREATER(); 
 
 
                 }
                 break;
-            case 48 :
-                // nesC.g:1:354: GREATEREQUAL
+            case 49 :
+                // nesC.g:1:363: GREATEREQUAL
                 {
                 mGREATEREQUAL(); 
 
 
                 }
                 break;
-            case 49 :
-                // nesC.g:1:367: HASH
+            case 50 :
+                // nesC.g:1:376: HASH
                 {
                 mHASH(); 
 
 
                 }
                 break;
-            case 50 :
-                // nesC.g:1:372: IF
+            case 51 :
+                // nesC.g:1:381: IF
                 {
                 mIF(); 
 
 
                 }
                 break;
-            case 51 :
-                // nesC.g:1:375: IMPLEMENTATION
+            case 52 :
+                // nesC.g:1:384: IMPLEMENTATION
                 {
                 mIMPLEMENTATION(); 
 
 
                 }
                 break;
-            case 52 :
-                // nesC.g:1:390: INLINE
+            case 53 :
+                // nesC.g:1:399: INLINE
                 {
                 mINLINE(); 
 
 
                 }
                 break;
-            case 53 :
-                // nesC.g:1:397: INT
+            case 54 :
+                // nesC.g:1:406: INT
                 {
                 mINT(); 
 
 
                 }
                 break;
-            case 54 :
-                // nesC.g:1:401: INT16_T
+            case 55 :
+                // nesC.g:1:410: INT16_T
                 {
                 mINT16_T(); 
 
 
                 }
                 break;
-            case 55 :
-                // nesC.g:1:409: INT32_T
+            case 56 :
+                // nesC.g:1:418: INT32_T
                 {
                 mINT32_T(); 
 
 
                 }
                 break;
-            case 56 :
-                // nesC.g:1:417: INT64_T
+            case 57 :
+                // nesC.g:1:426: INT64_T
                 {
                 mINT64_T(); 
 
 
                 }
                 break;
-            case 57 :
-                // nesC.g:1:425: INT8_T
+            case 58 :
+                // nesC.g:1:434: INT8_T
                 {
                 mINT8_T(); 
 
 
                 }
                 break;
-            case 58 :
-                // nesC.g:1:432: INTERFACE
+            case 59 :
+                // nesC.g:1:441: INTERFACE
                 {
                 mINTERFACE(); 
 
 
                 }
                 break;
-            case 59 :
-                // nesC.g:1:442: LBRACE
+            case 60 :
+                // nesC.g:1:451: LBRACE
                 {
                 mLBRACE(); 
 
 
                 }
                 break;
-            case 60 :
-                // nesC.g:1:449: LBRACKET
+            case 61 :
+                // nesC.g:1:458: LBRACKET
                 {
                 mLBRACKET(); 
 
 
                 }
                 break;
-            case 61 :
-                // nesC.g:1:458: LESS
+            case 62 :
+                // nesC.g:1:467: LESS
                 {
                 mLESS(); 
 
 
                 }
                 break;
-            case 62 :
-                // nesC.g:1:463: LESSEQUAL
+            case 63 :
+                // nesC.g:1:472: LESSEQUAL
                 {
                 mLESSEQUAL(); 
 
 
                 }
                 break;
-            case 63 :
-                // nesC.g:1:473: LONG
+            case 64 :
+                // nesC.g:1:482: LONG
                 {
                 mLONG(); 
 
 
                 }
                 break;
-            case 64 :
-                // nesC.g:1:478: LPARENS
+            case 65 :
+                // nesC.g:1:487: LPARENS
                 {
                 mLPARENS(); 
 
 
                 }
                 break;
-            case 65 :
-                // nesC.g:1:486: LSHIFT
+            case 66 :
+                // nesC.g:1:495: LSHIFT
                 {
                 mLSHIFT(); 
 
 
                 }
                 break;
-            case 66 :
-                // nesC.g:1:493: LSHIFTASSIGN
+            case 67 :
+                // nesC.g:1:502: LSHIFTASSIGN
                 {
                 mLSHIFTASSIGN(); 
 
 
                 }
                 break;
-            case 67 :
-                // nesC.g:1:506: MINUS
+            case 68 :
+                // nesC.g:1:515: MINUS
                 {
                 mMINUS(); 
 
 
                 }
                 break;
-            case 68 :
-                // nesC.g:1:512: MINUSASSIGN
+            case 69 :
+                // nesC.g:1:521: MINUSASSIGN
                 {
                 mMINUSASSIGN(); 
 
 
                 }
                 break;
-            case 69 :
-                // nesC.g:1:524: MINUSMINUS
+            case 70 :
+                // nesC.g:1:533: MINUSMINUS
                 {
                 mMINUSMINUS(); 
 
 
                 }
                 break;
-            case 70 :
-                // nesC.g:1:535: MODASSIGN
+            case 71 :
+                // nesC.g:1:544: MODASSIGN
                 {
                 mMODASSIGN(); 
 
 
                 }
                 break;
-            case 71 :
-                // nesC.g:1:545: MODULE
+            case 72 :
+                // nesC.g:1:554: MODULE
                 {
                 mMODULE(); 
 
 
                 }
                 break;
-            case 72 :
-                // nesC.g:1:552: MODULUS
+            case 73 :
+                // nesC.g:1:561: MODULUS
                 {
                 mMODULUS(); 
 
 
                 }
                 break;
-            case 73 :
-                // nesC.g:1:560: MULASSIGN
+            case 74 :
+                // nesC.g:1:569: MULASSIGN
                 {
                 mMULASSIGN(); 
 
 
                 }
                 break;
-            case 74 :
-                // nesC.g:1:570: NEW
+            case 75 :
+                // nesC.g:1:579: NEW
                 {
                 mNEW(); 
 
 
                 }
                 break;
-            case 75 :
-                // nesC.g:1:574: NORACE
+            case 76 :
+                // nesC.g:1:583: NORACE
                 {
                 mNORACE(); 
 
 
                 }
                 break;
-            case 76 :
-                // nesC.g:1:581: NOT
+            case 77 :
+                // nesC.g:1:590: NOT
                 {
                 mNOT(); 
 
 
                 }
                 break;
-            case 77 :
-                // nesC.g:1:585: NOTEQUAL
+            case 78 :
+                // nesC.g:1:594: NOTEQUAL
                 {
                 mNOTEQUAL(); 
 
 
                 }
                 break;
-            case 78 :
-                // nesC.g:1:594: NXLE_UINT16_T
+            case 79 :
+                // nesC.g:1:603: NXLE_UINT16_T
                 {
                 mNXLE_UINT16_T(); 
 
 
                 }
                 break;
-            case 79 :
-                // nesC.g:1:608: NXLE_UINT32_T
+            case 80 :
+                // nesC.g:1:617: NXLE_UINT32_T
                 {
                 mNXLE_UINT32_T(); 
 
 
                 }
                 break;
-            case 80 :
-                // nesC.g:1:622: NXLE_UINT64_T
+            case 81 :
+                // nesC.g:1:631: NXLE_UINT64_T
                 {
                 mNXLE_UINT64_T(); 
 
 
                 }
                 break;
-            case 81 :
-                // nesC.g:1:636: NXLE_UINT8_T
+            case 82 :
+                // nesC.g:1:645: NXLE_UINT8_T
                 {
                 mNXLE_UINT8_T(); 
 
 
                 }
                 break;
-            case 82 :
-                // nesC.g:1:649: NX_STRUCT
+            case 83 :
+                // nesC.g:1:658: NX_STRUCT
                 {
                 mNX_STRUCT(); 
 
 
                 }
                 break;
-            case 83 :
-                // nesC.g:1:659: NX_UINT16_T
+            case 84 :
+                // nesC.g:1:668: NX_UINT16_T
                 {
                 mNX_UINT16_T(); 
 
 
                 }
                 break;
-            case 84 :
-                // nesC.g:1:671: NX_UINT32_T
+            case 85 :
+                // nesC.g:1:680: NX_UINT32_T
                 {
                 mNX_UINT32_T(); 
 
 
                 }
                 break;
-            case 85 :
-                // nesC.g:1:683: NX_UINT64_T
+            case 86 :
+                // nesC.g:1:692: NX_UINT64_T
                 {
                 mNX_UINT64_T(); 
 
 
                 }
                 break;
-            case 86 :
-                // nesC.g:1:695: NX_UINT8_T
+            case 87 :
+                // nesC.g:1:704: NX_UINT8_T
                 {
                 mNX_UINT8_T(); 
 
 
                 }
                 break;
-            case 87 :
-                // nesC.g:1:706: NX_UNION
+            case 88 :
+                // nesC.g:1:715: NX_UNION
                 {
                 mNX_UNION(); 
 
 
                 }
                 break;
-            case 88 :
-                // nesC.g:1:715: OR
+            case 89 :
+                // nesC.g:1:724: OR
                 {
                 mOR(); 
 
 
                 }
                 break;
-            case 89 :
-                // nesC.g:1:718: PLUS
+            case 90 :
+                // nesC.g:1:727: PLUS
                 {
                 mPLUS(); 
 
 
                 }
                 break;
-            case 90 :
-                // nesC.g:1:723: PLUSASSIGN
+            case 91 :
+                // nesC.g:1:732: PLUSASSIGN
                 {
                 mPLUSASSIGN(); 
 
 
                 }
                 break;
-            case 91 :
-                // nesC.g:1:734: PLUSPLUS
+            case 92 :
+                // nesC.g:1:743: PLUSPLUS
                 {
                 mPLUSPLUS(); 
 
 
                 }
                 break;
-            case 92 :
-                // nesC.g:1:743: POST
+            case 93 :
+                // nesC.g:1:752: POST
                 {
                 mPOST(); 
 
 
                 }
                 break;
-            case 93 :
-                // nesC.g:1:748: PROVIDES
+            case 94 :
+                // nesC.g:1:757: PROVIDES
                 {
                 mPROVIDES(); 
 
 
                 }
                 break;
-            case 94 :
-                // nesC.g:1:757: RBRACE
+            case 95 :
+                // nesC.g:1:766: RBRACE
                 {
                 mRBRACE(); 
 
 
                 }
                 break;
-            case 95 :
-                // nesC.g:1:764: RBRACKET
+            case 96 :
+                // nesC.g:1:773: RBRACKET
                 {
                 mRBRACKET(); 
 
 
                 }
                 break;
-            case 96 :
-                // nesC.g:1:773: REGISTER
+            case 97 :
+                // nesC.g:1:782: REGISTER
                 {
                 mREGISTER(); 
 
 
                 }
                 break;
-            case 97 :
-                // nesC.g:1:782: REMOTE
+            case 98 :
+                // nesC.g:1:791: REMOTE
                 {
                 mREMOTE(); 
 
 
                 }
                 break;
-            case 98 :
-                // nesC.g:1:789: REQUIRES
+            case 99 :
+                // nesC.g:1:798: REQUIRES
                 {
                 mREQUIRES(); 
 
 
                 }
                 break;
-            case 99 :
-                // nesC.g:1:798: RESTRICT
+            case 100 :
+                // nesC.g:1:807: RESTRICT
                 {
                 mRESTRICT(); 
 
 
                 }
                 break;
-            case 100 :
-                // nesC.g:1:807: RETURN
+            case 101 :
+                // nesC.g:1:816: RETURN
                 {
                 mRETURN(); 
 
 
                 }
                 break;
-            case 101 :
-                // nesC.g:1:814: RPARENS
+            case 102 :
+                // nesC.g:1:823: RPARENS
                 {
                 mRPARENS(); 
 
 
                 }
                 break;
-            case 102 :
-                // nesC.g:1:822: RSHIFT
+            case 103 :
+                // nesC.g:1:831: RSHIFT
                 {
                 mRSHIFT(); 
 
 
                 }
                 break;
-            case 103 :
-                // nesC.g:1:829: RSHIFTASSIGN
+            case 104 :
+                // nesC.g:1:838: RSHIFTASSIGN
                 {
                 mRSHIFTASSIGN(); 
 
 
                 }
                 break;
-            case 104 :
-                // nesC.g:1:842: SHORT
+            case 105 :
+                // nesC.g:1:851: SHORT
                 {
                 mSHORT(); 
 
 
                 }
                 break;
-            case 105 :
-                // nesC.g:1:848: SIGNAL
+            case 106 :
+                // nesC.g:1:857: SIGNAL
                 {
                 mSIGNAL(); 
 
 
                 }
                 break;
-            case 106 :
-                // nesC.g:1:855: SIGNED
+            case 107 :
+                // nesC.g:1:864: SIGNED
                 {
                 mSIGNED(); 
 
 
                 }
                 break;
-            case 107 :
-                // nesC.g:1:862: SIZEOF
+            case 108 :
+                // nesC.g:1:871: SIZEOF
                 {
                 mSIZEOF(); 
 
 
                 }
                 break;
-            case 108 :
-                // nesC.g:1:869: STAR
+            case 109 :
+                // nesC.g:1:878: STAR
                 {
                 mSTAR(); 
 
 
                 }
                 break;
-            case 109 :
-                // nesC.g:1:874: STATIC
+            case 110 :
+                // nesC.g:1:883: STATIC
                 {
                 mSTATIC(); 
 
 
                 }
                 break;
-            case 110 :
-                // nesC.g:1:881: STRUCT
+            case 111 :
+                // nesC.g:1:890: STRUCT
                 {
                 mSTRUCT(); 
 
 
                 }
                 break;
-            case 111 :
-                // nesC.g:1:888: SWITCH
+            case 112 :
+                // nesC.g:1:897: SWITCH
                 {
                 mSWITCH(); 
 
 
                 }
                 break;
-            case 112 :
-                // nesC.g:1:895: TASK
+            case 113 :
+                // nesC.g:1:904: TASK
                 {
                 mTASK(); 
 
 
                 }
                 break;
-            case 113 :
-                // nesC.g:1:900: TYPEDEF
+            case 114 :
+                // nesC.g:1:909: TYPEDEF
                 {
                 mTYPEDEF(); 
 
 
                 }
                 break;
-            case 114 :
-                // nesC.g:1:908: UINT16_T
+            case 115 :
+                // nesC.g:1:917: UINT16_T
                 {
                 mUINT16_T(); 
 
 
                 }
                 break;
-            case 115 :
-                // nesC.g:1:917: UINT32_T
+            case 116 :
+                // nesC.g:1:926: UINT32_T
                 {
                 mUINT32_T(); 
 
 
                 }
                 break;
-            case 116 :
-                // nesC.g:1:926: UINT64_T
+            case 117 :
+                // nesC.g:1:935: UINT64_T
                 {
                 mUINT64_T(); 
 
 
                 }
                 break;
-            case 117 :
-                // nesC.g:1:935: UINT8_T
+            case 118 :
+                // nesC.g:1:944: UINT8_T
                 {
                 mUINT8_T(); 
 
 
                 }
                 break;
-            case 118 :
-                // nesC.g:1:943: UNION
+            case 119 :
+                // nesC.g:1:952: UNION
                 {
                 mUNION(); 
 
 
                 }
                 break;
-            case 119 :
-                // nesC.g:1:949: UNSIGNED
+            case 120 :
+                // nesC.g:1:958: UNSIGNED
                 {
                 mUNSIGNED(); 
 
 
                 }
                 break;
-            case 120 :
-                // nesC.g:1:958: USES
+            case 121 :
+                // nesC.g:1:967: USES
                 {
                 mUSES(); 
 
 
                 }
                 break;
-            case 121 :
-                // nesC.g:1:963: VOID
+            case 122 :
+                // nesC.g:1:972: VOID
                 {
                 mVOID(); 
 
 
                 }
                 break;
-            case 122 :
-                // nesC.g:1:968: VOLATILE
+            case 123 :
+                // nesC.g:1:977: VOLATILE
                 {
                 mVOLATILE(); 
 
 
                 }
                 break;
-            case 123 :
-                // nesC.g:1:977: WHILE
+            case 124 :
+                // nesC.g:1:986: WHILE
                 {
                 mWHILE(); 
 
 
                 }
                 break;
-            case 124 :
-                // nesC.g:1:983: T__187
-                {
-                mT__187(); 
-
-
-                }
-                break;
             case 125 :
-                // nesC.g:1:990: T__188
-                {
-                mT__188(); 
-
-
-                }
-                break;
-            case 126 :
-                // nesC.g:1:997: T__189
+                // nesC.g:1:992: T__189
                 {
                 mT__189(); 
 
 
                 }
                 break;
-            case 127 :
-                // nesC.g:1:1004: T__190
+            case 126 :
+                // nesC.g:1:999: T__190
                 {
                 mT__190(); 
 
 
                 }
                 break;
-            case 128 :
-                // nesC.g:1:1011: T__191
+            case 127 :
+                // nesC.g:1:1006: T__191
                 {
                 mT__191(); 
 
 
                 }
                 break;
+            case 128 :
+                // nesC.g:1:1013: T__192
+                {
+                mT__192(); 
+
+
+                }
+                break;
             case 129 :
-                // nesC.g:1:1018: RAW_IDENTIFIER
-                {
-                mRAW_IDENTIFIER(); 
-
-
-                }
-                break;
-            case 130 :
-                // nesC.g:1:1033: CONSTANT
-                {
-                mCONSTANT(); 
-
-
-                }
-                break;
-            case 131 :
-                // nesC.g:1:1042: STRING_LITERAL
-                {
-                mSTRING_LITERAL(); 
-
-
-                }
-                break;
-            case 132 :
-                // nesC.g:1:1057: CHARACTER_LITERAL
-                {
-                mCHARACTER_LITERAL(); 
-
-
-                }
-                break;
-            case 133 :
-                // nesC.g:1:1075: WHITESPACE
-                {
-                mWHITESPACE(); 
-
-
-                }
-                break;
-            case 134 :
-                // nesC.g:1:1086: COMMENT1
+                // nesC.g:1:1020: COMMENT1
                 {
                 mCOMMENT1(); 
 
 
                 }
                 break;
-            case 135 :
-                // nesC.g:1:1095: COMMENT2
+            case 130 :
+                // nesC.g:1:1029: COMMENT2
                 {
                 mCOMMENT2(); 
+
+
+                }
+                break;
+            case 131 :
+                // nesC.g:1:1038: COMMENT3
+                {
+                mCOMMENT3(); 
+
+
+                }
+                break;
+            case 132 :
+                // nesC.g:1:1047: RAW_IDENTIFIER
+                {
+                mRAW_IDENTIFIER(); 
+
+
+                }
+                break;
+            case 133 :
+                // nesC.g:1:1062: CONSTANT
+                {
+                mCONSTANT(); 
+
+
+                }
+                break;
+            case 134 :
+                // nesC.g:1:1071: STRING_LITERAL
+                {
+                mSTRING_LITERAL(); 
+
+
+                }
+                break;
+            case 135 :
+                // nesC.g:1:1086: CHARACTER_LITERAL
+                {
+                mCHARACTER_LITERAL(); 
+
+
+                }
+                break;
+            case 136 :
+                // nesC.g:1:1104: WHITESPACE
+                {
+                mWHITESPACE(); 
 
 
                 }
@@ -5011,31 +5045,31 @@ public class nesCLexer extends Lexer {
         "\56\1\117\1\121\4\56\1\135\1\uffff\1\56\2\uffff\1\144\1\56\1\uffff"+
         "\1\147\1\56\1\152\1\56\1\157\1\162\1\56\2\uffff\1\56\1\uffff\5\56"+
         "\10\uffff\1\56\1\u0084\2\56\16\uffff\5\56\1\u008f\1\56\6\uffff\11"+
-        "\56\1\uffff\1\u009c\1\uffff\1\u009d\2\56\1\uffff\1\u00a2\2\uffff"+
+        "\56\1\uffff\1\u009d\1\uffff\1\u009e\2\56\1\uffff\1\u00a3\2\uffff"+
         "\1\56\2\uffff\1\56\2\uffff\3\56\5\uffff\21\56\1\uffff\12\56\1\uffff"+
-        "\7\56\1\u00d6\3\56\3\uffff\2\56\1\u00e1\2\uffff\2\56\1\u00e4\35"+
-        "\56\1\u0103\1\56\1\u0105\1\u0106\1\u0107\7\56\1\u010f\1\u0110\1"+
-        "\56\1\u0112\3\56\1\uffff\2\56\1\u0118\7\56\1\uffff\1\u0120\1\56"+
-        "\1\uffff\4\56\1\u0127\14\56\1\u0135\4\56\1\u013d\1\u013e\4\56\1"+
-        "\u0143\1\56\1\uffff\1\u0145\3\uffff\3\56\1\u0149\3\56\2\uffff\1"+
-        "\56\1\uffff\1\u014e\1\56\1\u0150\2\56\1\uffff\7\56\1\uffff\6\56"+
-        "\1\uffff\6\56\1\u0166\6\56\1\uffff\5\56\1\u0172\1\56\2\uffff\1\56"+
-        "\1\u0175\2\56\1\uffff\1\u0178\1\uffff\3\56\1\uffff\2\56\1\u017e"+
-        "\1\u017f\1\uffff\1\u0180\1\uffff\3\56\1\u0184\3\56\1\u0188\1\56"+
-        "\1\u018a\1\u018b\6\56\1\u0192\2\56\1\u0195\1\uffff\1\u0196\1\u0197"+
-        "\1\u0198\1\u0199\1\u019a\1\u019b\5\56\1\uffff\2\56\1\uffff\2\56"+
-        "\1\uffff\1\u01a5\3\56\1\u01a9\3\uffff\1\56\1\u01ab\1\56\1\uffff"+
-        "\1\u01ad\1\u01ae\1\u01af\1\uffff\1\56\2\uffff\6\56\1\uffff\2\56"+
-        "\7\uffff\1\u01bc\3\56\1\u01c0\2\56\1\u01c3\1\u01c4\1\uffff\2\56"+
-        "\1\u01c7\1\uffff\1\56\1\uffff\1\56\3\uffff\7\56\1\u01d1\1\u01d2"+
-        "\1\u01d3\1\u01d4\1\u01d5\1\uffff\1\u01d6\1\u01d7\1\u01d8\1\uffff"+
-        "\1\u01d9\1\u01da\2\uffff\1\u01dc\1\56\1\uffff\2\56\1\u01e0\1\56"+
-        "\1\u01e5\4\56\12\uffff\1\u01ea\1\uffff\3\56\1\uffff\4\56\1\uffff"+
-        "\3\56\1\u01f5\1\uffff\7\56\1\u01fd\1\u01fe\1\u01ff\1\uffff\6\56"+
-        "\1\u0206\3\uffff\1\u0207\1\u0208\1\56\1\u020a\1\u020b\1\u020c\3"+
-        "\uffff\1\u020d\4\uffff";
+        "\7\56\1\u00d7\4\56\3\uffff\2\56\1\u00e3\2\uffff\2\56\1\u00e6\35"+
+        "\56\1\u0105\1\56\1\u0107\1\u0108\1\u0109\7\56\1\u0111\1\u0112\1"+
+        "\56\1\u0114\3\56\1\uffff\3\56\1\u011b\7\56\1\uffff\1\u0123\1\56"+
+        "\1\uffff\4\56\1\u012a\14\56\1\u0138\4\56\1\u0140\1\u0141\4\56\1"+
+        "\u0146\1\56\1\uffff\1\u0148\3\uffff\3\56\1\u014c\3\56\2\uffff\1"+
+        "\56\1\uffff\1\u0151\1\56\1\u0153\3\56\1\uffff\7\56\1\uffff\6\56"+
+        "\1\uffff\6\56\1\u016a\6\56\1\uffff\5\56\1\u0176\1\56\2\uffff\1\56"+
+        "\1\u0179\2\56\1\uffff\1\u017c\1\uffff\3\56\1\uffff\2\56\1\u0182"+
+        "\1\u0183\1\uffff\1\u0184\1\uffff\4\56\1\u0189\3\56\1\u018d\1\56"+
+        "\1\u018f\1\u0190\6\56\1\u0197\2\56\1\u019a\1\uffff\1\u019b\1\u019c"+
+        "\1\u019d\1\u019e\1\u019f\1\u01a0\5\56\1\uffff\2\56\1\uffff\2\56"+
+        "\1\uffff\1\u01aa\3\56\1\u01ae\3\uffff\2\56\1\u01b1\1\56\1\uffff"+
+        "\1\u01b3\1\u01b4\1\u01b5\1\uffff\1\56\2\uffff\6\56\1\uffff\2\56"+
+        "\7\uffff\1\u01c2\3\56\1\u01c6\2\56\1\u01c9\1\u01ca\1\uffff\2\56"+
+        "\1\u01cd\1\uffff\2\56\1\uffff\1\56\3\uffff\7\56\1\u01d8\1\u01d9"+
+        "\1\u01da\1\u01db\1\u01dc\1\uffff\1\u01dd\1\u01de\1\u01df\1\uffff"+
+        "\1\u01e0\1\u01e1\2\uffff\1\u01e3\1\56\1\uffff\3\56\1\u01e8\1\56"+
+        "\1\u01ed\4\56\12\uffff\1\u01f2\1\uffff\4\56\1\uffff\4\56\1\uffff"+
+        "\3\56\1\u01fe\1\uffff\10\56\1\u0207\1\u0208\1\u0209\1\uffff\7\56"+
+        "\1\u0211\3\uffff\1\u0212\1\u0213\1\u0214\1\56\1\u0216\1\u0217\1"+
+        "\u0218\4\uffff\1\u0219\4\uffff";
     static final String DFA13_eofS =
-        "\u020e\uffff";
+        "\u021a\uffff";
     static final String DFA13_minS =
         "\1\11\1\142\1\46\1\55\1\75\2\uffff\2\75\1\162\1\141\1\uffff\1\145"+
         "\1\52\1\56\2\154\1\137\1\145\1\75\1\uffff\1\146\2\uffff\1\55\1\157"+
@@ -5047,100 +5081,100 @@ public class nesCLexer extends Lexer {
         "\1\167\1\162\1\137\5\uffff\1\163\1\157\1\147\1\157\1\147\1\141\1"+
         "\151\1\163\1\160\1\156\1\151\1\145\2\151\1\164\1\165\1\156\1\uffff"+
         "\1\155\1\157\1\141\1\154\1\145\1\162\1\155\1\146\1\141\1\142\1\uffff"+
-        "\1\171\1\145\1\142\1\155\1\156\1\145\1\141\1\60\1\164\1\145\1\157"+
-        "\3\uffff\1\154\1\151\1\60\2\uffff\1\147\1\165\1\60\1\141\1\145\1"+
-        "\163\1\164\1\166\1\151\1\157\1\165\1\164\1\165\1\162\1\156\1\145"+
-        "\1\164\1\165\1\164\1\153\1\145\1\164\1\157\1\151\1\163\1\144\1\141"+
-        "\1\154\1\162\1\155\1\143\1\151\1\60\1\153\3\60\1\141\1\157\1\151"+
-        "\1\164\1\151\1\165\1\154\2\60\1\154\1\60\1\164\1\162\1\164\1\uffff"+
-        "\1\164\1\162\1\60\1\145\1\156\1\66\1\62\1\64\1\137\1\162\1\uffff"+
-        "\1\60\1\154\1\uffff\1\143\1\137\1\164\1\151\1\60\1\151\1\163\1\164"+
-        "\1\151\2\162\1\164\1\141\1\157\1\151\2\143\1\60\1\144\1\61\1\156"+
-        "\1\147\2\60\1\164\1\145\1\141\1\151\1\60\1\143\1\uffff\1\60\3\uffff"+
-        "\2\156\1\147\1\60\1\156\1\154\1\145\2\uffff\1\145\1\uffff\1\60\1"+
-        "\156\1\60\1\162\1\151\1\uffff\1\155\1\145\3\137\1\164\1\146\1\uffff"+
-        "\2\145\1\165\1\162\1\156\1\151\1\uffff\1\144\1\164\1\145\1\162\1"+
-        "\151\1\156\1\60\1\154\1\144\1\146\1\143\1\164\1\150\1\uffff\1\145"+
-        "\1\66\1\62\1\64\1\137\1\60\1\156\2\uffff\1\151\1\60\1\143\1\156"+
-        "\1\uffff\1\60\1\uffff\1\144\1\145\1\165\1\uffff\1\165\1\164\2\60"+
-        "\1\uffff\1\60\1\uffff\1\151\1\143\1\145\1\60\3\164\1\60\1\141\2"+
-        "\60\1\151\1\165\1\164\1\157\2\145\1\60\1\145\1\143\1\60\1\uffff"+
-        "\6\60\1\146\3\137\1\164\1\uffff\1\145\1\154\1\uffff\1\164\1\147"+
-        "\1\uffff\1\60\1\156\1\162\1\145\1\60\3\uffff\1\142\1\60\1\156\1"+
-        "\uffff\3\60\1\uffff\1\143\2\uffff\1\156\1\143\1\61\1\156\1\163\1"+
-        "\162\1\uffff\1\163\1\164\7\uffff\1\60\3\164\1\60\1\144\1\145\2\60"+
-        "\1\uffff\1\164\1\141\1\60\1\uffff\1\165\1\uffff\1\164\3\uffff\1"+
-        "\145\2\164\1\66\1\62\1\64\1\137\5\60\1\uffff\3\60\1\uffff\2\60\2"+
-        "\uffff\1\60\1\164\1\uffff\1\164\1\141\1\60\1\61\1\60\3\137\1\164"+
-        "\12\uffff\1\60\1\uffff\1\151\1\145\1\164\1\uffff\1\66\1\62\1\64"+
-        "\1\137\1\uffff\3\164\1\60\1\uffff\1\157\1\137\1\151\3\137\1\164"+
-        "\3\60\1\uffff\1\156\1\137\1\157\3\164\1\60\3\uffff\2\60\1\156\3"+
-        "\60\3\uffff\1\60\4\uffff";
+        "\1\171\1\145\1\142\1\155\1\156\1\145\1\141\1\60\1\164\1\170\1\145"+
+        "\1\157\3\uffff\1\154\1\151\1\60\2\uffff\1\147\1\165\1\60\1\141\1"+
+        "\145\1\163\1\164\1\166\1\151\1\157\1\165\1\164\1\165\1\162\1\156"+
+        "\1\145\1\164\1\165\1\164\1\153\1\145\1\164\1\157\1\151\1\163\1\144"+
+        "\1\141\1\154\1\162\1\155\1\143\1\151\1\60\1\153\3\60\1\141\1\157"+
+        "\1\151\1\164\1\151\1\165\1\154\2\60\1\154\1\60\1\164\1\162\1\164"+
+        "\1\uffff\2\164\1\162\1\60\1\145\1\156\1\66\1\62\1\64\1\137\1\162"+
+        "\1\uffff\1\60\1\154\1\uffff\1\143\1\137\1\164\1\151\1\60\1\151\1"+
+        "\163\1\164\1\151\2\162\1\164\1\141\1\157\1\151\2\143\1\60\1\144"+
+        "\1\61\1\156\1\147\2\60\1\164\1\145\1\141\1\151\1\60\1\143\1\uffff"+
+        "\1\60\3\uffff\2\156\1\147\1\60\1\156\1\154\1\145\2\uffff\1\145\1"+
+        "\uffff\1\60\1\156\1\60\1\162\1\145\1\151\1\uffff\1\155\1\145\3\137"+
+        "\1\164\1\146\1\uffff\2\145\1\165\1\162\1\156\1\151\1\uffff\1\144"+
+        "\1\164\1\145\1\162\1\151\1\156\1\60\1\154\1\144\1\146\1\143\1\164"+
+        "\1\150\1\uffff\1\145\1\66\1\62\1\64\1\137\1\60\1\156\2\uffff\1\151"+
+        "\1\60\1\143\1\156\1\uffff\1\60\1\uffff\1\144\1\145\1\165\1\uffff"+
+        "\1\165\1\164\2\60\1\uffff\1\60\1\uffff\1\151\1\156\1\143\1\145\1"+
+        "\60\3\164\1\60\1\141\2\60\1\151\1\165\1\164\1\157\2\145\1\60\1\145"+
+        "\1\143\1\60\1\uffff\6\60\1\146\3\137\1\164\1\uffff\1\145\1\154\1"+
+        "\uffff\1\164\1\147\1\uffff\1\60\1\156\1\162\1\145\1\60\3\uffff\1"+
+        "\142\1\163\1\60\1\156\1\uffff\3\60\1\uffff\1\143\2\uffff\1\156\1"+
+        "\143\1\61\1\156\1\163\1\162\1\uffff\1\163\1\164\7\uffff\1\60\3\164"+
+        "\1\60\1\144\1\145\2\60\1\uffff\1\164\1\141\1\60\1\uffff\1\165\1"+
+        "\151\1\uffff\1\164\3\uffff\1\145\2\164\1\66\1\62\1\64\1\137\5\60"+
+        "\1\uffff\3\60\1\uffff\2\60\2\uffff\1\60\1\164\1\uffff\1\164\1\157"+
+        "\1\141\1\60\1\61\1\60\3\137\1\164\12\uffff\1\60\1\uffff\1\151\1"+
+        "\145\1\156\1\164\1\uffff\1\66\1\62\1\64\1\137\1\uffff\3\164\1\60"+
+        "\1\uffff\1\157\2\137\1\151\3\137\1\164\3\60\1\uffff\1\156\2\137"+
+        "\1\157\3\164\1\60\3\uffff\3\60\1\156\3\60\4\uffff\1\60\4\uffff";
     static final String DFA13_maxS =
         "\1\176\1\165\1\75\1\76\1\75\2\uffff\1\174\1\75\1\162\1\157\1\uffff"+
         "\1\165\1\75\1\56\1\170\1\157\1\137\1\157\1\76\1\uffff\1\156\2\uffff"+
         "\1\75\1\157\1\uffff\1\75\1\157\1\75\1\170\2\75\1\162\2\uffff\1\145"+
         "\1\uffff\1\167\1\171\1\163\1\157\1\150\10\uffff\1\163\1\172\1\157"+
         "\1\164\16\uffff\1\145\1\163\1\141\1\156\1\146\1\172\1\164\6\uffff"+
-        "\1\163\1\165\1\145\1\164\1\157\1\162\1\141\1\156\1\164\1\uffff\1"+
+        "\1\163\1\165\1\145\1\164\1\157\1\162\1\145\1\156\1\164\1\uffff\1"+
         "\75\1\uffff\1\172\1\160\1\164\1\uffff\1\75\2\uffff\1\156\2\uffff"+
         "\1\144\2\uffff\1\167\1\162\1\154\5\uffff\1\163\1\157\1\164\1\157"+
         "\1\172\1\162\1\151\1\163\1\160\1\156\1\163\1\145\1\154\1\151\1\164"+
         "\1\165\1\156\1\uffff\1\155\1\157\1\141\1\154\1\145\1\162\1\160\1"+
         "\164\1\141\1\142\1\uffff\1\171\1\145\1\142\1\155\1\156\1\145\1\141"+
-        "\1\172\1\164\1\145\1\157\3\uffff\1\154\1\151\1\172\2\uffff\1\147"+
-        "\1\165\1\172\1\141\1\145\1\165\1\164\1\166\1\151\1\157\1\165\1\164"+
-        "\1\165\1\162\1\156\1\145\1\164\1\165\1\164\1\153\1\145\1\164\1\157"+
-        "\1\151\1\163\1\144\1\141\1\154\1\162\1\155\1\143\1\151\1\172\1\153"+
-        "\3\172\1\141\1\157\1\151\1\164\1\151\1\165\1\154\2\172\1\154\1\172"+
-        "\1\164\1\162\1\164\1\uffff\1\164\1\162\1\172\1\145\1\156\1\66\1"+
-        "\62\1\64\1\137\1\162\1\uffff\1\172\1\154\1\uffff\1\143\1\137\1\164"+
-        "\1\156\1\172\1\151\1\163\1\164\1\151\2\162\1\164\1\145\1\157\1\151"+
-        "\2\143\1\172\1\144\1\70\1\156\1\147\2\172\1\164\1\145\1\141\1\151"+
-        "\1\172\1\143\1\uffff\1\172\3\uffff\2\156\1\147\1\172\1\156\1\154"+
-        "\1\145\2\uffff\1\145\1\uffff\1\172\1\156\1\172\1\162\1\151\1\uffff"+
-        "\1\155\1\145\3\137\1\164\1\146\1\uffff\2\145\1\165\1\162\1\156\1"+
-        "\151\1\uffff\1\144\1\164\1\145\1\162\1\151\1\156\1\172\1\154\1\144"+
-        "\1\146\1\143\1\164\1\150\1\uffff\1\145\1\66\1\62\1\64\1\137\1\172"+
-        "\1\156\2\uffff\1\151\1\172\1\143\1\156\1\uffff\1\172\1\uffff\1\144"+
-        "\1\145\1\165\1\uffff\1\165\1\164\2\172\1\uffff\1\172\1\uffff\1\151"+
-        "\1\143\1\145\1\172\3\164\1\172\1\141\2\172\1\151\1\165\1\164\1\157"+
-        "\2\145\1\172\1\145\1\143\1\172\1\uffff\6\172\1\146\3\137\1\164\1"+
-        "\uffff\1\145\1\154\1\uffff\1\164\1\147\1\uffff\1\172\1\156\1\162"+
-        "\1\145\1\172\3\uffff\1\142\1\172\1\156\1\uffff\3\172\1\uffff\1\143"+
-        "\2\uffff\1\156\1\143\1\70\1\156\1\163\1\162\1\uffff\1\163\1\164"+
-        "\7\uffff\1\172\3\164\1\172\1\144\1\145\2\172\1\uffff\1\164\1\141"+
-        "\1\172\1\uffff\1\165\1\uffff\1\164\3\uffff\1\145\2\164\1\66\1\62"+
-        "\1\64\1\137\5\172\1\uffff\3\172\1\uffff\2\172\2\uffff\1\172\1\164"+
-        "\1\uffff\1\164\1\141\1\172\1\70\1\172\3\137\1\164\12\uffff\1\172"+
-        "\1\uffff\1\151\1\145\1\164\1\uffff\1\66\1\62\1\64\1\137\1\uffff"+
-        "\3\164\1\172\1\uffff\1\157\1\137\1\151\3\137\1\164\3\172\1\uffff"+
-        "\1\156\1\137\1\157\3\164\1\172\3\uffff\2\172\1\156\3\172\3\uffff"+
-        "\1\172\4\uffff";
+        "\1\172\1\164\1\170\1\145\1\157\3\uffff\1\154\1\151\1\172\2\uffff"+
+        "\1\147\1\165\1\172\1\141\1\145\1\165\1\164\1\166\1\151\1\157\1\165"+
+        "\1\164\1\165\1\162\1\156\1\145\1\164\1\165\1\164\1\153\1\145\1\164"+
+        "\1\157\1\151\1\163\1\144\1\141\1\154\1\162\1\155\1\143\1\151\1\172"+
+        "\1\153\3\172\1\141\1\157\1\151\1\164\1\151\1\165\1\154\2\172\1\154"+
+        "\1\172\1\164\1\162\1\164\1\uffff\2\164\1\162\1\172\1\145\1\156\1"+
+        "\66\1\62\1\64\1\137\1\162\1\uffff\1\172\1\154\1\uffff\1\143\1\137"+
+        "\1\164\1\156\1\172\1\151\1\163\1\164\1\151\2\162\1\164\1\145\1\157"+
+        "\1\151\2\143\1\172\1\144\1\70\1\156\1\147\2\172\1\164\1\145\1\141"+
+        "\1\151\1\172\1\143\1\uffff\1\172\3\uffff\2\156\1\147\1\172\1\156"+
+        "\1\154\1\145\2\uffff\1\145\1\uffff\1\172\1\156\1\172\1\162\1\145"+
+        "\1\151\1\uffff\1\155\1\145\3\137\1\164\1\146\1\uffff\2\145\1\165"+
+        "\1\162\1\156\1\151\1\uffff\1\144\1\164\1\145\1\162\1\151\1\156\1"+
+        "\172\1\154\1\144\1\146\1\143\1\164\1\150\1\uffff\1\145\1\66\1\62"+
+        "\1\64\1\137\1\172\1\156\2\uffff\1\151\1\172\1\143\1\156\1\uffff"+
+        "\1\172\1\uffff\1\144\1\145\1\165\1\uffff\1\165\1\164\2\172\1\uffff"+
+        "\1\172\1\uffff\1\151\1\156\1\143\1\145\1\172\3\164\1\172\1\141\2"+
+        "\172\1\151\1\165\1\164\1\157\2\145\1\172\1\145\1\143\1\172\1\uffff"+
+        "\6\172\1\146\3\137\1\164\1\uffff\1\145\1\154\1\uffff\1\164\1\147"+
+        "\1\uffff\1\172\1\156\1\162\1\145\1\172\3\uffff\1\142\1\163\1\172"+
+        "\1\156\1\uffff\3\172\1\uffff\1\143\2\uffff\1\156\1\143\1\70\1\156"+
+        "\1\163\1\162\1\uffff\1\163\1\164\7\uffff\1\172\3\164\1\172\1\144"+
+        "\1\145\2\172\1\uffff\1\164\1\141\1\172\1\uffff\1\165\1\151\1\uffff"+
+        "\1\164\3\uffff\1\145\2\164\1\66\1\62\1\64\1\137\5\172\1\uffff\3"+
+        "\172\1\uffff\2\172\2\uffff\1\172\1\164\1\uffff\1\164\1\157\1\141"+
+        "\1\172\1\70\1\172\3\137\1\164\12\uffff\1\172\1\uffff\1\151\1\145"+
+        "\1\156\1\164\1\uffff\1\66\1\62\1\64\1\137\1\uffff\3\164\1\172\1"+
+        "\uffff\1\157\2\137\1\151\3\137\1\164\3\172\1\uffff\1\156\2\137\1"+
+        "\157\3\164\1\172\3\uffff\3\172\1\156\3\172\4\uffff\1\172\4\uffff";
     static final String DFA13_acceptS =
-        "\5\uffff\1\12\1\15\4\uffff\1\26\10\uffff\1\61\1\uffff\1\73\1\74"+
-        "\2\uffff\1\100\7\uffff\1\136\1\137\1\uffff\1\145\5\uffff\1\175\1"+
-        "\176\1\u0080\1\u0081\1\u0082\1\u0083\1\u0084\1\u0085\4\uffff\1\3"+
-        "\1\14\1\2\1\4\1\104\1\105\1\103\1\47\1\6\1\17\1\130\1\16\1\21\1"+
-        "\20\7\uffff\1\36\1\u0086\1\u0087\1\37\1\174\1\41\11\uffff\1\60\1"+
-        "\uffff\1\57\3\uffff\1\76\1\uffff\1\177\1\75\1\uffff\1\106\1\110"+
-        "\1\uffff\1\111\1\154\3\uffff\1\115\1\114\1\132\1\133\1\131\21\uffff"+
-        "\1\5\12\uffff\1\40\13\uffff\1\147\1\146\1\62\3\uffff\1\102\1\101"+
-        "\63\uffff\1\53\12\uffff\1\65\2\uffff\1\112\36\uffff\1\13\1\uffff"+
-        "\1\23\1\24\1\25\7\uffff\1\43\1\44\1\uffff\1\46\5\uffff\1\56\7\uffff"+
-        "\1\77\6\uffff\1\134\15\uffff\1\160\7\uffff\1\170\1\171\4\uffff\1"+
-        "\10\1\uffff\1\22\3\uffff\1\33\4\uffff\1\50\1\uffff\1\52\25\uffff"+
-        "\1\150\13\uffff\1\166\2\uffff\1\173\2\uffff\1\11\5\uffff\1\42\1"+
-        "\45\1\51\3\uffff\1\64\3\uffff\1\71\1\uffff\1\107\1\113\6\uffff\1"+
-        "\141\2\uffff\1\144\1\151\1\152\1\153\1\155\1\156\1\157\11\uffff"+
-        "\1\27\3\uffff\1\35\1\uffff\1\55\1\uffff\1\66\1\67\1\70\14\uffff"+
-        "\1\161\3\uffff\1\165\2\uffff\1\1\1\7\2\uffff\1\34\11\uffff\1\127"+
-        "\1\135\1\140\1\142\1\143\1\162\1\163\1\164\1\167\1\172\1\uffff\1"+
-        "\30\3\uffff\1\72\4\uffff\1\122\4\uffff\1\31\12\uffff\1\126\7\uffff"+
-        "\1\123\1\124\1\125\6\uffff\1\121\1\32\1\54\1\uffff\1\116\1\117\1"+
-        "\120\1\63";
+        "\5\uffff\1\12\1\15\4\uffff\1\26\10\uffff\1\62\1\uffff\1\74\1\75"+
+        "\2\uffff\1\101\7\uffff\1\137\1\140\1\uffff\1\146\5\uffff\1\175\1"+
+        "\176\1\u0080\1\u0084\1\u0085\1\u0086\1\u0087\1\u0088\4\uffff\1\3"+
+        "\1\14\1\2\1\4\1\105\1\106\1\104\1\50\1\6\1\17\1\131\1\16\1\21\1"+
+        "\20\7\uffff\1\36\1\u0081\1\u0082\1\37\1\44\1\41\11\uffff\1\61\1"+
+        "\uffff\1\60\3\uffff\1\77\1\uffff\1\177\1\76\1\uffff\1\107\1\111"+
+        "\1\uffff\1\112\1\155\3\uffff\1\116\1\115\1\133\1\134\1\132\21\uffff"+
+        "\1\5\12\uffff\1\40\14\uffff\1\150\1\147\1\63\3\uffff\1\103\1\102"+
+        "\63\uffff\1\54\13\uffff\1\66\2\uffff\1\113\36\uffff\1\13\1\uffff"+
+        "\1\23\1\24\1\25\7\uffff\1\43\1\45\1\uffff\1\47\6\uffff\1\57\7\uffff"+
+        "\1\100\6\uffff\1\135\15\uffff\1\161\7\uffff\1\171\1\172\4\uffff"+
+        "\1\10\1\uffff\1\22\3\uffff\1\33\4\uffff\1\51\1\uffff\1\53\26\uffff"+
+        "\1\151\13\uffff\1\167\2\uffff\1\174\2\uffff\1\11\5\uffff\1\42\1"+
+        "\46\1\52\4\uffff\1\65\3\uffff\1\72\1\uffff\1\110\1\114\6\uffff\1"+
+        "\142\2\uffff\1\145\1\152\1\153\1\154\1\156\1\157\1\160\11\uffff"+
+        "\1\27\3\uffff\1\35\2\uffff\1\56\1\uffff\1\67\1\70\1\71\14\uffff"+
+        "\1\162\3\uffff\1\166\2\uffff\1\1\1\7\2\uffff\1\34\12\uffff\1\130"+
+        "\1\136\1\141\1\143\1\144\1\163\1\164\1\165\1\170\1\173\1\uffff\1"+
+        "\30\4\uffff\1\73\4\uffff\1\123\4\uffff\1\31\13\uffff\1\127\10\uffff"+
+        "\1\124\1\125\1\126\7\uffff\1\122\1\32\1\55\1\u0083\1\uffff\1\117"+
+        "\1\120\1\121\1\64";
     static final String DFA13_specialS =
-        "\u020e\uffff}>";
+        "\u021a\uffff}>";
     static final String[] DFA13_transitionS = {
             "\2\62\1\uffff\2\62\22\uffff\1\62\1\37\1\60\1\24\1\uffff\1\33"+
             "\1\2\1\61\1\32\1\45\1\35\1\40\1\13\1\3\1\16\1\15\12\57\1\53"+
@@ -5236,91 +5270,90 @@ public class nesCLexer extends Lexer {
             "\1\u0095",
             "\1\u0096",
             "\1\u0097",
-            "\1\u0098",
-            "\1\u0099",
+            "\1\u0098\3\uffff\1\u0099",
             "\1\u009a",
-            "",
             "\1\u009b",
             "",
+            "\1\u009c",
+            "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u009e",
-            "\1\u009f\7\uffff\1\u00a0",
+            "\1\u009f",
+            "\1\u00a0\7\uffff\1\u00a1",
             "",
-            "\1\u00a1",
-            "",
-            "",
-            "\1\u00a3",
+            "\1\u00a2",
             "",
             "",
             "\1\u00a4",
             "",
             "",
             "\1\u00a5",
+            "",
+            "",
             "\1\u00a6",
-            "\1\u00a8\14\uffff\1\u00a7",
+            "\1\u00a7",
+            "\1\u00a9\14\uffff\1\u00a8",
             "",
             "",
             "",
             "",
             "",
-            "\1\u00a9",
             "\1\u00aa",
-            "\1\u00ab\5\uffff\1\u00ac\3\uffff\1\u00ad\1\uffff\1\u00ae\1"+
-            "\u00af",
-            "\1\u00b0",
-            "\1\u00b1\22\uffff\1\u00b2",
-            "\1\u00b3\20\uffff\1\u00b4",
-            "\1\u00b5",
+            "\1\u00ab",
+            "\1\u00ac\5\uffff\1\u00ad\3\uffff\1\u00ae\1\uffff\1\u00af\1"+
+            "\u00b0",
+            "\1\u00b1",
+            "\1\u00b2\22\uffff\1\u00b3",
+            "\1\u00b4\20\uffff\1\u00b5",
             "\1\u00b6",
             "\1\u00b7",
             "\1\u00b8",
-            "\1\u00b9\11\uffff\1\u00ba",
-            "\1\u00bb",
-            "\1\u00bc\2\uffff\1\u00bd",
-            "\1\u00be",
+            "\1\u00b9",
+            "\1\u00ba\11\uffff\1\u00bb",
+            "\1\u00bc",
+            "\1\u00bd\2\uffff\1\u00be",
             "\1\u00bf",
             "\1\u00c0",
             "\1\u00c1",
-            "",
             "\1\u00c2",
+            "",
             "\1\u00c3",
             "\1\u00c4",
             "\1\u00c5",
             "\1\u00c6",
             "\1\u00c7",
-            "\1\u00c8\2\uffff\1\u00c9",
-            "\1\u00ca\14\uffff\1\u00cb\1\u00cc",
-            "\1\u00cd",
+            "\1\u00c8",
+            "\1\u00c9\2\uffff\1\u00ca",
+            "\1\u00cb\14\uffff\1\u00cc\1\u00cd",
             "\1\u00ce",
-            "",
             "\1\u00cf",
+            "",
             "\1\u00d0",
             "\1\u00d1",
             "\1\u00d2",
             "\1\u00d3",
             "\1\u00d4",
             "\1\u00d5",
+            "\1\u00d6",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u00d7",
             "\1\u00d8",
             "\1\u00d9",
-            "",
-            "",
-            "",
             "\1\u00da",
             "\1\u00db",
-            "\1\56\1\u00dc\1\56\1\u00dd\2\56\1\u00de\1\56\1\u00df\1\56\7"+
-            "\uffff\32\56\4\uffff\1\56\1\uffff\4\56\1\u00e0\25\56",
             "",
             "",
-            "\1\u00e2",
-            "\1\u00e3",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
+            "\1\u00dc",
+            "\1\u00dd",
+            "\1\56\1\u00de\1\56\1\u00df\2\56\1\u00e0\1\56\1\u00e1\1\56\7"+
+            "\uffff\32\56\4\uffff\1\56\1\uffff\4\56\1\u00e2\25\56",
+            "",
+            "",
+            "\1\u00e4",
             "\1\u00e5",
-            "\1\u00e6",
-            "\1\u00e7\1\uffff\1\u00e8",
-            "\1\u00e9",
-            "\1\u00ea",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u00e7",
+            "\1\u00e8",
+            "\1\u00e9\1\uffff\1\u00ea",
             "\1\u00eb",
             "\1\u00ec",
             "\1\u00ed",
@@ -5345,168 +5378,173 @@ public class nesCLexer extends Lexer {
             "\1\u0100",
             "\1\u0101",
             "\1\u0102",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0103",
             "\1\u0104",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0106",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u0108",
-            "\1\u0109",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u010a",
             "\1\u010b",
             "\1\u010c",
             "\1\u010d",
             "\1\u010e",
+            "\1\u010f",
+            "\1\u0110",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u0111",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u0113",
-            "\1\u0114",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u0115",
-            "",
             "\1\u0116",
             "\1\u0117",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
+            "\1\u0118",
             "\1\u0119",
             "\1\u011a",
-            "\1\u011b",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u011c",
             "\1\u011d",
             "\1\u011e",
             "\1\u011f",
-            "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0120",
             "\1\u0121",
-            "",
             "\1\u0122",
-            "\1\u0123",
-            "\1\u0124",
-            "\1\u0125\4\uffff\1\u0126",
+            "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u0128",
-            "\1\u0129",
-            "\1\u012a",
+            "\1\u0124",
+            "",
+            "\1\u0125",
+            "\1\u0126",
+            "\1\u0127",
+            "\1\u0128\4\uffff\1\u0129",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u012b",
             "\1\u012c",
             "\1\u012d",
             "\1\u012e",
-            "\1\u012f\3\uffff\1\u0130",
+            "\1\u012f",
+            "\1\u0130",
             "\1\u0131",
-            "\1\u0132",
-            "\1\u0133",
+            "\1\u0132\3\uffff\1\u0133",
             "\1\u0134",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0135",
             "\1\u0136",
-            "\1\u0137\1\uffff\1\u0138\2\uffff\1\u0139\1\uffff\1\u013a",
-            "\1\u013b",
-            "\1\u013c",
+            "\1\u0137",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0139",
+            "\1\u013a\1\uffff\1\u013b\2\uffff\1\u013c\1\uffff\1\u013d",
+            "\1\u013e",
             "\1\u013f",
-            "\1\u0140",
-            "\1\u0141",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u0142",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0143",
             "\1\u0144",
-            "",
+            "\1\u0145",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "",
-            "",
-            "",
-            "\1\u0146",
             "\1\u0147",
-            "\1\u0148",
+            "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
+            "",
+            "",
+            "\1\u0149",
             "\1\u014a",
             "\1\u014b",
-            "\1\u014c",
-            "",
-            "",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u014d",
-            "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u014e",
             "\1\u014f",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u0151",
-            "\1\u0152",
             "",
-            "\1\u0153",
+            "",
+            "\1\u0150",
+            "",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0152",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u0154",
             "\1\u0155",
             "\1\u0156",
+            "",
             "\1\u0157",
             "\1\u0158",
             "\1\u0159",
-            "",
             "\1\u015a",
             "\1\u015b",
             "\1\u015c",
             "\1\u015d",
+            "",
             "\1\u015e",
             "\1\u015f",
-            "",
             "\1\u0160",
             "\1\u0161",
             "\1\u0162",
             "\1\u0163",
+            "",
             "\1\u0164",
             "\1\u0165",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0166",
             "\1\u0167",
             "\1\u0168",
             "\1\u0169",
-            "\1\u016a",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u016b",
             "\1\u016c",
-            "",
             "\1\u016d",
             "\1\u016e",
             "\1\u016f",
             "\1\u0170",
+            "",
             "\1\u0171",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0172",
             "\1\u0173",
-            "",
-            "",
             "\1\u0174",
+            "\1\u0175",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u0176",
             "\1\u0177",
             "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
-            "\1\u0179",
+            "\1\u0178",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u017a",
             "\1\u017b",
             "",
-            "\1\u017c",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
             "\1\u017d",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u017e",
+            "\1\u017f",
             "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "",
+            "\1\u0180",
             "\1\u0181",
-            "\1\u0182",
-            "\1\u0183",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
             "\1\u0185",
             "\1\u0186",
             "\1\u0187",
+            "\1\u0188",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u0189",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u018a",
+            "\1\u018b",
             "\1\u018c",
-            "\1\u018d",
-            "\1\u018e",
-            "\1\u018f",
-            "\1\u0190",
-            "\1\u0191",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u018e",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0191",
+            "\1\u0192",
             "\1\u0193",
             "\1\u0194",
+            "\1\u0195",
+            "\1\u0196",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0198",
+            "\1\u0199",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
@@ -5515,80 +5553,82 @@ public class nesCLexer extends Lexer {
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u019c",
-            "\1\u019d",
-            "\1\u019e",
-            "\1\u019f",
-            "\1\u01a0",
-            "",
             "\1\u01a1",
             "\1\u01a2",
-            "",
             "\1\u01a3",
             "\1\u01a4",
+            "\1\u01a5",
             "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u01a6",
             "\1\u01a7",
+            "",
             "\1\u01a8",
+            "\1\u01a9",
+            "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "",
-            "",
-            "",
-            "\1\u01aa",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u01ab",
             "\1\u01ac",
-            "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u01ad",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
+            "",
+            "",
+            "\1\u01af",
             "\1\u01b0",
-            "",
-            "",
-            "\1\u01b1",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u01b2",
-            "\1\u01b3\1\uffff\1\u01b4\2\uffff\1\u01b5\1\uffff\1\u01b6",
+            "",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
+            "\1\u01b6",
+            "",
+            "",
             "\1\u01b7",
             "\1\u01b8",
-            "\1\u01b9",
-            "",
-            "\1\u01ba",
-            "\1\u01bb",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u01b9\1\uffff\1\u01ba\2\uffff\1\u01bb\1\uffff\1\u01bc",
             "\1\u01bd",
             "\1\u01be",
             "\1\u01bf",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
+            "\1\u01c0",
             "\1\u01c1",
-            "\1\u01c2",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u01c3",
+            "\1\u01c4",
             "\1\u01c5",
-            "\1\u01c6",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u01c7",
+            "\1\u01c8",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
-            "\1\u01c8",
-            "",
-            "\1\u01c9",
-            "",
-            "",
-            "",
-            "\1\u01ca",
             "\1\u01cb",
             "\1\u01cc",
-            "\1\u01cd",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
             "\1\u01ce",
             "\1\u01cf",
+            "",
             "\1\u01d0",
+            "",
+            "",
+            "",
+            "\1\u01d1",
+            "\1\u01d2",
+            "\1\u01d3",
+            "\1\u01d4",
+            "\1\u01d5",
+            "\1\u01d6",
+            "\1\u01d7",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
@@ -5603,71 +5643,77 @@ public class nesCLexer extends Lexer {
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
             "",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\22\56\1\u01db\7\56",
-            "\1\u01dd",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\22\56\1\u01e2\7\56",
+            "\1\u01e4",
             "",
-            "\1\u01de",
-            "\1\u01df",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u01e1\1\uffff\1\u01e2\2\uffff\1\u01e3\1\uffff\1\u01e4",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u01e5",
             "\1\u01e6",
             "\1\u01e7",
-            "\1\u01e8",
-            "\1\u01e9",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "",
-            "\1\u01eb",
-            "\1\u01ec",
-            "\1\u01ed",
-            "",
+            "\1\u01e9\1\uffff\1\u01ea\2\uffff\1\u01eb\1\uffff\1\u01ec",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\1\u01ee",
             "\1\u01ef",
             "\1\u01f0",
             "\1\u01f1",
             "",
-            "\1\u01f2",
-            "\1\u01f3",
-            "\1\u01f4",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
+            "\1\u01f3",
+            "\1\u01f4",
+            "\1\u01f5",
             "\1\u01f6",
+            "",
             "\1\u01f7",
             "\1\u01f8",
             "\1\u01f9",
             "\1\u01fa",
+            "",
             "\1\u01fb",
             "\1\u01fc",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u01fd",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
+            "\1\u01ff",
             "\1\u0200",
             "\1\u0201",
             "\1\u0202",
             "\1\u0203",
             "\1\u0204",
             "\1\u0205",
+            "\1\u0206",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
+            "\1\u020a",
+            "\1\u020b",
+            "\1\u020c",
+            "\1\u020d",
+            "\1\u020e",
+            "\1\u020f",
+            "\1\u0210",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "",
             "",
             "",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
-            "\1\u0209",
+            "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "\1\u0215",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
             "\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32\56",
+            "",
             "",
             "",
             "",
@@ -5708,7 +5754,7 @@ public class nesCLexer extends Lexer {
             this.transition = DFA13_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__187 | T__188 | T__189 | T__190 | T__191 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE | COMMENT1 | COMMENT2 );";
+            return "1:1: Tokens : ( ABSTRACT | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELLIPSIS | ELSE | ENABLE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__189 | T__190 | T__191 | T__192 | COMMENT1 | COMMENT2 | COMMENT3 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE );";
         }
     }
  

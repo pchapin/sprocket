@@ -39,12 +39,12 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
    * @return A fresh global symbol table stack preloaded with certain type names.
    */
   private def initializeGlobalSymbols(): SymbolTableManager = {
-    val globalTypes: Array[String] = Array("bool", "error_t", "message_t")
+    val globalTypes: Array[String] = Array("__builtin_va_list", "bool", "error_t", "message_t")
     val globalSymbols: SymbolTableManager = new SymbolTableManager
     for (typeName <- globalTypes) {
       globalSymbols.addType(typeName)
     }
-    return globalSymbols
+    globalSymbols
   }
 
 
@@ -77,6 +77,10 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
 
   private def doWholeFileTests(testCaseNames: Array[String]) {
     doTests(testCaseNames, initializeGlobalSymbols, _.nesC_file())
+  }
+
+  private def doTranslationUnitTests(testCaseNames: Array[String]) {
+    doTests(testCaseNames, initializeGlobalSymbols, _.translation_unit())
   }
 
   private def doExpressionTests(testCaseNames: Array[String]) {
@@ -199,7 +203,8 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
 
   test("Function Declaration Test") {
     val testCaseNames =
-      Array("Declaration0300.nc", "Declaration0310.nc", "Declaration0320.nc")
+      Array("Declaration0300.nc", "Declaration0310.nc", "Declaration0320.nc", "Declaration0330.nc",
+            "Declaration0340.nc")
     doDeclarationTests(testCaseNames)
   }
 
@@ -213,6 +218,12 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
     val testCaseNames =
       Array("Declaration0500.nc", "Declaration0510.nc", "Declaration0520.nc")
     doDeclarationTests(testCaseNames)
+  }
+
+  test("Translation Unit Test") {
+    val testCaseNames =
+      Array("TranslationUnit0100.nc", "TranslationUnit0110.nc")
+    doTranslationUnitTests(testCaseNames)
   }
 
   test("Sprocket Extensions Test") {

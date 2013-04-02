@@ -92,11 +92,20 @@ public final class SymbolTableManager {
      */
     public boolean isType(String name)
     {
+        boolean result = false;
         for (int i = scopes.size() - 1; i >= 0; --i) {
-            if (scopes.get(i).isType(name)) return true;
-            if (scopes.get(i).isDefined(name)) return false;
+            if (scopes.get(i).isType(name)) {
+                result = true;
+                break;
+            }
+            if (scopes.get(i).isDefined(name)) {
+                result = false;
+                break;
+            }
         }
-        return false;
+        // The following is sometimes useful for debugging.
+        // System.out.println("Checking " + name + " as a type; result = " + result);
+        return result;
     }
 
 

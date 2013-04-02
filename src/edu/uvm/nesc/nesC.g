@@ -242,6 +242,39 @@ tokens {
 //    {
 //        throw e;
 //    }
+
+    // The following two overrides provide enhanced error messages that are useful for debugging
+    // grammar problems. The messages produced are not very suitable for end users so these
+    // methods should probably be removed before a "production" version of Sprocket is released.
+    //
+    // If you run ANTLR with the -dfa option, it will generate DOT files showing decision state
+    // diagrams. You can use these files to look up a particular decision number to get more
+    // information about what the parser was attempting to do when it encountered the error.
+    // See Section 10.2 on page 245 of the Definitive ANTLR book (for ANTLR v3).
+    //
+    @Override
+    public String getErrorMessage(RecognitionException e, String[] tokenNames)
+    {
+        List stack = getRuleInvocationStack(e, this.getClass().getName());
+        String msg = null;
+        if (e instanceof NoViableAltException) {
+            NoViableAltException nvae = (NoViableAltException)e;
+            msg = " no viable alt; token=" + e.token +
+                  " (decision=" + nvae.decisionNumber +
+                  " state " + nvae.stateNumber + ")" +
+                  " decision=<<" + nvae.grammarDecisionDescription + ">>";
+        }
+        else {
+            msg = super.getErrorMessage(e, tokenNames);
+        }
+        return stack + " " + msg;
+    }
+
+    @Override
+    public String getTokenErrorDisplay(Token t)
+    {
+        return t.toString();
+    }
 }
 
 //@parser::rulecatch {
@@ -717,7 +750,7 @@ jump_statement
 /* ===================================== */
 
 translation_unit
-    :    (external_declaration | line_directive)+;
+    :    (line_directive | external_declaration)+;
 
 // It would be more accurate to move function_definition here. See the comment at 'declaration'
 external_declaration
@@ -764,7 +797,7 @@ nesC_file
 interface_definition
     :    INTERFACE identifier type_parameters? attributes?
         '{' { symbols.enterScope(); }
-        (declaration | line_directive)*
+        (line_directive | declaration)*
             { symbols.exitScope();  } '}'
             -> ^(INTERFACE identifier declaration*);
     
@@ -830,7 +863,7 @@ configuration_implementation
             -> ^(IMPLEMENTATION configuration_element_list?);
     
 configuration_element_list
-    :    (configuration_element | line_directive)+;
+    :    (line_directive | configuration_element)+;
     
 configuration_element
     :    components
@@ -905,7 +938,7 @@ identifier_path
 //
 component_specification
     :    '{' { symbols.enterScope(); }
-          (uses_provides | line_directive)* '}' -> ^(SPECIFICATION uses_provides*);
+          (line_directive | uses_provides)* '}' -> ^(SPECIFICATION uses_provides*);
     
 uses_provides
     :    USES specification_element_list -> ^(USES specification_element_list)

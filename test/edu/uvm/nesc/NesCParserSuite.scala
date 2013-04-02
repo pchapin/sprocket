@@ -222,7 +222,7 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
 
   test("Translation Unit Test") {
     val testCaseNames =
-      Array("TranslationUnit0100.nc", "TranslationUnit0110.nc")
+      Array("TranslationUnit0100.nc", "TranslationUnit0110.nc", "TranslationUnit0120.nc")
     doTranslationUnitTests(testCaseNames)
   }
 

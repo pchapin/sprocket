@@ -1,0 +1,13 @@
+
+TITLE: Trust Management in Wireless Sensor Networks
+
+AUTHORS: Peter C. Chapin and Christian Skalka
+
+ABSTRACT: Nodes in a heterogeneous wireless sensor network have a need for specifying and
+enforcing rich access control policies. We enhance SpartanRPC, an extension of the nesC language
+that supports remote procedure call, to use the RT_0 trust management system for controlling
+access to remotely exported resources. Our implementation, currently under development, will
+perform all access control computations on the sensor nodes, including both eliptic curve public
+key operations and the execution of a dynamically generated Datalog program to compute
+authorizations. We intend to explore the feasibility of this implementation and evaluate areas
+for future optimizations.

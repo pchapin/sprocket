@@ -1,0 +1,13 @@
+
+TITLE: Programming Language Support for Wireless Sensor Network Reconfiguration
+
+ABSTRACT: The nesC programming language is commonly used for the development of wireless sensor
+network applications. nesC allows different software components to be statically wired together
+to form node-level applications. We are developing an extension to nesC that allows components
+on different nodes to be wired together in a manner that is similar to that provided by the
+existing nesC language. Our extension hides all node to node communication behind a remote
+procedure call abstraction. Because of the volatile nature of wireless sensor networks, the
+inter-node wiring must be adaptable to changes in network topology or function. Thus unlike the
+current nesC language, our extension provides a mechanism for supporting dynamic wiring
+configurations so that the structure of the overall program can change at run time.
+

@@ -1,8 +1,8 @@
 grammar nesC;
 
 options {
-    backtrack = true;      // Quick and dirty. Should try to remove eventually.
-    memoize   = true;      // Quick and dirty. Should try to remove eventually.
+    // backtrack = true;      // Quick and dirty. Should try to remove eventually.
+    // memoize   = true;      // Quick and dirty. Should try to remove eventually.
     output    = AST;
 }
 
@@ -325,6 +325,11 @@ call_kind
 argument_expression_list
     :    assignment_expression (','! assignment_expression)*;
     
+// With SIZEOF unary_expression there's a non-LL(*) decision that arises because unary_expression
+// can expand as postfix_expression -> primary_expression -> '(' expression ')'. In other words
+// the grammar has problems telling sizeof(int) from sizeof(x+y). Applying sizeof to expressions
+// is unusual. I'll just make it illegal for now.
+//
 unary_expression
     :    '++' unary_expression -> ^(PRE_INCREMENT unary_expression)
     |    '--' unary_expression -> ^(PRE_DECREMENT unary_expression)
@@ -334,9 +339,9 @@ unary_expression
     |    '-'  cast_expression  -> ^(UNARY_MINUS   cast_expression )
     |    ('~'^ | '!'^) cast_expression
     |    SIZEOF '(' type_name ')' -> ^(SIZEOF_TYPE type_name)
-    |    SIZEOF unary_expression  -> ^(SIZEOF_EXPRESSION unary_expression)
+//    |    SIZEOF unary_expression  -> ^(SIZEOF_EXPRESSION unary_expression)
     |    postfix_expression;
-    
+
 // It is convenient to put the cast_expression first in the AST because that way the various
 // tokens composing the type_name do not have to be wrapped in a pseudo-token. Note that the
 // expression should be entirely contained inside its own tree.
@@ -427,19 +432,22 @@ scope { LinkedList<String> declaredNames;
          function_definition -> ^(DECLARATION ^(FUNCTION_DEFINITION function_definition))
          // TODO: Add function names to the list of ordinary (non-type) names in the symbol table.
 
+         // The init_declarator_list is optional so 'typedef signed char int8_t;' will parse.
+         // See the comment in the 'tokens' section of this grammar near the INT8_T token.
+    |    TYPEDEF declaration_specifiers ';'
+             -> ^(DECLARATION TYPEDEF declaration_specifiers)
+
     |    { $declaration::declaredNames = new LinkedList<String>();
            $declaration::inStructDeclaration = false;
          }
-         // The init_declarator_list is optional so 'typedef signed char int8_t;' will parse.
-         // See the comment in the 'tokens' section of this grammar near the INT8_T token.
-         TYPEDEF declaration_specifiers gcc_attributes? init_declarator_list? gcc_attributes? ';'
+         TYPEDEF declaration_specifiers gcc_attributes? init_declarator_list gcc_attributes? ';'
              {
                // Inefficient, but how many declarators will be in a declaration, honestly?
                for (int i = 0; i < $declaration::declaredNames.size(); ++i) {
                    symbols.addType($declaration::declaredNames.get(i));
                }
              }
-             -> ^(DECLARATION TYPEDEF declaration_specifiers init_declarator_list?);
+             -> ^(DECLARATION TYPEDEF declaration_specifiers init_declarator_list);
     
 declaration_specifiers
     :    (storage_class_specifier |
@@ -784,8 +792,12 @@ function_definition
 // declarations and the interface|component. This null token is awkward.
 //
 nesC_file
-    :    translation_unit? interface_definition -> ^(FILE translation_unit? interface_definition)
-    |    translation_unit? component            -> ^(FILE translation_unit? component);
+    :    translation_unit? large_scale_construct
+             -> ^(FILE translation_unit? large_scale_construct);
+
+large_scale_construct
+    :    interface_definition
+    |    component;
 
 // This is deprecated. The nesC 1.2 manual doesn't even discuss the semantics of 'includes'
 // include_statement

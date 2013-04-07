@@ -516,14 +516,12 @@ type_specifier
     |   typedef_name;
 
 struct_or_union_specifier
-    :    struct_or_union identifier? '{' struct_declaration_list '}'
-            -> ^(struct_or_union identifier? struct_declaration_list)
-    |    struct_or_union identifier
-            -> ^(struct_or_union identifier)
+    :    struct_or_union '{' struct_declaration_list '}'
+             -> ^(struct_or_union struct_declaration_list)
+    |    struct_or_union identifier (/* attributes? */ '{' struct_declaration_list '}')?
+             -> ^(struct_or_union identifier /* attributes? */ struct_declaration_list?)
     |    STRUCT '@' identifier '{' struct_declaration_list '}'
-            -> ^(STRUCT identifier struct_declaration_list)
-    |    struct_or_union identifier attributes '{' struct_declaration_list '}'
-            -> ^(struct_or_union identifier struct_declaration_list);
+             -> ^(STRUCT '@' identifier struct_declaration_list);
     
 struct_or_union
     :    STRUCT | UNION | NX_STRUCT | NX_UNION;
@@ -557,16 +555,14 @@ struct_declarator_list
     :    struct_declarator (',' struct_declarator)* -> ^(DECLARATOR_LIST struct_declarator+);
     
 struct_declarator
-    :    declarator? ':' constant_expression
-    |    declarator;
+    :    declarator (':' constant_expression)?
+    |    ':' constant_expression;
     
 enum_specifier
-    :    ENUM identifier? '{' enumerator_list ','? '}'
-             -> ^(ENUM identifier? enumerator_list)
-    |    ENUM identifier attributes '{' enumerator_list ','? '}'
-             -> ^(ENUM identifier attributes enumerator_list)
-    |    ENUM identifier
-             -> ^(ENUM identifier);
+    :    ENUM '{' enumerator_list ','? '}'
+             -> ^(ENUM enumerator_list)
+    |    ENUM identifier (/* attributes? */ '{' enumerator_list ','? '}')?
+             -> ^(ENUM identifier /* attributes? */ enumerator_list?);
     
 enumerator_list
     :    enumerator (','! enumerator)*;
@@ -645,10 +641,13 @@ parameter_list
 // should be packaged in order to distinguish them clearly.
 //
 parameter_declaration
-    :    declaration_specifiers declarator attributes?
-            -> ^(PARAMETER declaration_specifiers declarator attributes?)
-    |    declaration_specifiers abstract_declarator?
-            -> ^(PARAMETER declaration_specifiers abstract_declarator?);
+    :    declaration_specifiers parameter_declarator
+            -> ^(PARAMETER declaration_specifiers parameter_declarator);
+
+// The problem here is that both declarator and abstract_declarator can start with pointer.
+parameter_declarator
+    :    declarator attributes?
+    |    abstract_declarator?;
     
 identifier_list
     :    identifier (',' identifier)* -> identifier+;
@@ -715,13 +714,9 @@ labeled_statement
 //    
 compound_statement
     :    '{' { symbols.enterScope(); }
-         block_item*
-             { symbols.exitScope();  } '}' -> ^(COMPOUND_STATEMENT block_item*);
+         declaration* statement*
+             { symbols.exitScope();  } '}' -> ^(COMPOUND_STATEMENT declaration* statement*);
 
-block_item
-    :    declaration
-    |    statement;
-    
 // The STATEMENT pseudo-token is needed so that expression statements are clearly distinguished
 // from declarations, other kinds of statements (if, while, etc), and also to clarify places
 // where null statements are used.
@@ -923,12 +918,13 @@ component_argument
 // external connections).
 //
 connection
-    :    endpoint '=' endpoint ';'
-             -> ^(CONNECTION '=' endpoint endpoint)
-    |    certificate_specification? endpoint '->' endpoint ';'
-             -> ^(CONNECTION '->' endpoint endpoint certificate_specification?)
-    |    certificate_specification? endpoint '<-' endpoint ';'
-             -> ^(CONNECTION '<-' endpoint endpoint certificate_specification?);
+    :    certificate_specification? endpoint wire_rhs ';'
+             -> ^(CONNECTION wire_rhs endpoint certificate_specification?);
+
+wire_rhs
+    :    '='^  endpoint
+    |    '->'^ endpoint
+    |    '<-'^ endpoint;
 
 certificate_specification
     :    ENABLE certs=STRING_LITERAL (AS entity=STRING_LITERAL)? (ASSUMING assumptions=STRING_LITERAL)? FOR

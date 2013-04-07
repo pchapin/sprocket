@@ -9,8 +9,8 @@ Prerequisites
 -------------
 
 * Java development kit (I used v1.7u15)
-* Scala (I used v2.10)
-* IntelliJ IDEA (I used v12.0.4)
+* Scala (I used v2.10.1)
+* IntelliJ IDEA (I used v12.1)
 * LaTeX (required for building the documentation)
 
 Development is done on Linux but it is likely that most things will work on Windows or any other
@@ -40,13 +40,6 @@ configuration file and about how to use Sprocket in general.
 The Samples directory contains various examples of Spartan RPC programs. See the README files
 associated with each example for more information.
 
-The files in the IML folder contain a list of known issues with Sprocket in "Issue Markup
-Language" format. This XML language is defined by the schema located in the repository here:
-
-    https://github.com/pchapin/IML
-
-If you clone this repository into a sibling folder named IML the relative paths in the XML
-documents will work and they can then be validated.
 
 nesC Grammar
 ------------
@@ -76,10 +69,6 @@ issues to consider.
   in the ASTs. These will eventualy be removed. Also the structure of the ASTs may change (as I
   learn what I'm doing).
 
-+ Currently the parser aborts with an exception at the first syntax error encountered (at least
-  that is the intent). This facilitates testing but it is undesirable behavior in a production
-  program. Better error handling may eventually be implemented.
-
 + I may eventually provide a tree grammar to convert the ASTs into real parse trees (I'm not
   clear if I absolutely need that for my own work right now, but in general it would be
   desirable to have this ability).
@@ -89,20 +78,3 @@ issues to consider.
   exponential in the number of input tokens. My experience with the parser so far is that in
   real life parse times are just fine. However, it might be desirable to eventually do without
   backtracking mode.
-
-+ Symbol table handling is very simplistic and this causes some errors. For example, consider
-  the following (plain C) code:
-
-        typedef int counter;
-
-        void f()
-        {
-          char *counter;  // Syntax error here!
-  
-          // ...
-        }
-
-  The parser believes 'counter' is a type name and thus considers the declaration marked above
-  as a syntax error since type names can not appear as declarators. While this is clearly not
-  accpetable in an industrial strength parser, it probably won't cause any real problems in
-  small to medium sized examples.

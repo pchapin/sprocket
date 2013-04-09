@@ -1,8 +1,8 @@
 grammar nesC;
 
 options {
-    backtrack = true;      // Quick and dirty. Should try to remove eventually.
-    memoize   = true;      // Quick and dirty. Should try to remove eventually.
+    // backtrack = true;      // Quick and dirty. Should try to remove eventually.
+    // memoize   = true;      // Quick and dirty. Should try to remove eventually.
     output    = AST;
 }
 
@@ -325,6 +325,11 @@ call_kind
 argument_expression_list
     :    assignment_expression (','! assignment_expression)*;
     
+// With SIZEOF unary_expression there's a non-LL(*) decision that arises because unary_expression
+// can expand as postfix_expression -> primary_expression -> '(' expression ')'. In other words
+// the grammar has problems telling sizeof(int) from sizeof(x+y). Applying sizeof to expressions
+// is unusual. I'll just make it illegal for now.
+//
 unary_expression
     :    '++' unary_expression -> ^(PRE_INCREMENT unary_expression)
     |    '--' unary_expression -> ^(PRE_DECREMENT unary_expression)
@@ -334,15 +339,16 @@ unary_expression
     |    '-'  cast_expression  -> ^(UNARY_MINUS   cast_expression )
     |    ('~'^ | '!'^) cast_expression
     |    SIZEOF '(' type_name ')' -> ^(SIZEOF_TYPE type_name)
-    |    SIZEOF unary_expression  -> ^(SIZEOF_EXPRESSION unary_expression)
+//    |    SIZEOF unary_expression  -> ^(SIZEOF_EXPRESSION unary_expression)
     |    postfix_expression;
-    
+
 // It is convenient to put the cast_expression first in the AST because that way the various
 // tokens composing the type_name do not have to be wrapped in a pseudo-token. Note that the
 // expression should be entirely contained inside its own tree.
 //
 cast_expression
-    :    '(' type_name ')' cast_expression -> ^(CAST cast_expression type_name)
+    :    ('(' type_name ')') =>
+          '(' type_name ')' cast_expression -> ^(CAST cast_expression type_name)
     |    unary_expression;
     
 multiplicative_expression
@@ -378,12 +384,20 @@ logical_or_expression
 conditional_expression
     :    logical_or_expression ('?'^ expression ':'! conditional_expression)?;
     
+//assignment_expression
+//    :    unary_expression ('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression
+//    |    conditional_expression;
+
+// The original grammar used the productions above. This resulted in a non-LL(*) decision
+// because conditional_expression can also be a unary_expression. The production below resolves
+// this but permits various illegal expressions on the left hand side of an assignment operator.
+// Such expressions will have to be ruled out after parsing.
+//    
 assignment_expression
-    :    unary_expression ('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression
-    |    conditional_expression;
-    
+    :    conditional_expression (('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression)?;
+
 expression
-    :    assignment_expression (','^ assignment_expression)*;
+    :    assignment_expression ((',' assignment_expression) => ','^ assignment_expression)*;
     
 constant_expression
     :    conditional_expression;
@@ -405,10 +419,12 @@ constant_expression
 // not terminated with a ';' while other kinds of declarations are so terminated.
 //
 // TODO: Currently the gcc_attributes are not part of the AST.
+// TODO: How are names introduced in parameter lists handled? Are they going into symbol tables?
 declaration
 scope { LinkedList<String> declaredNames;
         boolean inStructDeclaration; }
-    :    { $declaration::declaredNames = new LinkedList<String>();
+    :    (declaration_specifiers gcc_attributes? init_declarator_list? ';') =>
+         { $declaration::declaredNames = new LinkedList<String>();
            $declaration::inStructDeclaration = false;
          }
          // The init_declarator_list is optional because of, for example, structure definitions.
@@ -424,29 +440,47 @@ scope { LinkedList<String> declaredNames;
     |    { $declaration::declaredNames = new LinkedList<String>();
            $declaration::inStructDeclaration = false;
          }
-         function_definition -> ^(DECLARATION ^(FUNCTION_DEFINITION function_definition))
-         // TODO: Add function names to the list of ordinary (non-type) names in the symbol table.
+         function_definition
+             {
+               // Inefficient, but how many declarators will be in a declaration, honestly?
+               for (int i = 0; i < $declaration::declaredNames.size(); ++i) {
+                   symbols.addIdentifier($declaration::declaredNames.get(i));
+               }
+             }
+             -> ^(DECLARATION ^(FUNCTION_DEFINITION function_definition))
+
+    |    // The init_declarator_list is optional so 'typedef signed char int8_t;' will parse.
+         // See the comment in the 'tokens' section of this grammar near the INT8_T token.
+         //
+         (TYPEDEF declaration_specifiers ';') => TYPEDEF declaration_specifiers ';'
+             -> ^(DECLARATION TYPEDEF declaration_specifiers)
 
     |    { $declaration::declaredNames = new LinkedList<String>();
            $declaration::inStructDeclaration = false;
          }
-         // The init_declarator_list is optional so 'typedef signed char int8_t;' will parse.
-         // See the comment in the 'tokens' section of this grammar near the INT8_T token.
-         TYPEDEF declaration_specifiers gcc_attributes? init_declarator_list? gcc_attributes? ';'
+         TYPEDEF declaration_specifiers gcc_attributes? init_declarator_list gcc_attributes? ';'
              {
                // Inefficient, but how many declarators will be in a declaration, honestly?
                for (int i = 0; i < $declaration::declaredNames.size(); ++i) {
                    symbols.addType($declaration::declaredNames.get(i));
                }
              }
-             -> ^(DECLARATION TYPEDEF declaration_specifiers init_declarator_list?);
+             -> ^(DECLARATION TYPEDEF declaration_specifiers init_declarator_list);
     
+// nesC allows declarations to be marked as "default" in certain situations. Currently doing so
+// causes problems in blocks where declarations have to be distinguished from statements. A
+// labeled_statement can start with DEFAULT ':'. I don't understand why this is a problem,
+// though, since no c_style_declaration_specifier can start with ':'. Why isn't the second
+// lookahead token sufficient to disambiguate?
+//
 declaration_specifiers
-    :    (storage_class_specifier |
-          type_specifier          |
-          type_qualifier          |
-          function_specifier      |
-          DEFAULT)+;
+    :    /* DEFAULT? */ c_style_declaration_specifier+;
+
+c_style_declaration_specifier
+    :    storage_class_specifier
+    |    type_specifier
+    |    type_qualifier
+    |    function_specifier;
   
 // The DECLARATOR_LIST pseudo-token is needed as a container for a list of declarators. This
 // is needed to distinguish the declarators in a declaration from the various declaration
@@ -508,14 +542,12 @@ type_specifier
     |   typedef_name;
 
 struct_or_union_specifier
-    :    struct_or_union identifier? '{' struct_declaration_list '}'
-            -> ^(struct_or_union identifier? struct_declaration_list)
-    |    struct_or_union identifier
-            -> ^(struct_or_union identifier)
+    :    struct_or_union '{' struct_declaration_list '}'
+             -> ^(struct_or_union struct_declaration_list)
+    |    struct_or_union identifier (/* attributes? */ '{' struct_declaration_list '}')?
+             -> ^(struct_or_union identifier /* attributes? */ struct_declaration_list?)
     |    STRUCT '@' identifier '{' struct_declaration_list '}'
-            -> ^(STRUCT identifier struct_declaration_list)
-    |    struct_or_union identifier attributes '{' struct_declaration_list '}'
-            -> ^(struct_or_union identifier struct_declaration_list);
+             -> ^(STRUCT '@' identifier struct_declaration_list);
     
 struct_or_union
     :    STRUCT | UNION | NX_STRUCT | NX_UNION;
@@ -549,16 +581,14 @@ struct_declarator_list
     :    struct_declarator (',' struct_declarator)* -> ^(DECLARATOR_LIST struct_declarator+);
     
 struct_declarator
-    :    declarator? ':' constant_expression
-    |    declarator;
+    :    declarator (':' constant_expression)?
+    |    ':' constant_expression;
     
 enum_specifier
-    :    ENUM identifier? '{' enumerator_list ','? '}'
-             -> ^(ENUM identifier? enumerator_list)
-    |    ENUM identifier attributes '{' enumerator_list ','? '}'
-             -> ^(ENUM identifier attributes enumerator_list)
-    |    ENUM identifier
-             -> ^(ENUM identifier);
+    :    ENUM '{' enumerator_list ','? '}'
+             -> ^(ENUM enumerator_list)
+    |    ENUM identifier (/* attributes? */ '{' enumerator_list ','? '}')?
+             -> ^(ENUM identifier /* attributes? */ enumerator_list?);
     
 enumerator_list
     :    enumerator (','! enumerator)*;
@@ -605,9 +635,9 @@ direct_declarator_identifier
 // to distinguish these differences.
 //
 direct_declarator_modifier
-    :   '[' constant_expression? ']'
+    :   ('[' constant_expression? ']') => '[' constant_expression? ']'
             -> ^(DECLARATOR_ARRAY_MODIFIER constant_expression?)
-    |   ('[' gen=parameter_list ']')? '(' normal=parameter_list ')'
+    |   ('[' generic=parameter_list ']')? '(' normal=parameter_list ')'
             -> ^(DECLARATOR_PARAMETER_LIST_MODIFIER $normal);
 
 // The POINTER_QUALIFIER pseudo-token is needed to distinguish the use of '*' in declarations
@@ -637,10 +667,13 @@ parameter_list
 // should be packaged in order to distinguish them clearly.
 //
 parameter_declaration
-    :    declaration_specifiers declarator attributes?
-            -> ^(PARAMETER declaration_specifiers declarator attributes?)
-    |    declaration_specifiers abstract_declarator?
-            -> ^(PARAMETER declaration_specifiers abstract_declarator?);
+    :    declaration_specifiers parameter_declarator
+            -> ^(PARAMETER declaration_specifiers parameter_declarator);
+
+// The problem here is that both declarator and abstract_declarator can start with pointer.
+parameter_declarator
+    :    (declarator attributes?) => declarator attributes?
+    |    abstract_declarator?;
     
 identifier_list
     :    identifier (',' identifier)* -> identifier+;
@@ -649,20 +682,22 @@ type_name
     :    specifier_qualifier_list abstract_declarator?;
     
 abstract_declarator
-    :    pointer? direct_abstract_declarator
+    :    (pointer? direct_abstract_declarator) => pointer? direct_abstract_declarator
     |    pointer;
     
 direct_abstract_declarator
-    :    ('(' abstract_declarator    ')' |
-          '[' assignment_expression? ']' |
-          '(' parameter_list?   ')')
-             ('[' assignment_expression? ']' | '(' parameter_list? ')')*;
+    :    ('(' abstract_declarator ')') => 
+          '(' abstract_declarator ')' direct_abstract_declarator_modifier*
+    |    direct_abstract_declarator_modifier+;
+
+direct_abstract_declarator_modifier
+    :    '[' assignment_expression? ']'
+    |    '(' parameter_list ')';
         
-// Type names have to be handled in a special way. They are not just raw identifiers.
-typedef_name 
-    :    id=RAW_IDENTIFIER
-         { symbols.isType($id.text) }?;
-    //|  IDENTIFIER '.' IDENTIFIER;
+// Type names are special raw identifiers.
+typedef_name
+    :    { symbols.isType(input.LT(1).getText()) }? RAW_IDENTIFIER;
+//    |    RAW_IDENTIFIER '.' RAW_IDENTIFIER;
     
 // The INITIALIZER_LIST pseudo-token is needed to distinguish brace enclosed initializers from
 // simple assignment expressions. Since the first initializer in an initializer list might also
@@ -683,6 +718,10 @@ initializer_list
 /* Statement grammar */
 /* ================= */
 
+// Allowing line_directive here creates problems because an expression_statement can start with
+// a CONSTANT. This means the end of a line_directive (matching CONSTANT*) can't easily be
+// found.
+//
 statement
     :    labeled_statement
     |    compound_statement
@@ -690,8 +729,8 @@ statement
     |    selection_statement
     |    iteration_statement
     |    jump_statement
-    |    atomic_statement
-    |    line_directive;    // This is a hack.
+    |    atomic_statement;
+//    |    line_directive;    // This is a hack. Is it really necessary?
     
 
 atomic_statement
@@ -707,13 +746,9 @@ labeled_statement
 //    
 compound_statement
     :    '{' { symbols.enterScope(); }
-         block_item*
-             { symbols.exitScope();  } '}' -> ^(COMPOUND_STATEMENT block_item*);
+         declaration* statement*
+             { symbols.exitScope();  } '}' -> ^(COMPOUND_STATEMENT declaration* statement*);
 
-block_item
-    :    declaration
-    |    statement;
-    
 // The STATEMENT pseudo-token is needed so that expression statements are clearly distinguished
 // from declarations, other kinds of statements (if, while, etc), and also to clarify places
 // where null statements are used.
@@ -721,9 +756,18 @@ block_item
 expression_statement
     :    expression? ';' -> ^(STATEMENT expression?);
     
+// Using a syntactic predicate here is probably wrong. Typedef declarations inside the
+// controlled statements won't have their types entered into the symbol table when the predicate
+// is being evaluated. Thus nested declarations using those types won't parse. Correct handling
+// might require rewriting the grammar to resolve the ambiguity. The resulting grammar is ugly,
+// however.
+//
 selection_statement
-    :    IF '(' expression ')' statement (ELSE statement)?
-             -> ^(IF expression statement statement?)
+    :    (IF '(' expression ')' statement ELSE statement) =>
+          IF '(' expression ')' statement ELSE statement
+             -> ^(IF expression statement)
+    |    IF '(' expression ')' statement
+             -> ^(IF expression statement)
     |    SWITCH '(' expression ')' statement
              -> ^(SWITCH expression statement);
     
@@ -771,6 +815,9 @@ external_declaration
 line_directive
     :    '#' CONSTANT STRING_LITERAL CONSTANT* -> ^(LINE_DIRECTIVE STRING_LITERAL);
     
+// This is a bit liberal. It permits things like 'int x { ... }.' That is, it does not require
+// the declarator to have a parameter list modifier.
+//
 function_definition
     :    declaration_specifiers declarator attributes? compound_statement
             -> declaration_specifiers declarator attributes? compound_statement;
@@ -784,8 +831,12 @@ function_definition
 // declarations and the interface|component. This null token is awkward.
 //
 nesC_file
-    :    translation_unit? interface_definition -> ^(FILE translation_unit? interface_definition)
-    |    translation_unit? component            -> ^(FILE translation_unit? component);
+    :    translation_unit? large_scale_construct
+             -> ^(FILE translation_unit? large_scale_construct);
+
+large_scale_construct
+    :    interface_definition
+    |    component;
 
 // This is deprecated. The nesC 1.2 manual doesn't even discuss the semantics of 'includes'
 // include_statement
@@ -826,8 +877,8 @@ component_kind
     |    GENERIC CONFIGURATION -> ^(COMPONENT_KIND GENERIC CONFIGURATION);
     
 implementation
-    :    module_implementation
-    |    configuration_implementation;
+    :    IMPLEMENTATION '{' body=((configuration_body) => configuration_body | module_body) '}'
+             -> ^(IMPLEMENTATION $body);
 
 // The COMPONENT_PARAMETER_LIST pseudo-token is used to wrap all the parameters of a generic
 // component. This is so the parameters are well contained as a single child of the component
@@ -847,21 +898,17 @@ component_parameter
 // Implementation scope is nested inside specification scope. Both scopes end when the
 // implementation closes.
 //
-module_implementation
-    :    IMPLEMENTATION '{' { symbols.enterScope(); }
-                            translation_unit
-                            { symbols.exitScope(); symbols.exitScope(); }
-                        '}'
-            -> ^(IMPLEMENTATION translation_unit);
-
-// See comment immediately above.
-configuration_implementation
-    :    IMPLEMENTATION '{' { symbols.enterScope(); }
-                            configuration_element_list?
-                            { symbols.exitScope(); symbols.exitScope(); }
-                        '}'
-            -> ^(IMPLEMENTATION configuration_element_list?);
+configuration_body
+    :    { symbols.enterScope(); }
+         configuration_element_list?
+         { symbols.exitScope(); symbols.exitScope(); };
     
+// See comment immediately above.
+module_body
+    :    { symbols.enterScope(); }
+         translation_unit
+         { symbols.exitScope(); symbols.exitScope(); };
+
 configuration_element_list
     :    (line_directive | configuration_element)+;
     
@@ -911,12 +958,13 @@ component_argument
 // external connections).
 //
 connection
-    :    endpoint '=' endpoint ';'
-             -> ^(CONNECTION '=' endpoint endpoint)
-    |    certificate_specification? endpoint '->' endpoint ';'
-             -> ^(CONNECTION '->' endpoint endpoint certificate_specification?)
-    |    certificate_specification? endpoint '<-' endpoint ';'
-             -> ^(CONNECTION '<-' endpoint endpoint certificate_specification?);
+    :    certificate_specification? endpoint wire_rhs ';'
+             -> ^(CONNECTION wire_rhs endpoint certificate_specification?);
+
+wire_rhs
+    :    '='^  endpoint
+    |    '->'^ endpoint
+    |    '<-'^ endpoint;
 
 certificate_specification
     :    ENABLE certs=STRING_LITERAL (AS entity=STRING_LITERAL)? (ASSUMING assumptions=STRING_LITERAL)? FOR
@@ -987,8 +1035,9 @@ gcc_attribute_list
 gcc_attribute
     :    assignment_expression;
 
+// Ordinary identifiers are raw identifiers that are not type names.
 identifier
-    :   id=RAW_IDENTIFIER { !symbols.isType($id.text) }?;
+    :    { !symbols.isType(input.LT(1).getText()) }? RAW_IDENTIFIER;
 
 /* =========== */
 /* Lexer rules */
@@ -1019,11 +1068,9 @@ CHARACTER_LITERAL
     
 WHITESPACE
     :    ( '\t' | ' ' | '\r' | '\n' | '\f' )+  {$channel = HIDDEN;};
-    
-// Expose line directives to the parser for analysis. This is needed to reconstruct the
-// #include directives in the rewritten output. It will eventually also be needed to
-// produce better quality error messages (but there is a lot of other work to be done
-// before that can happen).
+
+// See the comment at the line_directive production for reasons why we might want to shunt line
+// directives to the hidden channel under certain circumstances.
 //
 //LINE_DIRECTIVE
 //    :    '#' (options {greedy=false;} : .)* ('\r' | '\n') {$channel = HIDDEN;};

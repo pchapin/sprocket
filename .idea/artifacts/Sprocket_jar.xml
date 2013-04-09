@@ -6,12 +6,10 @@
         <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Sprocket" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/bcprov-jdk16-145.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/antlr-3.4.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/local/scala-2.10.0/lib/scala-actors.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/local/scala-2.10.0/lib/scala-library.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/local/scala-2.10.0/lib/scala-reflect.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/scalatest_2.10-1.9.1.jar" path-in-jar="/" />
+      <element id="library" level="project" name="ANTLR" />
+      <element id="library" level="project" name="BouncyCastle" />
+      <element id="library" level="application" name="scala-library-2.10" />
+      <element id="library" level="project" name="ScalaTest" />
     </root>
   </artifact>
 </component>

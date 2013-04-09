@@ -347,7 +347,8 @@ unary_expression
 // expression should be entirely contained inside its own tree.
 //
 cast_expression
-    :    '(' type_name ')' cast_expression -> ^(CAST cast_expression type_name)
+    :    ('(' type_name ')') =>
+          '(' type_name ')' cast_expression -> ^(CAST cast_expression type_name)
     |    unary_expression;
     
 multiplicative_expression
@@ -383,10 +384,18 @@ logical_or_expression
 conditional_expression
     :    logical_or_expression ('?'^ expression ':'! conditional_expression)?;
     
+//assignment_expression
+//    :    unary_expression ('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression
+//    |    conditional_expression;
+
+// The original grammar used the productions above. This resulted in a non-LL(*) decision
+// because conditional_expression can also be a unary_expression. The production below resolves
+// this but permits various illegal expressions on the left hand side of an assignment operator.
+// Such expressions will have to be ruled out after parsing.
+//    
 assignment_expression
-    :    unary_expression ('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression
-    |    conditional_expression;
-    
+    :    conditional_expression (('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression)?;
+
 expression
     :    assignment_expression (','^ assignment_expression)*;
     
@@ -609,9 +618,9 @@ direct_declarator_identifier
 // to distinguish these differences.
 //
 direct_declarator_modifier
-    :   '[' constant_expression? ']'
+    :   ('[' constant_expression? ']') => '[' constant_expression? ']'
             -> ^(DECLARATOR_ARRAY_MODIFIER constant_expression?)
-    |   ('[' gen=parameter_list ']')? '(' normal=parameter_list ')'
+    |   ('[' generic=parameter_list ']')? '(' normal=parameter_list ')'
             -> ^(DECLARATOR_PARAMETER_LIST_MODIFIER $normal);
 
 // The POINTER_QUALIFIER pseudo-token is needed to distinguish the use of '*' in declarations
@@ -656,7 +665,7 @@ type_name
     :    specifier_qualifier_list abstract_declarator?;
     
 abstract_declarator
-    :    pointer? direct_abstract_declarator
+    :    (pointer? direct_abstract_declarator) => pointer? direct_abstract_declarator
     |    pointer;
     
 direct_abstract_declarator
@@ -665,11 +674,10 @@ direct_abstract_declarator
           '(' parameter_list?   ')')
              ('[' assignment_expression? ']' | '(' parameter_list? ')')*;
         
-// Type names have to be handled in a special way. They are not just raw identifiers.
-typedef_name 
-    :    id=RAW_IDENTIFIER
-         { symbols.isType($id.text) }?;
-    //|  IDENTIFIER '.' IDENTIFIER;
+// Type names are special raw identifiers.
+typedef_name
+    :    { symbols.isType(input.LT(1).getText()) }? RAW_IDENTIFIER;
+//    |    RAW_IDENTIFIER '.' RAW_IDENTIFIER;
     
 // The INITIALIZER_LIST pseudo-token is needed to distinguish brace enclosed initializers from
 // simple assignment expressions. Since the first initializer in an initializer list might also
@@ -995,8 +1003,9 @@ gcc_attribute_list
 gcc_attribute
     :    assignment_expression;
 
+// Ordinary identifiers are raw identifiers that are not type names.
 identifier
-    :   id=RAW_IDENTIFIER { !symbols.isType($id.text) }?;
+    :    { !symbols.isType(input.LT(1).getText()) }? RAW_IDENTIFIER;
 
 /* =========== */
 /* Lexer rules */

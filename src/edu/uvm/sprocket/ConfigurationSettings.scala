@@ -13,8 +13,8 @@ import java.io._
  * collection of command line arguments.
  * 
  * @param configurableItems A map from the name of a configuration setting to a validation function. The validation
- *                          function is used to both check a candidate setting and to normalize the value of the setting
- *                          into whatever form the application finds convenient.
+ * function is used to both check a candidate setting and to normalize the value of the setting into whatever form the
+ * application finds convenient.
  */
 class ConfigurationSettings(private val configurableItems: Map[String, String => String]) {
   import ConfigurationSettings._
@@ -44,7 +44,7 @@ class ConfigurationSettings(private val configurableItems: Map[String, String =>
    * @param line The string of text to modify.
    *
    * @return The modified string. Note that in many cases the returned string will have trailing white space characters.
-   *         For example an input string such as "Hello! # This is a comment" is returned as "Hello! ".
+   * For example an input string such as "Hello! # This is a comment" is returned as "Hello! ".
    */
   private def killComments(line: String): String = {
     object States extends Enumeration {
@@ -79,14 +79,14 @@ class ConfigurationSettings(private val configurableItems: Map[String, String =>
    * to the end of the line.
    *
    * @param fileName The name of the file to open. If the file can not be opened there is no effect (no exception is
-   *                 thrown and the settings map is unchanged).
+   * thrown and the settings map is unchanged).
    *
    * @throws BadNameException if a name is encountered that is not configurable.
    * @throws BadValidationException if any of the file members fail to pass validation.
    */
   def readConfigurationFile(fileName: String) {
     // TODO: This method does not allow the value to contain an '=' character.
-    // TODO: If a name is foudn that is not among the set of allowed configurable items, it is silently ignored.
+    // TODO: If a name is found that is not among the set of allowed configurable items, it is silently ignored.
 
     var inputFile: BufferedReader = null
     try {
@@ -145,7 +145,7 @@ class ConfigurationSettings(private val configurableItems: Map[String, String =>
    *
    * @param name The name of the configuration item to add.
    * @param value The value corresponding to the name. If the name already exists in the configuration its value is
-   *              replaced by this value, otherwise the (name, value) pair is added
+   * replaced by this value, otherwise the (name, value) pair is added
    *
    * @throws BadNameException if the name does not specify a configurable item.
    * @throws BadValidationException if the value does not pass validation.
@@ -183,7 +183,7 @@ object ConfigurationSettings {
    * @throws BadValidationException if the raw string is not in the form described above.
    */
   def basicBooleanValidator(raw: String) = {
-    val upperRaw = raw.toUpperCase()
+    val upperRaw = raw.toUpperCase
     if      (upperRaw == "TRUE"  || upperRaw == "T") "true"
     else if (upperRaw == "FALSE" || upperRaw == "F") "false"
     else

@@ -139,7 +139,7 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
 
   test("Complex Module Test") {
     val testCaseNames =
-      Array("Module0200.nc", "Module0210.nc", "Module0220.nc", "Module0230.nc")
+      Array("Module0200.nc", "Module0210.nc", "Module0220.nc", "Module0230.nc", "Module0240.nc")
     doWholeFileTests(testCaseNames)
   }
 
@@ -233,4 +233,5 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
             "Extensions0050.nc")
     doWholeFileTests(testCaseNames)
   }
+
 }

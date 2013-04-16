@@ -1,9 +1,7 @@
 grammar nesC;
 
 options {
-    // backtrack = true;      // Quick and dirty. Should try to remove eventually.
-    // memoize   = true;      // Quick and dirty. Should try to remove eventually.
-    output    = AST;
+    output = AST;
 }
 
 tokens {
@@ -667,13 +665,13 @@ parameter_list
 // should be packaged in order to distinguish them clearly.
 //
 parameter_declaration
-    :    declaration_specifiers parameter_declarator
-            -> ^(PARAMETER declaration_specifiers parameter_declarator);
+    :    declaration_specifiers parameter_declarator?
+            -> ^(PARAMETER declaration_specifiers parameter_declarator?);
 
 // The problem here is that both declarator and abstract_declarator can start with pointer.
 parameter_declarator
     :    (declarator attributes?) => declarator attributes?
-    |    abstract_declarator?;
+    |    abstract_declarator;
     
 identifier_list
     :    identifier (',' identifier)* -> identifier+;
@@ -877,8 +875,8 @@ component_kind
     |    GENERIC CONFIGURATION -> ^(COMPONENT_KIND GENERIC CONFIGURATION);
     
 implementation
-    :    IMPLEMENTATION '{' body=((configuration_body) => configuration_body | module_body) '}'
-             -> ^(IMPLEMENTATION $body);
+    :    IMPLEMENTATION '{' body '}'
+             -> ^(IMPLEMENTATION body?);
 
 // The COMPONENT_PARAMETER_LIST pseudo-token is used to wrap all the parameters of a generic
 // component. This is so the parameters are well contained as a single child of the component
@@ -895,6 +893,10 @@ component_parameter
     :    parameter_declaration
     |    TYPEDEF identifier attributes?;
     
+body
+    :    (configuration_body) => configuration_body
+    |    module_body;
+
 // Implementation scope is nested inside specification scope. Both scopes end when the
 // implementation closes.
 //

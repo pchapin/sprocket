@@ -42,8 +42,10 @@ tokens {
     WHILE          = 'while';
 
     // gcc extensions needed by some programs.
-    GCCATTRIBUTE   = '__attribute__';
-    
+    GCCATTRIBUTE    = '__attribute__';
+    BUILTIN_VA_LIST = '__builtin_va_list';
+    BUILTIN_VA_ARG  = '__builtin_va_arg';
+
     // The 'nx' types are built into the nesC compiler (they require special handling by the
     // compiler). I'm not clear if the exact width types are built-in or not. However, the nesC
     // compiler appears to be fine seeing 'typedef signed char int8_t;' Sprocket treats the
@@ -61,15 +63,27 @@ tokens {
     INT16_T        = 'int16_t';
     INT32_T        = 'int32_t';
     INT64_T        = 'int64_t';
+
     UINT8_T        = 'uint8_t';
     UINT16_T       = 'uint16_t';
     UINT32_T       = 'uint32_t';
     UINT64_T       = 'uint64_t';
 
+    NX_INT8_T      = 'nx_int8_t';
+    NX_INT16_T     = 'nx_int16_t';
+    NX_INT32_T     = 'nx_int32_t';
+    NX_INT64_T     = 'nx_int64_t';
+
     NX_UINT8_T     = 'nx_uint8_t';
     NX_UINT16_T    = 'nx_uint16_t';
     NX_UINT32_T    = 'nx_uint32_t';
     NX_UINT64_T    = 'nx_uint64_t';
+
+    NXLE_INT8_T    = 'nxle_int8_t';
+    NXLE_INT16_T   = 'nxle_int16_t';
+    NXLE_INT32_T   = 'nxle_int32_t';
+    NXLE_INT64_T   = 'nxle_int64_t';
+    
     NXLE_UINT8_T   = 'nxle_uint8_t';
     NXLE_UINT16_T  = 'nxle_uint16_t';
     NXLE_UINT32_T  = 'nxle_uint32_t';
@@ -305,7 +319,9 @@ primary_expression
 //
 postfix_expression
     :    call_kind? primary_expression postfix_expression_modifier*
-            -> ^(POSTFIX_EXPRESSION call_kind? primary_expression postfix_expression_modifier*);
+            -> ^(POSTFIX_EXPRESSION call_kind? primary_expression postfix_expression_modifier*)
+    |    BUILTIN_VA_ARG '(' expression ',' type_name ')'  // Gcc extension.
+            -> ^(BUILTIN_VA_ARG expression type_name);
 
 postfix_expression_modifier
     :   '[' expression ']' -> ^(ARRAY_ELEMENT_SELECTION expression)
@@ -521,31 +537,49 @@ type_specifier
     |   INT16_T
     |   INT32_T
     |   INT64_T
+
     |   UINT8_T
     |   UINT16_T
     |   UINT32_T
     |   UINT64_T
 
+    |   NX_INT8_T
+    |   NX_INT16_T
+    |   NX_INT32_T
+    |   NX_INT64_T
+
     |   NX_UINT8_T
     |   NX_UINT16_T
     |   NX_UINT32_T
     |   NX_UINT64_T
+
+    |   NXLE_INT8_T
+    |   NXLE_INT16_T
+    |   NXLE_INT32_T
+    |   NXLE_INT64_T
+
     |   NXLE_UINT8_T
     |   NXLE_UINT16_T
     |   NXLE_UINT32_T
     |   NXLE_UINT64_T
 
+    |   BUILTIN_VA_LIST    // Gcc extension.
+
     |   struct_or_union_specifier
     |   enum_specifier
     |   typedef_name;
 
+// Really structure tags should be in their own name space (maybe tag_identifier?) that is
+// distinguished from other identifiers using a semantic predicate. In any case they can be type
+// names (for example) so using the 'identifier' production isn't appropriate.
+//
 struct_or_union_specifier
-    :    struct_or_union '{' struct_declaration_list '}'
-             -> ^(struct_or_union struct_declaration_list)
-    |    struct_or_union identifier (/* attributes? */ '{' struct_declaration_list '}')?
-             -> ^(struct_or_union identifier /* attributes? */ struct_declaration_list?)
-    |    STRUCT '@' identifier '{' struct_declaration_list '}'
-             -> ^(STRUCT '@' identifier struct_declaration_list);
+    :    struct_or_union '{' struct_declaration_list? '}'
+             -> ^(struct_or_union struct_declaration_list?)
+    |    struct_or_union RAW_IDENTIFIER (/* attributes? */ '{' struct_declaration_list? '}')?
+             -> ^(struct_or_union RAW_IDENTIFIER /* attributes? */ struct_declaration_list?)
+    |    STRUCT '@' RAW_IDENTIFIER '{' struct_declaration_list? '}'
+             -> ^(STRUCT '@' RAW_IDENTIFIER struct_declaration_list?);
     
 struct_or_union
     :    STRUCT | UNION | NX_STRUCT | NX_UNION;
@@ -555,7 +589,7 @@ struct_or_union
 //
 struct_declaration_list
     :    { $declaration::inStructDeclaration = true; }
-         struct_declaration+
+         (line_directive | struct_declaration)+
          { $declaration::inStructDeclaration = false; };
     
 struct_declaration
@@ -762,8 +796,8 @@ expression_statement
 //
 selection_statement
     :    (IF '(' expression ')' statement ELSE statement) =>
-          IF '(' expression ')' statement ELSE statement
-             -> ^(IF expression statement)
+          IF '(' expression ')' s1=statement ELSE s2=statement
+             -> ^(IF expression $s1 $s2)
     |    IF '(' expression ')' statement
              -> ^(IF expression statement)
     |    SWITCH '(' expression ')' statement

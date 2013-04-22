@@ -517,6 +517,14 @@ public class SyntaxViewer {
                     rewrite(t.getChild(i));
                 }
                 break;
+
+            case nesCLexer.BUILTIN_VA_ARG:
+                sink.print("__builtin_va_arg(");
+                rewrite(t.getChild(0));
+                sink.print(", ");
+                rewrite(t.getChild(1));
+                sink.print(")");
+                break;
                 
             case nesCLexer.ARGUMENT_LIST:
                 sink.print("( ");

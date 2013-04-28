@@ -26,7 +26,7 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
    * @return A fresh, empty symbol table stack.
    */
   private def initializeEmptySymbols(): SymbolTableManager = {
-    return new SymbolTableManager
+    new SymbolTableManager
   }
 
 
@@ -147,7 +147,8 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
     val testCaseNames =
       Array("Expression0000.nc", "Expression0002.nc", "Expression0004.nc", "Expression0006.nc",
             "Expression0008.nc", "Expression0010.nc", "Expression0012.nc", "Expression0014.nc",
-            "Expression0016.nc", "Expression0018.nc", "Expression0020.nc", "Expression0022.nc")
+            "Expression0016.nc", "Expression0018.nc", "Expression0020.nc", "Expression0022.nc",
+            "Expression0024.nc", "Expression0026.nc", "Expression0028.nc")
     doExpressionTests(testCaseNames)
   }
 
@@ -216,7 +217,7 @@ class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
 
   test("GCC Attributes Test") {
     val testCaseNames =
-      Array("Declaration0500.nc", "Declaration0510.nc", "Declaration0520.nc")
+      Array("Declaration0500.nc", "Declaration0510.nc", "Declaration0520.nc", "Declaration0530.nc")
     doDeclarationTests(testCaseNames)
   }
 

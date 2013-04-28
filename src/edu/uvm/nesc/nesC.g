@@ -115,9 +115,9 @@ tokens {
     USES           = 'uses';
     
     // Sprocket extensions to nesC
+    ACTIVATE       = 'activate';
     ASSUMING       = 'assuming';
     DUTY           = 'duty';
-    ENABLE         = 'enable';
     REMOTE         = 'remote';
     REQUIRES       = 'requires';
     
@@ -339,11 +339,6 @@ call_kind
 argument_expression_list
     :    assignment_expression (','! assignment_expression)*;
     
-// With SIZEOF unary_expression there's a non-LL(*) decision that arises because unary_expression
-// can expand as postfix_expression -> primary_expression -> '(' expression ')'. In other words
-// the grammar has problems telling sizeof(int) from sizeof(x+y). Applying sizeof to expressions
-// is unusual. I'll just make it illegal for now.
-//
 unary_expression
     :    '++' unary_expression -> ^(PRE_INCREMENT unary_expression)
     |    '--' unary_expression -> ^(PRE_DECREMENT unary_expression)
@@ -352,8 +347,8 @@ unary_expression
     |    '+'  cast_expression  -> ^(UNARY_PLUS    cast_expression )
     |    '-'  cast_expression  -> ^(UNARY_MINUS   cast_expression )
     |    ('~'^ | '!'^) cast_expression
-    |    SIZEOF '(' type_name ')' -> ^(SIZEOF_TYPE type_name)
-//    |    SIZEOF unary_expression  -> ^(SIZEOF_EXPRESSION unary_expression)
+    |    (SIZEOF '(' type_name ')') => SIZEOF '(' type_name ')' -> ^(SIZEOF_TYPE type_name)
+    |    SIZEOF unary_expression -> ^(SIZEOF_EXPRESSION unary_expression)
     |    postfix_expression;
 
 // It is convenient to put the cast_expression first in the AST because that way the various
@@ -851,8 +846,8 @@ line_directive
 // the declarator to have a parameter list modifier.
 //
 function_definition
-    :    declaration_specifiers declarator attributes? compound_statement
-            -> declaration_specifiers declarator attributes? compound_statement;
+    :    declaration_specifiers declarator (attributes | gcc_attributes)? compound_statement
+            -> declaration_specifiers declarator compound_statement;
 
 /* ============================ */
 /* nesC and Sprocket extensions */
@@ -1003,8 +998,8 @@ wire_rhs
     |    '<-'^ endpoint;
 
 certificate_specification
-    :    ENABLE certs=STRING_LITERAL (AS entity=STRING_LITERAL)? (ASSUMING assumptions=STRING_LITERAL)? FOR
-             -> ^(ENABLE $certs ^(AS $entity)? ^(ASSUMING $assumptions)?);
+    :    ACTIVATE certs=STRING_LITERAL (AS entity=STRING_LITERAL)? (ASSUMING assumptions=STRING_LITERAL)? FOR
+             -> ^(ACTIVATE $certs ^(AS $entity)? ^(ASSUMING $assumptions)?);
 
 endpoint
     :    identifier_path
@@ -1061,6 +1056,10 @@ attribute
 
 // nesC programs are ultimately passed to gcc, and gcc-specific attributes are commonly used,
 // for example, in libraries (header files, etc).
+//
+// TODO: Look up all places where gcc-specific attributes can appear and be sure the handling of
+// them is complete. Right now 'gcc_attributes' is sprinkled haphazardly around the grammar for
+// the sake of getting examples to compile.
 //
 gcc_attributes
     :    GCCATTRIBUTE '(' '(' gcc_attribute_list ')' ')';

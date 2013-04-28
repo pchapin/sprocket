@@ -44,20 +44,27 @@ object TreeConverter {
    * @return An appropriate processor instance for this tree or null if no appropriate Processor could be determined.
    */ 
   def createProcessor(root: ASTNode): Processor = {
+    // TODO: Handle binary components in a more intelligent way.
 
     def scanSubtree(node: ASTNode): Processor = {
       val nullProcessor: Processor = null
       node match {
+
+        // Interface tokens can appear in uses-provides specifications as well as when defining interfaces.
         case ASTNode(nesCLexer.INTERFACE, _, children)
           if children(0).tokenType != nesCLexer.INTERFACE_TYPE => new InterfaceProcessor(root)
+
+        // Handle both modules and configurations here.
         case ASTNode(nesCLexer.COMPONENT_DEFINITION, _, children) =>
-          children(0).tokenType match {
+          val ASTNode(nesCLexer.COMPONENT_KIND, _, kindChildren) = children(0)
+
+          kindChildren(0).tokenType match {
             case nesCLexer.CONFIGURATION => new ConfigurationProcessor(root)
             case nesCLexer.MODULE => new ModuleProcessor(root)
 
             // Generic configurations are handled with the same processor as non-generic ones (for now).
             case nesCLexer.GENERIC =>
-              children(1).tokenType match {
+              kindChildren(1).tokenType match {
                 case nesCLexer.CONFIGURATION => new ConfigurationProcessor(root)
                 case nesCLexer.MODULE => new ModuleProcessor(root)
                 case _ => nullProcessor  // This should never arise for syntactically correct input.

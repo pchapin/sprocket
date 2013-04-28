@@ -79,13 +79,13 @@ class ConfigurationProcessor(root: ASTNode) extends Processor(root) {
     def makeConnection( endpoints: (String, String, String, String) ): ASTNode = {
       val (sourceComponent, sourceInterface, destinationComponent, destinationInterface) = endpoints
       ASTNode(nesCLexer.CONNECTION, "CONNECTION",
-              List(ASTNode(nesCLexer.STRING_LITERAL, "->", List()),
+              List(ASTNode(nesCLexer.STRING_LITERAL, "->",
+                           List(ASTNode(nesCLexer.IDENTIFIER_PATH, "IDENTIFIER_PATH",
+                                        List(ASTNode(nesCLexer.RAW_IDENTIFIER, destinationComponent, List()),
+                                             ASTNode(nesCLexer.RAW_IDENTIFIER, destinationInterface, List()))))),
                    ASTNode(nesCLexer.IDENTIFIER_PATH, "IDENTIFIER_PATH",
                            List(ASTNode(nesCLexer.RAW_IDENTIFIER, sourceComponent, List()),
-                                ASTNode(nesCLexer.RAW_IDENTIFIER, sourceInterface, List()))),
-                   ASTNode(nesCLexer.IDENTIFIER_PATH, "IDENTIFIER_PATH",
-                           List(ASTNode(nesCLexer.RAW_IDENTIFIER, destinationComponent, List()),
-                                ASTNode(nesCLexer.RAW_IDENTIFIER, destinationInterface, List())))))
+                                ASTNode(nesCLexer.RAW_IDENTIFIER, sourceInterface, List())))))
     }
 
     // The various connections that we need.
@@ -128,15 +128,19 @@ class ConfigurationProcessor(root: ASTNode) extends Processor(root) {
           // if (connectorType == "=")
           //   throw new CompilationException("Dynamic wires not supported in external connections")
 
-          val sourceEndpoint = if (connectorType == "->") children(1) else children(2)
-          val destinationEndpoint = if (connectorType == "->") children(2) else children(1)
+          val ASTNode(_, _, wireRHSChildren) = children(0)
+          val leftEndpoint = children(1)
+          val rightEndpoint = wireRHSChildren(0)
+
+          val sourceEndpoint = if (connectorType == "->") leftEndpoint else rightEndpoint
+          val destinationEndpoint = if (connectorType == "->") rightEndpoint else leftEndpoint
 
           if (sourceEndpoint.tokenType == nesCLexer.DYNAMIC_IDENTIFIER_PATH) {
             throw new CompilationException("Dynamic wire source must be statically specified")
           }
           if (destinationEndpoint.tokenType == nesCLexer.DYNAMIC_IDENTIFIER_PATH) {
             // TODO: Get "as" entity from dynamic wire and store in the stubList for the StubWriter.
-            val authorizationRequired = if (children.length == 4) true else false
+            val authorizationRequired = (children.length == 3)
             rewriteDynamicWire(sourceEndpoint, destinationEndpoint, authorizationRequired)
           }
           else {

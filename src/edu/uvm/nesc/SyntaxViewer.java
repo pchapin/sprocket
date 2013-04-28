@@ -842,7 +842,7 @@ public class SyntaxViewer {
                 sink.print(" ");
                 sink.print(t.getChild(0).getText());
                 sink.print(" ");
-                rewrite(t.getChild(2));
+                rewrite(t.getChild(0).getChild(0));
                 sink.print(";\n");
                 break;
 

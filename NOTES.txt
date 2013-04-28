@@ -1,4 +1,0 @@
-
-The AST for connection has been changed. Notice, for one thing, that it is now possible to put a
-certificate_specification on an '=' wire eventhough doing so makes no sense. This will have to
-be ruled out semantically.

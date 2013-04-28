@@ -393,17 +393,14 @@ logical_or_expression
 conditional_expression
     :    logical_or_expression ('?'^ expression ':'! conditional_expression)?;
     
-//assignment_expression
-//    :    unary_expression ('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression
-//    |    conditional_expression;
-
-// The original grammar used the productions above. This resulted in a non-LL(*) decision
-// because conditional_expression can also be a unary_expression. The production below resolves
-// this but permits various illegal expressions on the left hand side of an assignment operator.
-// Such expressions will have to be ruled out after parsing.
-//    
 assignment_expression
-    :    conditional_expression (('='^ | '*='^ | '/='^ | '%='^ | '+='^ | '-='^ | '<<='^ | '>>='^ | '&='^ | '^='^ | '|='^) assignment_expression)?;
+    :    (unary_expression assignment_operator) =>
+          unary_expression assignment_operator assignment_expression
+             -> ^(assignment_operator unary_expression assignment_expression)
+    |    conditional_expression;
+
+assignment_operator
+    :    '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=';
 
 expression
     :    assignment_expression ((',' assignment_expression) => ','^ assignment_expression)*;
@@ -981,7 +978,7 @@ component_argument_list
             -> ^(COMPONENT_ARGUMENTS component_argument+);
     
 component_argument
-    :    expression
+    :    assignment_expression
     |    type_name;
 
 // It is necessary to use a pseudo-token here to distinguish '=' and '->' from their use in

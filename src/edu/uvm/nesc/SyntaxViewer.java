@@ -147,7 +147,14 @@ public class SyntaxViewer {
                 sink.print(t.getText());
                 sink.print(" ");
                 break;
-                
+
+            case nesCLexer.TYPE_NAME:
+                for (int i = 0; i < t.getChildCount(); ++i) {
+                    rewrite(t.getChild(i));
+                    sink.print(" ");
+                }
+                break;
+
             case nesCLexer.DECLARATION:
                 indent();
                 for (int i = 0; i < t.getChildCount(); ++i) {
@@ -774,7 +781,7 @@ public class SyntaxViewer {
                 break;
 
             case nesCLexer.INTERFACE_TYPE:
-                // Assume there is no 'remotable' or 'with' parts left in the AST.
+                // Assume there is no 'remote' or 'requires' parts left in the AST.
                 sink.print(t.getChild(0));
                 if (t.getChildCount() > 1) {
                     sink.print("<");

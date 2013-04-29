@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nesC.g 2013-04-28 13:43:36
+// $ANTLR 3.4 nesC.g 2013-04-29 18:01:52
 
     package edu.uvm.nesc;
 
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class nesCLexer extends Lexer {
     public static final int EOF=-1;
-    public static final int T__199=199;
     public static final int T__200=200;
     public static final int T__201=201;
     public static final int T__202=202;
+    public static final int T__203=203;
     public static final int ABSTRACT=4;
     public static final int ACTIVATE=5;
     public static final int ADDRESS_OF=6;
@@ -197,19 +197,20 @@ public class nesCLexer extends Lexer {
     public static final int SWITCH=183;
     public static final int TASK=184;
     public static final int TYPEDEF=185;
-    public static final int UINT16_T=186;
-    public static final int UINT32_T=187;
-    public static final int UINT64_T=188;
-    public static final int UINT8_T=189;
-    public static final int UNARY_MINUS=190;
-    public static final int UNARY_PLUS=191;
-    public static final int UNION=192;
-    public static final int UNSIGNED=193;
-    public static final int USES=194;
-    public static final int VOID=195;
-    public static final int VOLATILE=196;
-    public static final int WHILE=197;
-    public static final int WHITESPACE=198;
+    public static final int TYPE_NAME=186;
+    public static final int UINT16_T=187;
+    public static final int UINT32_T=188;
+    public static final int UINT64_T=189;
+    public static final int UINT8_T=190;
+    public static final int UNARY_MINUS=191;
+    public static final int UNARY_PLUS=192;
+    public static final int UNION=193;
+    public static final int UNSIGNED=194;
+    public static final int USES=195;
+    public static final int VOID=196;
+    public static final int VOLATILE=197;
+    public static final int WHILE=198;
+    public static final int WHITESPACE=199;
 
         // This is mostly just a placeholder.
         private final int VERSION = 1;
@@ -3266,36 +3267,15 @@ public class nesCLexer extends Lexer {
     }
     // $ANTLR end "WHILE"
 
-    // $ANTLR start "T__199"
-    public final void mT__199() throws RecognitionException {
-        try {
-            int _type = T__199;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:144:8: ( ':' )
-            // nesC.g:144:10: ':'
-            {
-            match(':'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__199"
-
     // $ANTLR start "T__200"
     public final void mT__200() throws RecognitionException {
         try {
             int _type = T__200;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:145:8: ( ';' )
-            // nesC.g:145:10: ';'
+            // nesC.g:144:8: ( ':' )
+            // nesC.g:144:10: ':'
             {
-            match(';'); 
+            match(':'); 
 
             }
 
@@ -3313,12 +3293,10 @@ public class nesCLexer extends Lexer {
         try {
             int _type = T__201;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:146:8: ( '<-' )
-            // nesC.g:146:10: '<-'
+            // nesC.g:145:8: ( ';' )
+            // nesC.g:145:10: ';'
             {
-            match("<-"); 
-
-
+            match(';'); 
 
             }
 
@@ -3336,6 +3314,29 @@ public class nesCLexer extends Lexer {
         try {
             int _type = T__202;
             int _channel = DEFAULT_TOKEN_CHANNEL;
+            // nesC.g:146:8: ( '<-' )
+            // nesC.g:146:10: '<-'
+            {
+            match("<-"); 
+
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        	// do for sure before leaving
+        }
+    }
+    // $ANTLR end "T__202"
+
+    // $ANTLR start "T__203"
+    public final void mT__203() throws RecognitionException {
+        try {
+            int _type = T__203;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
             // nesC.g:147:8: ( '?' )
             // nesC.g:147:10: '?'
             {
@@ -3350,21 +3351,21 @@ public class nesCLexer extends Lexer {
         	// do for sure before leaving
         }
     }
-    // $ANTLR end "T__202"
+    // $ANTLR end "T__203"
 
     // $ANTLR start "COMMENT1"
     public final void mCOMMENT1() throws RecognitionException {
         try {
             int _type = COMMENT1;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1079:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // nesC.g:1079:10: '/*' ( options {greedy=false; } : . )* '*/'
+            // nesC.g:1087:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // nesC.g:1087:10: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
 
 
-            // nesC.g:1079:15: ( options {greedy=false; } : . )*
+            // nesC.g:1087:15: ( options {greedy=false; } : . )*
             loop1:
             do {
                 int alt1=2;
@@ -3389,7 +3390,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // nesC.g:1079:42: .
+            	    // nesC.g:1087:42: .
             	    {
             	    matchAny(); 
 
@@ -3424,14 +3425,14 @@ public class nesCLexer extends Lexer {
         try {
             int _type = COMMENT2;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1082:5: ( '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' ) )
-            // nesC.g:1082:10: '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' )
+            // nesC.g:1090:5: ( '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' ) )
+            // nesC.g:1090:10: '//' ( options {greedy=false; } : . )* ( '\\r' | '\\n' )
             {
             match("//"); 
 
 
 
-            // nesC.g:1082:15: ( options {greedy=false; } : . )*
+            // nesC.g:1090:15: ( options {greedy=false; } : . )*
             loop2:
             do {
                 int alt2=2;
@@ -3447,7 +3448,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // nesC.g:1082:42: .
+            	    // nesC.g:1090:42: .
             	    {
             	    matchAny(); 
 
@@ -3488,8 +3489,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = COMMENT3;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1087:5: ( '__extension__' )
-            // nesC.g:1087:10: '__extension__'
+            // nesC.g:1095:5: ( '__extension__' )
+            // nesC.g:1095:10: '__extension__'
             {
             match("__extension__"); 
 
@@ -3513,8 +3514,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = RAW_IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1090:5: ( ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )* )
-            // nesC.g:1090:10: ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
+            // nesC.g:1098:5: ( ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )* )
+            // nesC.g:1098:10: ( '_' | 'a' .. 'z' | 'A' .. 'Z' ) ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
             {
             if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
                 input.consume();
@@ -3526,7 +3527,7 @@ public class nesCLexer extends Lexer {
             }
 
 
-            // nesC.g:1090:42: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
+            // nesC.g:1098:42: ( '_' | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )*
             loop3:
             do {
                 int alt3=2;
@@ -3576,8 +3577,8 @@ public class nesCLexer extends Lexer {
         try {
             int _type = CONSTANT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1093:5: ( NUMBER )
-            // nesC.g:1093:10: NUMBER
+            // nesC.g:1101:5: ( NUMBER )
+            // nesC.g:1101:10: NUMBER
             {
             mNUMBER(); 
 
@@ -3598,12 +3599,12 @@ public class nesCLexer extends Lexer {
         try {
             int _type = STRING_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1096:5: ( '\"' ( options {greedy=false; } : . )* '\"' )
-            // nesC.g:1096:10: '\"' ( options {greedy=false; } : . )* '\"'
+            // nesC.g:1104:5: ( '\"' ( options {greedy=false; } : . )* '\"' )
+            // nesC.g:1104:10: '\"' ( options {greedy=false; } : . )* '\"'
             {
             match('\"'); 
 
-            // nesC.g:1096:14: ( options {greedy=false; } : . )*
+            // nesC.g:1104:14: ( options {greedy=false; } : . )*
             loop4:
             do {
                 int alt4=2;
@@ -3619,7 +3620,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt4) {
             	case 1 :
-            	    // nesC.g:1096:41: .
+            	    // nesC.g:1104:41: .
             	    {
             	    matchAny(); 
 
@@ -3650,12 +3651,12 @@ public class nesCLexer extends Lexer {
         try {
             int _type = CHARACTER_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1099:5: ( '\\'' ( options {greedy=false; } : . )* '\\'' )
-            // nesC.g:1099:10: '\\'' ( options {greedy=false; } : . )* '\\''
+            // nesC.g:1107:5: ( '\\'' ( options {greedy=false; } : . )* '\\'' )
+            // nesC.g:1107:10: '\\'' ( options {greedy=false; } : . )* '\\''
             {
             match('\''); 
 
-            // nesC.g:1099:15: ( options {greedy=false; } : . )*
+            // nesC.g:1107:15: ( options {greedy=false; } : . )*
             loop5:
             do {
                 int alt5=2;
@@ -3671,7 +3672,7 @@ public class nesCLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // nesC.g:1099:42: .
+            	    // nesC.g:1107:42: .
             	    {
             	    matchAny(); 
 
@@ -3702,10 +3703,10 @@ public class nesCLexer extends Lexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nesC.g:1102:5: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+ )
-            // nesC.g:1102:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
+            // nesC.g:1110:5: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+ )
+            // nesC.g:1110:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
             {
-            // nesC.g:1102:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
+            // nesC.g:1110:10: ( '\\t' | ' ' | '\\r' | '\\n' | '\\f' )+
             int cnt6=0;
             loop6:
             do {
@@ -3760,7 +3761,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER"
     public final void mNUMBER() throws RecognitionException {
         try {
-            // nesC.g:1111:5: ( DEC_NUMBER | HEX_NUMBER )
+            // nesC.g:1119:5: ( DEC_NUMBER | HEX_NUMBER )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -3786,7 +3787,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // nesC.g:1111:10: DEC_NUMBER
+                    // nesC.g:1119:10: DEC_NUMBER
                     {
                     mDEC_NUMBER(); 
 
@@ -3794,7 +3795,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // nesC.g:1112:10: HEX_NUMBER
+                    // nesC.g:1120:10: HEX_NUMBER
                     {
                     mHEX_NUMBER(); 
 
@@ -3814,10 +3815,10 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "DEC_NUMBER"
     public final void mDEC_NUMBER() throws RecognitionException {
         try {
-            // nesC.g:1115:5: ( ( DIGIT )+ ( NUMBER_SUFFIX )? )
-            // nesC.g:1115:10: ( DIGIT )+ ( NUMBER_SUFFIX )?
+            // nesC.g:1123:5: ( ( DIGIT )+ ( NUMBER_SUFFIX )? )
+            // nesC.g:1123:10: ( DIGIT )+ ( NUMBER_SUFFIX )?
             {
-            // nesC.g:1115:10: ( DIGIT )+
+            // nesC.g:1123:10: ( DIGIT )+
             int cnt8=0;
             loop8:
             do {
@@ -3856,7 +3857,7 @@ public class nesCLexer extends Lexer {
             } while (true);
 
 
-            // nesC.g:1115:21: ( NUMBER_SUFFIX )?
+            // nesC.g:1123:21: ( NUMBER_SUFFIX )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -3865,7 +3866,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt9) {
                 case 1 :
-                    // nesC.g:1115:23: NUMBER_SUFFIX
+                    // nesC.g:1123:23: NUMBER_SUFFIX
                     {
                     mNUMBER_SUFFIX(); 
 
@@ -3889,13 +3890,13 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "HEX_NUMBER"
     public final void mHEX_NUMBER() throws RecognitionException {
         try {
-            // nesC.g:1118:5: ( NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )? )
-            // nesC.g:1118:10: NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )?
+            // nesC.g:1126:5: ( NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )? )
+            // nesC.g:1126:10: NUMBER_PREFIX ( HEX_DIGIT )+ ( NUMBER_SUFFIX )?
             {
             mNUMBER_PREFIX(); 
 
 
-            // nesC.g:1118:24: ( HEX_DIGIT )+
+            // nesC.g:1126:24: ( HEX_DIGIT )+
             int cnt10=0;
             loop10:
             do {
@@ -3934,7 +3935,7 @@ public class nesCLexer extends Lexer {
             } while (true);
 
 
-            // nesC.g:1118:39: ( NUMBER_SUFFIX )?
+            // nesC.g:1126:39: ( NUMBER_SUFFIX )?
             int alt11=2;
             int LA11_0 = input.LA(1);
 
@@ -3943,7 +3944,7 @@ public class nesCLexer extends Lexer {
             }
             switch (alt11) {
                 case 1 :
-                    // nesC.g:1118:41: NUMBER_SUFFIX
+                    // nesC.g:1126:41: NUMBER_SUFFIX
                     {
                     mNUMBER_SUFFIX(); 
 
@@ -3967,7 +3968,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // nesC.g:1121:5: ( '0' .. '9' )
+            // nesC.g:1129:5: ( '0' .. '9' )
             // nesC.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
@@ -3993,7 +3994,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "HEX_DIGIT"
     public final void mHEX_DIGIT() throws RecognitionException {
         try {
-            // nesC.g:1124:5: ( '0' .. '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
+            // nesC.g:1132:5: ( '0' .. '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
             // nesC.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
@@ -4019,8 +4020,8 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER_PREFIX"
     public final void mNUMBER_PREFIX() throws RecognitionException {
         try {
-            // nesC.g:1127:5: ( '0x' )
-            // nesC.g:1127:10: '0x'
+            // nesC.g:1135:5: ( '0x' )
+            // nesC.g:1135:10: '0x'
             {
             match("0x"); 
 
@@ -4039,10 +4040,10 @@ public class nesCLexer extends Lexer {
     // $ANTLR start "NUMBER_SUFFIX"
     public final void mNUMBER_SUFFIX() throws RecognitionException {
         try {
-            // nesC.g:1130:5: ( ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' ) )
-            // nesC.g:1130:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
+            // nesC.g:1138:5: ( ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' ) )
+            // nesC.g:1138:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
             {
-            // nesC.g:1130:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
+            // nesC.g:1138:10: ( 'l' | 'L' | 'u' | 'U' | 'lu' | 'ul' | 'LU' | 'UL' )
             int alt12=8;
             switch ( input.LA(1) ) {
             case 'l':
@@ -4103,35 +4104,35 @@ public class nesCLexer extends Lexer {
 
             switch (alt12) {
                 case 1 :
-                    // nesC.g:1130:11: 'l'
+                    // nesC.g:1138:11: 'l'
                     {
                     match('l'); 
 
                     }
                     break;
                 case 2 :
-                    // nesC.g:1130:17: 'L'
+                    // nesC.g:1138:17: 'L'
                     {
                     match('L'); 
 
                     }
                     break;
                 case 3 :
-                    // nesC.g:1130:23: 'u'
+                    // nesC.g:1138:23: 'u'
                     {
                     match('u'); 
 
                     }
                     break;
                 case 4 :
-                    // nesC.g:1130:29: 'U'
+                    // nesC.g:1138:29: 'U'
                     {
                     match('U'); 
 
                     }
                     break;
                 case 5 :
-                    // nesC.g:1130:35: 'lu'
+                    // nesC.g:1138:35: 'lu'
                     {
                     match("lu"); 
 
@@ -4140,7 +4141,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 6 :
-                    // nesC.g:1130:42: 'ul'
+                    // nesC.g:1138:42: 'ul'
                     {
                     match("ul"); 
 
@@ -4149,7 +4150,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 7 :
-                    // nesC.g:1130:49: 'LU'
+                    // nesC.g:1138:49: 'LU'
                     {
                     match("LU"); 
 
@@ -4158,7 +4159,7 @@ public class nesCLexer extends Lexer {
                     }
                     break;
                 case 8 :
-                    // nesC.g:1130:56: 'UL'
+                    // nesC.g:1138:56: 'UL'
                     {
                     match("UL"); 
 
@@ -4181,7 +4182,7 @@ public class nesCLexer extends Lexer {
     // $ANTLR end "NUMBER_SUFFIX"
 
     public void mTokens() throws RecognitionException {
-        // nesC.g:1:8: ( ABSTRACT | ACTIVATE | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | BUILTIN_VA_ARG | BUILTIN_VA_LIST | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELLIPSIS | ELSE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_INT16_T | NXLE_INT32_T | NXLE_INT64_T | NXLE_INT8_T | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_INT16_T | NX_INT32_T | NX_INT64_T | NX_INT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__199 | T__200 | T__201 | T__202 | COMMENT1 | COMMENT2 | COMMENT3 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE )
+        // nesC.g:1:8: ( ABSTRACT | ACTIVATE | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | BUILTIN_VA_ARG | BUILTIN_VA_LIST | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELLIPSIS | ELSE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_INT16_T | NXLE_INT32_T | NXLE_INT64_T | NXLE_INT8_T | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_INT16_T | NX_INT32_T | NX_INT64_T | NX_INT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__200 | T__201 | T__202 | T__203 | COMMENT1 | COMMENT2 | COMMENT3 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE )
         int alt13=146;
         alt13 = dfa13.predict(input);
         switch (alt13) {
@@ -5258,33 +5259,33 @@ public class nesCLexer extends Lexer {
                 }
                 break;
             case 135 :
-                // nesC.g:1:1119: T__199
-                {
-                mT__199(); 
-
-
-                }
-                break;
-            case 136 :
-                // nesC.g:1:1126: T__200
+                // nesC.g:1:1119: T__200
                 {
                 mT__200(); 
 
 
                 }
                 break;
-            case 137 :
-                // nesC.g:1:1133: T__201
+            case 136 :
+                // nesC.g:1:1126: T__201
                 {
                 mT__201(); 
 
 
                 }
                 break;
-            case 138 :
-                // nesC.g:1:1140: T__202
+            case 137 :
+                // nesC.g:1:1133: T__202
                 {
                 mT__202(); 
+
+
+                }
+                break;
+            case 138 :
+                // nesC.g:1:1140: T__203
+                {
+                mT__203(); 
 
 
                 }
@@ -6155,7 +6156,7 @@ public class nesCLexer extends Lexer {
             this.transition = DFA13_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( ABSTRACT | ACTIVATE | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | BUILTIN_VA_ARG | BUILTIN_VA_LIST | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELLIPSIS | ELSE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_INT16_T | NXLE_INT32_T | NXLE_INT64_T | NXLE_INT8_T | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_INT16_T | NX_INT32_T | NX_INT64_T | NX_INT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__199 | T__200 | T__201 | T__202 | COMMENT1 | COMMENT2 | COMMENT3 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE );";
+            return "1:1: Tokens : ( ABSTRACT | ACTIVATE | AMP | AND | ARROW | AS | ASSIGN | ASSUMING | ASYNC | ATOMIC | ATTRIBUTE | AUTO | BITANDASSIGN | BITCOMPLEMENT | BITOR | BITORASSIGN | BITXOR | BITXORASSIGN | BREAK | BUILTIN_VA_ARG | BUILTIN_VA_LIST | CALL | CASE | CHAR | COMMA | COMMAND | COMPONENT | COMPONENTS | CONFIGURATION | CONST | CONTINUE | DEFAULT | DIVASSIGN | DIVIDE | DO | DOT | DOUBLE | DUTY | ELLIPSIS | ELSE | ENUM | EQUAL | EVENT | EXTERN | FLOAT | FOR | GCCATTRIBUTE | GENERIC | GOTO | GREATER | GREATEREQUAL | HASH | IF | IMPLEMENTATION | INLINE | INT | INT16_T | INT32_T | INT64_T | INT8_T | INTERFACE | LBRACE | LBRACKET | LESS | LESSEQUAL | LONG | LPARENS | LSHIFT | LSHIFTASSIGN | MINUS | MINUSASSIGN | MINUSMINUS | MODASSIGN | MODULE | MODULUS | MULASSIGN | NEW | NORACE | NOT | NOTEQUAL | NXLE_INT16_T | NXLE_INT32_T | NXLE_INT64_T | NXLE_INT8_T | NXLE_UINT16_T | NXLE_UINT32_T | NXLE_UINT64_T | NXLE_UINT8_T | NX_INT16_T | NX_INT32_T | NX_INT64_T | NX_INT8_T | NX_STRUCT | NX_UINT16_T | NX_UINT32_T | NX_UINT64_T | NX_UINT8_T | NX_UNION | OR | PLUS | PLUSASSIGN | PLUSPLUS | POST | PROVIDES | RBRACE | RBRACKET | REGISTER | REMOTE | REQUIRES | RESTRICT | RETURN | RPARENS | RSHIFT | RSHIFTASSIGN | SHORT | SIGNAL | SIGNED | SIZEOF | STAR | STATIC | STRUCT | SWITCH | TASK | TYPEDEF | UINT16_T | UINT32_T | UINT64_T | UINT8_T | UNION | UNSIGNED | USES | VOID | VOLATILE | WHILE | T__200 | T__201 | T__202 | T__203 | COMMENT1 | COMMENT2 | COMMENT3 | RAW_IDENTIFIER | CONSTANT | STRING_LITERAL | CHARACTER_LITERAL | WHITESPACE );";
         }
     }
  

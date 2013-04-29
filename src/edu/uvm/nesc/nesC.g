@@ -213,6 +213,7 @@ tokens {
     SIZEOF_EXPRESSION;
     SPECIFICATION;
     STATEMENT;
+    TYPE_NAME;
     UNARY_PLUS;
     UNARY_MINUS;
 }
@@ -979,7 +980,7 @@ component_argument_list
     
 component_argument
     :    assignment_expression
-    |    type_name;
+    |    wrapped_type_name;
 
 // It is necessary to use a pseudo-token here to distinguish '=' and '->' from their use in
 // expressions. Sprocket extensions allow a key to be associated with a connection (but not
@@ -1040,7 +1041,14 @@ interface_type
             -> ^(INTERFACE_TYPE REMOTE? STRING_LITERAL? identifier type_arguments?);
     
 type_arguments
-    :    '<' type_name (',' type_name)* '>' -> type_name+;
+    :    '<' wrapped_type_name (',' wrapped_type_name)* '>' -> wrapped_type_name+;
+
+// Type names can consist of a number of separate "words" (type specifiers, abstract declarator,
+// etc). In productions where a list of type names can appear it is helpful to wrap each one
+// in its own subtree. This makes things clearer when, for example, rewriting the AST.
+//
+wrapped_type_name
+    :    type_name -> ^(TYPE_NAME type_name);
     
 instance_parameters
     :    '[' parameter_list ']';

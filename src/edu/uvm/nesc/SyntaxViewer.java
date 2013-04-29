@@ -631,11 +631,10 @@ public class SyntaxViewer {
                 }
                 break;
 
-            // This is a simple hack. Emit a #include for line directives that reference header files. If #includes were
-            // nested this will cause spurious #include directives to be emitted here. However, that should not cause
-            // any problems for the back end nesC compiler. Note that the AST for material in a header file should not
-            // be rewritten. However, when a line directive for the main .nc file is encountered, rewriting should be
-            // turned on again.
+            // This is a simple hack. Emit a #include for line directives that reference header files, but only if
+            // rewriting is not currently suppressed. Once we pass over a line directive that references a header file,
+            // further rewriting is turned off... until we encounter a line directive that references the main .nc file
+            // again.
             //
             case nesCLexer.LINE_DIRECTIVE:
                 String fileNameWithQuotes = t.getChild(0).getText();
@@ -654,7 +653,7 @@ public class SyntaxViewer {
                     // }
 
                     // Output the reconstructed #include directive.
-                    sink.print("#include " + fileNameWithQuotes + "\n");
+                    if (!suppressRewriting) sink.print("#include " + fileNameWithQuotes + "\n");
                     suppressRewriting = true;
                 }
                 else {

@@ -848,7 +848,11 @@ public class SyntaxViewer {
                 sink.print(" ");
                 sink.print(t.getChild(0).getText());
                 sink.print(" ");
-                rewrite(t.getChild(0).getChild(0));
+                // An endpoint might have an argument expression list so rewrite all the children.
+                // TODO: This won't handle multiple arguments properly since it won't include the comma in the list.
+                for (int i = 0; i < t.getChild(0).getChildCount(); ++i) {
+                    rewrite(t.getChild(0).getChild(i));
+                }
                 sink.print(";\n");
                 break;
 

@@ -999,6 +999,10 @@ certificate_specification
     :    ACTIVATE certs=STRING_LITERAL (AS entity=STRING_LITERAL)? (ASSUMING assumptions=STRING_LITERAL)? FOR
              -> ^(ACTIVATE $certs ^(AS $entity)? ^(ASSUMING $assumptions)?);
 
+// TODO: We should really wrap up the endpoint so that we can deal with argument_expression_list
+// a little more cleanly in the rewriter. See the handling of CONNECTION in SyntaxViewer.java
+// for more information.
+//
 endpoint
     :    identifier_path
     |    identifier_path '[' argument_expression_list ']';

@@ -13,11 +13,11 @@ module RemoteSelectorC {
 implementation {
 
     // Send to node broadcast address (0xFFFF), component #1.
-    struct component_id broadcast = { 0xFFFF, 0x01 };
+    component_id broadcast = { 0xFFFF, 0x01 };
 
-    command struct component_set ComponentManager.elements()
+    command component_set ComponentManager.elements()
     {
-        struct component_set result = { &broadcast, 1 };
+        component_set result = { &broadcast, 1 };
         return result;
     }
 }

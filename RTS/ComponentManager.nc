@@ -5,5 +5,5 @@
 #include "ComponentManager.h"
 
 interface ComponentManager { 
-   command struct component_set elements( );
+   command component_set elements( );
 }

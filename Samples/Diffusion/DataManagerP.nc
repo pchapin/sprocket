@@ -40,8 +40,8 @@ implementation {
 
 
     // Workspace array used to hold component IDs of remote DataManagerC components.
-    struct component_id  remote_components[MAX_NEIGHBORS];
-    struct component_set remote_set;
+    component_id  remote_components[MAX_NEIGHBORS];
+    component_set remote_set;
 
 
     // This event sends data events to interested nodes at the rates they have requested.
@@ -101,7 +101,7 @@ implementation {
     command int DCache.compute_reinforcement(
         int temp_threshold,
         int steepest_gradient,
-        struct component_set *target_set )
+        component_set *target_set )
     {
         //
         // Scan the data cache and figure which nodes are sending us interesting data already.
@@ -115,7 +115,7 @@ implementation {
 
     
     // Return the remote_components list based on our current concept of our neighbors.
-    command struct component_set ComponentManager.elements( )
+    command component_set ComponentManager.elements( )
     {
         return remote_set;
     }

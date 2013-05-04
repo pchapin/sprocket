@@ -7,11 +7,12 @@ AUTHOR  : Peter C. Chapin
 #include "Credentials.h"
 
 module ProviderC {
+    uses            interface SpartanBoot;
     uses            interface Leds;
     provides remote interface BlinkR requires "A.r";
     
     uses            interface TransferFormat;
-    uses            interface Boot;
+    uses            interface RPCControl;
 }
 implementation  {
     
@@ -47,8 +48,9 @@ implementation  {
                     0x52, 0x96, 0x0F, 0x5B, 0xFF, 0xCD, 0xA8, 0xBE,
                     0x62, 0x14, 0x02, 0x51, 0x57
     };
+
     
-    event void Boot.booted( )
+    event void SpartanBoot.booted( )
     {
         bool valid;
         
@@ -65,10 +67,16 @@ implementation  {
         }           
     }
 
+
     duty void BlinkR.flash( )
     {
         // For debugging purposes, comment this out so that it doesn't confuse things.
         // call Leds.led0Toggle( );
+    }
+
+
+    event void RPCControl.duty_posted( )
+    {
     }
 
 }

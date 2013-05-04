@@ -5,15 +5,15 @@
 #ifndef COMPONENTMANAGER_H
 #define COMPONENTMANAGER_H
 
-/* typedef */ struct component_id {
+typedef struct {
    uint16_t node_id;
    uint8_t  local_id;
-} /* component_id */;
+} component_id;
 
 
-/* typedef */ struct component_set {
-    struct component_id *ids;         // Parser can't handle a typedef name here.
+typedef struct {
+    component_id *ids;
     int count;
-} /* component_set */;
+} component_set;
 
 #endif

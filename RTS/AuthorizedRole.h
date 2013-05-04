@@ -6,8 +6,8 @@
 #define AUTHORIZEDROLE_H
 
 struct AuthorizedRole {
-          uint16_t component_id;
-          uint8_t  interface_id;
+          uint16_t component_identifier;
+          uint8_t  interface_identifier;
           int      role_id;
 };
 

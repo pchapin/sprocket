@@ -7,14 +7,15 @@ AUTHOR  : Peter C. Chapin
 
 configuration AppC { }
 implementation {
-    components MainC, UserC as App, RemoteSelectorC, new TimerMilliC( ) as Timer0;
+    components RPCControlC, UserC as App, RemoteSelectorC, new TimerMilliC( ) as Timer0;
     
     // Used for debugging.
     components LedsC;
 
-    App.Boot   -> MainC;
-    App.Leds   -> LedsC;
-    enable "*" for App.BlinkR -> [RemoteSelectorC].BlinkR;
-    App.Timer0 -> Timer0;
+    App.SpartanBoot -> RPCControlC;
+    App.RPCControl  -> RPCControlC;
+    App.Leds        -> LedsC;
+    activate "*" for App.BlinkR -> [RemoteSelectorC].BlinkR;
+    App.Timer0      -> Timer0;
 }
 

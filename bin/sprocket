@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Edit this file as appropriate and put it on your PATH.
+
+SPROCKET_CLASSPATH=$HOME/Projects/Sprocket/build/production/Sprocket
+SPROCKET_CLASSPATH=$HOME/Projects/Sprocket/lib/antlr-3.4.jar:$SPROCKET_CLASSPATH
+SPROCKET_CLASSPATH=$HOME/Projects/Sprocket/lib/bcprov-jdk16-145.jar:$SPROCKET_CLASSPATH
+
+scala -cp $SPROCKET_CLASSPATH edu.uvm.sprocket.Main $*

@@ -9,13 +9,14 @@ implementation {
 
 %GOVERNINGROLES%
 
-    command int GoverningRoles.get_role_id( uint16_t component_id, uint8_t interface_id )
+    command int GoverningRoles.get_role_id(
+        uint16_t component_identifier, uint8_t interface_identifier )
     {
         int i;
         
         for( i = 0; i < sizeof( authorized_roles ) / sizeof( struct AuthorizedRole ); ++i ) {
-            if( authorized_roles[i].component_id == component_id &&
-                authorized_roles[i].interface_id == interface_id ) {
+            if( authorized_roles[i].component_identifier == component_identifier &&
+                authorized_roles[i].interface_identifier == interface_identifier ) {
                 return authorized_roles[i].role_id;
             }
         }

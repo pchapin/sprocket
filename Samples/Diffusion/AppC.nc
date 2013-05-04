@@ -19,16 +19,16 @@ implementation {
     DiffusionC.RPCControl -> RPCControlC;
     DiffusionC.ICache -> InterestManagerC;
     DiffusionC.DCache -> DataManagerC;
-    /* enable "*" for */ DiffusionC.InterestManagement -> [DiffusionC].InterestManagement;
+    /* activate "*" for */ DiffusionC.InterestManagement -> [DiffusionC].InterestManagement;
     
     InterestManagerC.NeighborManagement -> NeighborManagerC;
     InterestManagerC.DCache -> DataManagerC;
     InterestManagerC.Timer0 -> Timer0;
-    /* enable "*" for */ InterestManagerC.NeighborSensor -> [InterestManagerC].InterestManagement;
+    /* activate "*" for */ InterestManagerC.NeighborSensor -> [InterestManagerC].InterestManagement;
 
     DataManagerC.NeighborManagement -> NeighborManagerC;
     DataManagerC.ICache -> InterestManagerC;
     DataManagerC.Timer0 -> Timer0;
-    /* enable "*" for */ DataManagerC.NeighborSensor -> [DataManagerC].DataManagement;
+    /* activate "*" for */ DataManagerC.NeighborSensor -> [DataManagerC].DataManagement;
 }
 

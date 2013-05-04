@@ -7,11 +7,11 @@ AUTHOR  : Peter C. Chapin
 
 configuration AppC { }
 implementation {
-    components MainC, ProviderC as App, LedsC, TransferFormatC;
+    components RPCControlC, ProviderC as App, LedsC, TransferFormatC;
 
-    App.Leds -> LedsC;
-    
+    App.SpartanBoot    -> RPCControlC;
+    App.Leds           -> LedsC;
     App.TransferFormat -> TransferFormatC;
-    App.Boot -> MainC;
+    App.RPCControl     -> RPCControlC;
 }
 

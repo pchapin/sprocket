@@ -14,5 +14,5 @@ implementation {
   ClientC.SpartanBoot -> RPCControlC;
   ClientC.RPCControl  -> RPCControlC;
   ClientC.Timer0      -> Timer0;
-  enable "*" for ClientC.Blink -> [RemoteSelectorC].Blink;
+  activate "*" for ClientC.Blink -> [RemoteSelectorC].Blink;
 }

@@ -11,7 +11,7 @@ AUTHOR  : Peter C. Chapin
 configuration AppC {
 }
 implementation {
-    components MainC;
+    components RPCControlC;
     
     // Components required for the client portion of the application.
     components BlinkToRadioC as ClientApp;
@@ -25,9 +25,10 @@ implementation {
     components RemoteSelectorC;
     
     // Client functionality.
-    ClientApp.Boot       -> MainC;
-    ClientApp.Timer0     -> Timer0;
-    ClientApp.LEDControl -> [RemoteSelectorC].LEDControl;
+    ClientApp.SpartanBoot -> RPCControlC;
+    ClientApp.Timer0      -> Timer0;
+    ClientApp.LEDControl  -> [RemoteSelectorC].LEDControl;
+    ClientApp.RPCControl  -> RPCControlC;
     
     // Server functionality.
     ServerApp.Leds -> LedsC;

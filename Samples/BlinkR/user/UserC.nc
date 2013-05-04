@@ -12,17 +12,18 @@ AUTHOR  : Peter C. Chapin
 
 module UserC {
     uses {
-        interface Boot;
+        interface SpartanBoot;
         interface Leds;
         interface Timer<TMilli> as Timer0;
         interface BlinkR;
+        interface RPCControl;
     }
 }
 
 
 implementation {
 
-    event void Boot.booted( )
+    event void SpartanBoot.booted( )
     {
         call Timer0.startPeriodic( DELAY );
     }
@@ -31,6 +32,10 @@ implementation {
     {
         call Leds.led1Toggle( );
         post BlinkR.flash( );
+    }
+
+    event void RPCControl.duty_posted( )
+    {
     }
 
 }

@@ -32,7 +32,7 @@ implementation {
     int     size;                                 // Number of bytes used in buffer above.
     int     augmented_size;                       // Number of bytes after authorization tokens.
     
-    struct component_set remote_components;
+    component_set remote_components;
     int remote_index = 0;
     
     // Preapre the SpartanRPC header. Return pointer to first byte past header.

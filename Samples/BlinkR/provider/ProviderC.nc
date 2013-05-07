@@ -54,24 +54,24 @@ implementation  {
     {
         bool valid;
         
-        call Leds.led2On( );  // Blue.
-        
-        call TransferFormat.raw_to_credential(
-                certificate_1, sizeof( certificate_1 ), &credential,  &valid );
-        
-        if( valid ) {
-            call Leds.led1On( );  // Green.
-        }
-        else {
-            call Leds.led0On( );  // Red.
-        }           
+        call Leds.led2On( );  // Blue.       
+ 
+        // call TransferFormat.raw_to_credential(
+        //         certificate_1, sizeof( certificate_1 ), &credential,  &valid );
+        //
+        // if( valid ) {
+        //     call Leds.led1On( );  // Green.
+        // }
+        // else {
+        //     call Leds.led0On( );  // Red.
+        // }           
     }
 
 
     duty void BlinkR.flash( )
     {
         // For debugging purposes, comment this out so that it doesn't confuse things.
-        // call Leds.led0Toggle( );
+        call Leds.led0Toggle( );
     }
 
 

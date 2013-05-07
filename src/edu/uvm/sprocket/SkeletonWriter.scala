@@ -36,13 +36,15 @@ object SkeletonWriter {
                               roleIdentifier: String) {
     val information = Global.iMap.getInformation(interfaceName)
 
-    // TODO: Right now we can only handle a single duty because we can't distinguish between them.
-    val duty :: _ = information.getDuties
-    for ( (parameterName, parameterType) <- duty.getParameters) {
-      outputFile.write("                memcpy(&" + parameterName + ", argp, sizeof(" + parameterType.name + "));\n")
-      outputFile.write("                argp += sizeof(" + parameterType.name + ");\n")
+    for (duty <- information.getDuties) {
+      outputFile.write(s"                case ${duty.ID}:\n")
+      for ( (parameterName, parameterType) <- duty.getParameters) {
+        outputFile.write(s"                    memcpy(&$parameterName, argp, sizeof(${parameterType.name}));\n")
+        outputFile.write(s"                    argp += sizeof(${parameterType.name});\n")
+      }
+      outputFile.write(s"                    post ${duty.name}();\n")
+      outputFile.write(s"                    break;\n")
     }
-    outputFile.write("                post " + duty.name +"();\n")
   }
 
 
@@ -79,8 +81,8 @@ object SkeletonWriter {
             }
           }
 
-          outputFile.close
-          templateFile.close
+          outputFile.close()
+          templateFile.close()
           writeOneSkeleton(rest)
         }
       }

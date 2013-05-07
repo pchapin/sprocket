@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // FILE    : InterfaceProcessor.scala
 // SUBJECT : Tree processing class for Spartan RPC interfaces.
-// AUTHOR  : (C) Copyright 2011 by Peter C. Chapin <PChapin@vtc.vsc.edu>
+// AUTHOR  : (C) Copyright 2013 by Peter C. Chapin <PChapin@vtc.vsc.edu>
 //
 //-----------------------------------------------------------------------
 package edu.uvm.sprocket
@@ -12,13 +12,14 @@ import edu.uvm.nesc.nesCLexer
 class InterfaceProcessor(root: ASTNode) extends Processor(root) {
 
   private var information: InterfaceInformation = null
+  private var currentDutyID = 1
   private var currentDuty: Duty = null
   private var currentParameterReturnType: String = null
 
   /**
-   * Process the branches of the abstract syntax tree of a duty declarator looking for
-   * information about the duties parameters. This method is only used over the duty's
-   * parameter list. The declarators it finds are parameter declarators.
+   * Process the branches of the abstract syntax tree of a duty declarator looking for information about the duties
+   * parameters. This method is only used over the duty's parameter list. The declarators it finds are parameter
+   * declarators.
    *
    * @param node A particular node in the AST
    * @return A node that will replace the given node (could be an identity replacement).
@@ -38,9 +39,8 @@ class InterfaceProcessor(root: ASTNode) extends Processor(root) {
   }
 
   /**
-   * Process the branches of the abstract syntax tree of a duty declarator looking for the name
-   * of the duty. This method is only used in the declarator of the duty itself. It is not
-   * used while processing duty parameters.
+   * Process the branches of the abstract syntax tree of a duty declarator looking for the name of the duty. This method
+   * is only used in the declarator of the duty itself. It is not used while processing duty parameters.
    *
    * @param node A particular node in the AST.
    * @return A node that will replace the given node (could be an identity replacement).
@@ -49,7 +49,9 @@ class InterfaceProcessor(root: ASTNode) extends Processor(root) {
     node match {
       // Assume that the duty's name is the first identifier in the identifier path.
       case ASTNode(nesCLexer.IDENTIFIER_PATH, text, children) => {
-        currentDuty = new Duty(children(0).text)
+        currentDuty = new Duty(children(0).text, currentDutyID)
+        // TODO: It should be an error if the duty ID goes above 15 (must fit into four bits).
+        currentDutyID = currentDutyID + 1
         information.addDuty(currentDuty)
         ASTNode(nesCLexer.IDENTIFIER_PATH, text, children)
       }
@@ -67,9 +69,8 @@ class InterfaceProcessor(root: ASTNode) extends Processor(root) {
   }
 
   /**
-   * Process the branches of the abstract syntax tree of an interface definition. This method is
-   * used to search for the duty declarations once the name of the interface has been seen and
-   * checked.
+   * Process the branches of the abstract syntax tree of an interface definition. This method is used to search for the
+   * duty declarations once the name of the interface has been seen and checked.
    *
    * @param node A particular node in the AST.
    * @return A node that will replace the given node (could be an identity replacement).

@@ -9,13 +9,18 @@ module ClientC {
     uses interface RPCControl;
 }
 implementation {
-    uint8_t counter;
+    uint8_t counter = 0;
     
     task void send_message( )
     {
         counter++;
-        post Blink.setLeds( counter );
-        if( (counter & 0x00FF) == 0 ) call Leds.led0Toggle( );
+        if( (counter & 0x00FF) == 0 ) {
+            call Leds.led0Toggle( );
+            post Blink.toggleProgress( );
+        }
+        else {
+            post Blink.setLeds( counter );
+        }
     }
     
     event void SpartanBoot.booted( )

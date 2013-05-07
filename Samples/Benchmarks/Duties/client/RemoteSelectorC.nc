@@ -9,8 +9,9 @@ module RemoteSelectorC {
 }
 implementation {
 
-    // Send to node broadcast address (0xFFFF), component #1.
-    component_id broadcast = { 0xFFFF, 0x01 };
+    // Ideally we would send to the broadcast address, but that is tricky in this system.
+    // Send to node #0, component #1.
+    component_id broadcast = { 0x00, 0x01 };
 
     command component_set ComponentManager.elements( )
     {

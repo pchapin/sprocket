@@ -11,6 +11,7 @@ implementation {
     uint8_t  arguments[20];         // Holds a copy of the "current" arguments + authorization.
     uint8_t *argp;                  // Points at the duty arguments in the message.
     bool     check_in_progress = FALSE;   // =TRUE if MAC check is in progress.
+    int      duty_id;
     
     %DUTYTASKS%
 
@@ -26,9 +27,10 @@ implementation {
         if( check_in_progress == TRUE ) return msg;
 
         // Verify that this message is intended for this (N, C, I) address.
-        if( ( *p++ & 0x7F ) != %INTERFACEID% ) {
+        if( ( (*p & 0x7F) >> 4 ) != %INTERFACEID% ) {  // Why is the MSB masked out?
             return msg;
         }
+        duty_id = *p++ & 0x0F;
         component_count = *p++;
         for( i = 0; i < component_count; ++i ) {
             if((*p == 0xFF || *p == TOS_NODE_ID) && *(p + 1) == %COMPONENTID% ) found = TRUE;
@@ -52,7 +54,10 @@ implementation {
     {
         if( check_in_progress ) {
             if( check_result == TRUE ) {
-                %INVOKEDUTY%
+                switch( duty_id ) {
+                    %INVOKEDUTY%
+                // If there is no matching case, ignore the call (invalid duty ID).
+                }
             }
             check_in_progress = FALSE;
         }

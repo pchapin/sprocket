@@ -36,7 +36,7 @@ implementation {
     int remote_index = 0;
     
     // Preapre the SpartanRPC header. Return pointer to first byte past header.
-    uint8_t *prepare_header( )
+    uint8_t *prepare_header( uint8_t duty_id )
     {
         int i;
         uint8_t *p = message_buffer;
@@ -45,7 +45,7 @@ implementation {
         memset( message_buffer, 0, MESSAGE_BUFFER_SIZE );
 
         // Header.
-        *p++ = %INTERFACEID%;
+        *p++ = (%INTERFACEID% << 4) | duty_id;
         *p++ = remote_components.count;
         for( i = 0; i < remote_components.count; ++i ) {
             *p++ = remote_components.ids[i].node_id;

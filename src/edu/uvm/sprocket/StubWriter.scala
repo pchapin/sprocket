@@ -13,7 +13,7 @@ object StubWriter {
   private def writeDutyCommands(outputFile: BufferedWriter, interfaceName: String) {
     val information = Global.iMap.getInformation(interfaceName)
     for (duty <- information.getDuties) {
-      outputFile.write("    command void " + interfaceName + "." + duty.name + "(")
+      outputFile.write(s"    command void $interfaceName.${duty.name}(")
       var parameterCounter = 0
       for ( (parameterName, parameterType) <- duty.getParameters) {
         outputFile.write(parameterType.name + " " + parameterName)
@@ -26,22 +26,22 @@ object StubWriter {
       outputFile.write("        uint8_t *p;\n\n")
 
       // Preliminaries.
-      outputFile.write("        if( duty_pending ) return;\n")
-      outputFile.write("        duty_pending = TRUE;\n")
-      outputFile.write("        remote_components = call ComponentManager.elements( );\n")
-      outputFile.write("        remote_index = 0;\n")
-      outputFile.write("        p = prepare_header( );\n")
+      outputFile.write(s"        if( duty_pending ) return;\n")
+      outputFile.write(s"        duty_pending = TRUE;\n")
+      outputFile.write(s"        remote_components = call ComponentManager.elements( );\n")
+      outputFile.write(s"        remote_index = 0;\n")
+      outputFile.write(s"        p = prepare_header( ${duty.ID} );\n")
 
       // Command parameters.
       for ( (parameterName, parameterType) <- duty.getParameters) {
-        outputFile.write("        memcpy(p, &" + parameterName + ", sizeof(" + parameterType.name + "));\n")
-        outputFile.write("        p += sizeof(" + parameterType.name + ");\n")
+        outputFile.write(s"        memcpy(p, &$parameterName, sizeof(${parameterType.name}));\n")
+        outputFile.write(s"        p += sizeof(${parameterType.name});\n")
       }
 
       // Begin the process of sending the packet.
-      outputFile.write("        size = p - message_buffer;\n")
-      outputFile.write("        post compute_authorization( );\n")
-      outputFile.write("    }\n")
+      outputFile.write(s"        size = p - message_buffer;\n")
+      outputFile.write(s"        post compute_authorization( );\n")
+      outputFile.write(s"    }\n")
     }
   }
 
@@ -71,14 +71,14 @@ object StubWriter {
               line = line.replace("%STUBNAME%", stubName)
               line = line.replace("%INTERFACENAME%", interfaceName)
               line = line.replace("%INTERFACEID%", Global.iMap.getId(interfaceName).toString)
-              line = line.replace("%ENTITYINDEX%", "0")  // TODO: Use an appropriate entity index.
+              line = line.replace("%ENTITYINDEX%", "0")  // TODO: Use an appropriate entity index. Zero is "default."
               outputFile.write(line)
               outputFile.write("\n")
             }
           }
 
-          outputFile.close
-          templateFile.close
+          outputFile.close()
+          templateFile.close()
           writeOneStub(rest)
         }
       }

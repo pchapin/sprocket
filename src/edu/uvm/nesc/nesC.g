@@ -582,7 +582,7 @@ struct_or_union
 //
 struct_declaration_list
     :    { $declaration::inStructDeclaration = true; }
-         (line_directive | struct_declaration)+
+         (line_directive_mini | struct_declaration)+
          { $declaration::inStructDeclaration = false; };
     
 struct_declaration
@@ -744,9 +744,18 @@ initializer_list
 /* ================= */
 
 // Allowing line_directive here creates problems because an expression_statement can start with
-// a CONSTANT. This means the end of a line_directive (matching CONSTANT*) can't easily be
-// found.
+// a CONSTANT. This means the end of a line_directive can't be unambiguously found. For example
+// something like
 //
+// # "somefile.nc" 1
+// /* null statement */ ;
+//
+// can be parsed as
+//
+// # "somefile.nc"
+// 1;  /* an expression_statement */
+//
+// See also the comment at line_directive.
 statement
     :    labeled_statement
     |    compound_statement
@@ -754,8 +763,8 @@ statement
     |    selection_statement
     |    iteration_statement
     |    jump_statement
-    |    atomic_statement;
-//    |    line_directive;    // This is a hack. Is it really necessary?
+    |    atomic_statement
+    |    line_directive_mini;    // This is a hack. Is it really necessary?
     
 
 atomic_statement
@@ -831,14 +840,22 @@ external_declaration
 // In particular, if the #includes are left expanded, the nesC compiler complains about
 // multiple definitions of constructs (types) defined in separate files.
 //
-// Note that because line directives can occur pretty much anywhere this grammar is sprinkled
-// with places where the 'line_directive' nonterminal is allowed. This is a bit of a hack. A
-// better approach might be to only recognize line directives at the top of the file and to
-// just shunt them to the hidden channel (lexically) when processing the body of a component or
-// interface. This requires context sensitive lexical analysis. I haven't implemented that yet.
+// Because line directives can occur pretty much anywhere this grammar is sprinkled with places
+// where line directives are allowed. This is a bit of a hack. A better approach might be to
+// only recognize line directives at global scope and to just shunt them to the hidden channel
+// (lexically) when processing the body of a component or interface. This requires context
+// sensitive lexical analysis. I haven't implemented that yet.
+//
+// For now it is necessary to distinguish between line directives that can occur at global scope
+// from those that can occur inside other structures. See the comment at 'statement' for more
+// information. See also: http://gcc.gnu.org/onlinedocs/cpp/Preprocessor-Output.html for details
+// on the line directive syntax.
 //
 line_directive
     :    '#' CONSTANT STRING_LITERAL CONSTANT* -> ^(LINE_DIRECTIVE STRING_LITERAL);
+
+line_directive_mini
+    :    '#' CONSTANT STRING_LITERAL -> ^(LINE_DIRECTIVE STRING_LITERAL);
     
 // This is a bit liberal. It permits things like 'int x { ... }.' That is, it does not require
 // the declarator to have a parameter list modifier.
@@ -873,7 +890,7 @@ large_scale_construct
 interface_definition
     :    INTERFACE identifier type_parameters? attributes?
         '{' { symbols.enterScope(); }
-        (line_directive | declaration)*
+        (line_directive_mini | declaration)*
             { symbols.exitScope();  } '}'
             -> ^(INTERFACE identifier declaration*);
     
@@ -939,7 +956,7 @@ module_body
          { symbols.exitScope(); symbols.exitScope(); };
 
 configuration_element_list
-    :    (line_directive | configuration_element)+;
+    :    (line_directive_mini | configuration_element)+;
     
 configuration_element
     :    components
@@ -1019,7 +1036,7 @@ identifier_path
 //
 component_specification
     :    '{' { symbols.enterScope(); }
-          (line_directive | uses_provides)* '}' -> ^(SPECIFICATION uses_provides*);
+          (line_directive_mini | uses_provides)* '}' -> ^(SPECIFICATION uses_provides*);
     
 uses_provides
     :    USES specification_element_list -> ^(USES specification_element_list)

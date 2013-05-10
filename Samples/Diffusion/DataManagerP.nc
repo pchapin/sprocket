@@ -9,6 +9,7 @@
 // -----------------------------------------------------------------------
 
 #include <Timer.h>
+#include "ComponentManager.h"
 #include "constants.h"
 
 module DataManagerP {

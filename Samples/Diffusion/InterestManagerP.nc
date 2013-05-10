@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 #include <Timer.h>
+#include "ComponentManager.h"
 #include "constants.h"
 
 module InterestManagerP {
@@ -32,8 +33,8 @@ implementation {
 
 
     // Workspace array used to hold component IDs of remote InterestManagerC components.
-    struct component_id  remote_components[MAX_NEIGHBORS];
-    struct component_set remote_set;
+    component_id  remote_components[MAX_NEIGHBORS];
+    component_set remote_set;
 
 
     command void ICache.initialize( )
@@ -130,7 +131,7 @@ implementation {
 
 
     // Return the remote_components list based on our current concept of our neighbors.
-    command struct component_set ComponentManager.elements( )
+    command component_set ComponentManager.elements( )
     {
         return remote_set;
     }

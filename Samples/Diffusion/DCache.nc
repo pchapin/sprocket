@@ -32,5 +32,5 @@ interface DCache {
     command int compute_reinforcement(
         int temp_threshold,
         int steepest_gradient,
-        struct component_set *target_set );
+        component_set *target_set );
 }

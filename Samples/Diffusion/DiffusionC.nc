@@ -5,6 +5,8 @@
 //
 //-----------------------------------------------------------------------
 
+#include "ComponentManager.h"
+
 module DiffusionC {
     uses interface Boot;
     uses interface ICache;
@@ -17,10 +19,10 @@ module DiffusionC {
 implementation {
     
     // The main node expresses some interests...
-    struct component_id  neighbor = { 2, 1 };  // Node #2, Component #1 
-    struct component_set remote_set = { &neighbor, 1 };
+    component_id  neighbor = { 2, 1 };  // Node #2, Component #1 
+    component_set remote_set = { &neighbor, 1 };
     
-    command struct component_set ComponentManager.elements( )
+    command component_set ComponentManager.elements( )
     {
         return remote_set;
     }

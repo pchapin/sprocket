@@ -52,7 +52,7 @@ implementation  {
     
     event void SpartanBoot.booted( )
     {
-        bool valid;
+        // bool valid;
         
         call Leds.led2On( );  // Blue.       
  

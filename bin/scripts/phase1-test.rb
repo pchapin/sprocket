@@ -20,7 +20,8 @@ attempts = [Attempt.new("Samples/Benchmarks/Duties/client",   ""),
             Attempt.new("Samples/BlinkR/provider",            "\"-n=A\""),
             Attempt.new("Samples/BlinkR/user",                "\"-n=B\""),
             Attempt.new("Samples/BlinkToRadio",               ""),
-            Attempt.new("Samples/Diffusion",                  "\"-n=A\"")]
+            Attempt.new("Samples/Diffusion",                  "\"-n=A\""),
+            Attempt.new("Samples/Dissemination" ,             "\"-n=N\"")]
 
 attempts.each { |attempt|
   Dir.chdir(attempt.folder) do

@@ -5,6 +5,8 @@
 //
 // -----------------------------------------------------------------------
 
+#include "ComponentManager.h"
+
 module DisseminatorC {
     provides remote interface DisseminationUpdate requires "N.control";
     provides        interface DisseminationValue;
@@ -13,7 +15,7 @@ module DisseminatorC {
     provides        interface ComponentManager;
 }
 implementation {
-    int current_value;
+    int current_value = 0;
     
     command const int *DisseminationValue.get( )
     {
@@ -24,18 +26,18 @@ implementation {
     {
         if( current_value != new_value ) {
             post NeighborUpdate.change( new_value );
+            current_value = new_value;
+            signal DisseminationValue.changed( );
         }
-        current_value = new_value;
-        signal DisseminationValue.changed( );
     }
     
-    struct component_id neighbors[] = {
+    component_id neighbors[] = {
         { 2, 1 }
     };
     
-    command struct component_set ComponentManager.elements( )
+    command component_set ComponentManager.elements( )
     {
-        struct component_set remote_set = { neighbors, 1 };
+        component_set remote_set = { neighbors, 1 };
         return remote_set;
     }
 }

@@ -21,7 +21,8 @@ attempts = [Attempt.new("Samples/Benchmarks/Duties/client",   "", false),
             Attempt.new("Samples/BlinkR/provider",            "", true ),
             Attempt.new("Samples/BlinkR/user",                "", false),
             Attempt.new("Samples/BlinkToRadio",               "", false),
-            Attempt.new("Samples/Diffusion",                  "", true )]
+            Attempt.new("Samples/Diffusion",                  "", true ),
+            Attempt.new("Samples/Dissemination",              "", true )]
 
 attempts.each { |attempt|
   if !Dir.exists?(attempt.folder + "/Sprocket-Out")

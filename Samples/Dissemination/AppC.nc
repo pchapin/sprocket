@@ -5,10 +5,12 @@
 //
 //-----------------------------------------------------------------------
 
+#include <Timer.h>
+
 configuration AppC {
 }
 implementation {
-    components MainC, DemoC, DisseminatorC, LedsC;
+    components MainC, DemoC, DisseminatorC, new TimerMilliC( ) as Timer, LedsC;
     components RPCControlC;
     
     DemoC -> MainC.Boot;
@@ -17,7 +19,8 @@ implementation {
     DemoC.DisseminationUpdate -> DisseminatorC;
     DemoC.DisseminationValue -> DisseminatorC;
     DemoC.Leds -> LedsC;
-    /* enable "*" for */ DisseminatorC.NeighborUpdate -> [DisseminatorC].DisseminationUpdate;
+    DemoC.Timer -> Timer;
+    /* activate "*" for */ DisseminatorC.NeighborUpdate -> [DisseminatorC].DisseminationUpdate;
     
 }
 

@@ -8,9 +8,11 @@
 //
 // -----------------------------------------------------------------------
 
+#include "command.h"
+
 interface DisseminationValue {
 
-    command const int *get( );
+    command const command_t *get( );
     event void changed( );
 }
 

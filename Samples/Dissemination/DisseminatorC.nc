@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 #include "ComponentManager.h"
+#include "command.h"
 
 module DisseminatorC {
     provides remote interface DisseminationUpdate requires "N.control";
@@ -15,16 +16,24 @@ module DisseminatorC {
     provides        interface ComponentManager;
 }
 implementation {
-    int current_value = 0;
+    command_t current_value = { 0, 0, 0, 0 };
+
+    bool commands_equal( const command_t *left, const command_t *right )
+    {
+        return ( left->mote_id      == right->mote_id      &&
+                 left->command_name == right->command_name &&
+                 left->val          == right->val          &&
+                 left->nonce        == right->nonce );
+    }
     
-    command const int *DisseminationValue.get( )
+    command const command_t *DisseminationValue.get( )
     {
         return &current_value;
     }
     
-    duty void DisseminationUpdate.change( int new_value )
+    duty void DisseminationUpdate.change( command_t new_value )
     {
-        if( current_value != new_value ) {
+        if( !commands_equal( &current_value, &new_value ) ) {
             post NeighborUpdate.change( new_value );
             current_value = new_value;
             signal DisseminationValue.changed( );
@@ -32,6 +41,7 @@ implementation {
     }
     
     component_id neighbors[] = {
+        // Each component_id is { node_id, component_number }.
         { 2, 1 }
     };
     

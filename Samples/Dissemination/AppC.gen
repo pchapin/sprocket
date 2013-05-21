@@ -1,11 +1,13 @@
 
+#include <Timer.h>
+
 configuration AppC  {
 }
 implementation {
 
     // Replace (ACNullC and ASNullC) with (ACRT0C and ASRT0C) for security implementation.
     
-    components MainC , DemoC , DisseminatorC , LedsC ;
+    components MainC , DemoC , DisseminatorC , new TimerMilliC( ) as Timer , LedsC ;
     components RPCControlC;
     components Spkt_InitializeC, ACRT0C, ASRT0C;
     components Spkt_1 , Spkt_2 ;
@@ -19,6 +21,7 @@ implementation {
     DemoC .DisseminationUpdate -> DisseminatorC .DisseminationUpdate;
     DemoC .DisseminationValue -> DisseminatorC .DisseminationValue;
     DemoC .Leds -> LedsC .Leds;
+    DemoC .Timer -> Timer .Timer;
     
     Spkt_1 .AuthorizationClient  -> ACRT0C .AuthorizationClient ;
     DisseminatorC .NeighborUpdate  -> Spkt_1 .DisseminationUpdate ;

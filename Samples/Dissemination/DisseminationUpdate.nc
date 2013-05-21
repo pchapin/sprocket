@@ -8,9 +8,11 @@
 //
 // -----------------------------------------------------------------------
 
+#include "command.h"
+
 interface DisseminationUpdate {
 
-    duty void change(int new_value);
+    duty void change(command_t new_value);
 
 }
 

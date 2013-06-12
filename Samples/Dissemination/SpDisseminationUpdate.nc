@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// FILE    : DisseminationUpdate.nc
+// FILE    : SpDisseminationUpdate.nc
 // SUBJECT : SpartanRPC version of the DisseminationUpdate interface.
 // AUTHOR  : (C) Copyright 2013 by Peter C. Chapin <pchapin@cems.uvm.edu>
 //
@@ -10,7 +10,7 @@
 
 #include "command.h"
 
-interface DisseminationUpdate {
+interface SpDisseminationUpdate {
 
     duty void change(command_t new_value);
 

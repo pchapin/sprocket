@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// FILE    : DisseminatorC.nc
+// FILE    : SpDisseminatorC.nc
 // SUBJECT : SpartanRPC version of the Disseminator component.
 // AUTHOR  : (C) Copyright 2013 by Peter C. Chapin <pchapin@cems.uvm.edu>
 //
@@ -8,10 +8,10 @@
 #include "ComponentManager.h"
 #include "command.h"
 
-module DisseminatorC {
-    provides remote interface DisseminationUpdate requires "N.control";
-    provides        interface DisseminationValue;
-    uses            interface DisseminationUpdate as NeighborUpdate;
+module SpDisseminatorC {
+    provides remote interface SpDisseminationUpdate requires "N.control";
+    provides        interface SpDisseminationValue;
+    uses            interface SpDisseminationUpdate as NeighborUpdate;
     
     provides        interface ComponentManager;
 }
@@ -26,17 +26,17 @@ implementation {
                  left->nonce        == right->nonce );
     }
     
-    command const command_t *DisseminationValue.get( )
+    command const command_t *SpDisseminationValue.get( )
     {
         return &current_value;
     }
     
-    duty void DisseminationUpdate.change( command_t new_value )
+    duty void SpDisseminationUpdate.change( command_t new_value )
     {
         if( !commands_equal( &current_value, &new_value ) ) {
             post NeighborUpdate.change( new_value );
             current_value = new_value;
-            signal DisseminationValue.changed( );
+            signal SpDisseminationValue.changed( );
         }
     }
     

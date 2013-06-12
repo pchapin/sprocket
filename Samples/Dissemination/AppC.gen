@@ -7,7 +7,7 @@ implementation {
 
     // Replace (ACNullC and ASNullC) with (ACRT0C and ASRT0C) for security implementation.
     
-    components MainC , DemoC , DisseminatorC , new TimerMilliC( ) as Timer , LedsC ;
+    components MainC , DemoC , SpDisseminatorC , new TimerMilliC( ) as Timer , LedsC ;
     components RPCControlC;
     components Spkt_InitializeC, ACRT0C, ASRT0C;
     components Spkt_1 , Spkt_2 ;
@@ -18,23 +18,25 @@ implementation {
     DemoC  -> MainC .Boot ;
     DemoC .SpartanBoot -> RPCControlC;
     DemoC .RPCControl -> RPCControlC;
-    DemoC .DisseminationUpdate -> DisseminatorC .DisseminationUpdate;
-    DemoC .DisseminationValue -> DisseminatorC .DisseminationValue;
+    DemoC .SpDisseminationUpdate -> SpDisseminatorC .SpDisseminationUpdate;
+    DemoC .SpDisseminationValue -> SpDisseminatorC .SpDisseminationValue;
     DemoC .Leds -> LedsC .Leds;
     DemoC .Timer -> Timer .Timer;
+
+    // Stub wirings...
     
-    Spkt_1 .AuthorizationClient  -> ACRT0C .AuthorizationClient ;
-    DisseminatorC .NeighborUpdate  -> Spkt_1 .DisseminationUpdate ;
-    Spkt_1 .ComponentManager  -> DisseminatorC .ComponentManager ;
-    Spkt_1 .Packet  -> AMSenderC .Packet ;
-    Spkt_1 .AMSend  -> AMSenderC .AMSend ;
-    RPCControlC. StubControl -> Spkt_1;
+    Spkt_2 .AuthorizationClient  -> ACRT0C .AuthorizationClient ;
+    SpDisseminatorC .NeighborUpdate  -> Spkt_2 .SpDisseminationUpdate ;
+    Spkt_2 .ComponentManager  -> SpDisseminatorC .ComponentManager ;
+    Spkt_2 .Packet  -> AMSenderC .Packet ;
+    Spkt_2 .AMSend  -> AMSenderC .AMSend ;
+    RPCControlC. StubControl -> Spkt_2;
 
     // Skeleton wirings...
     
-    Spkt_2. DisseminationUpdate -> DisseminatorC .DisseminationUpdate;
-    Spkt_2. Receive -> AMReceiverC;
-    Spkt_2. AMPacket -> AMReceiverC;
-    Spkt_2. AuthorizationServer -> ASRT0C;
+    Spkt_1. SpDisseminationUpdate -> SpDisseminatorC .SpDisseminationUpdate;
+    Spkt_1. Receive -> AMReceiverC;
+    Spkt_1. AMPacket -> AMReceiverC;
+    Spkt_1. AuthorizationServer -> ASRT0C;
 }
 

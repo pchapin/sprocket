@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// FILE    : DisseminationValue.nc
+// FILE    : SpDisseminationValue.nc
 // SUBJECT : SpartanRPC version of the DisseminationValue interface.
 // AUTHOR  : (C) Copyright 2013 by Peter C. Chapin <pchapin@cems.uvm.edu>
 //
@@ -10,7 +10,7 @@
 
 #include "command.h"
 
-interface DisseminationValue {
+interface SpDisseminationValue {
 
     command const command_t *get( );
     event void changed( );

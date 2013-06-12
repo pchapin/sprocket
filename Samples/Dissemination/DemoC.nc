@@ -12,8 +12,8 @@ module DemoC {
     uses interface Boot;
     uses interface SpartanBoot;
     uses interface RPCControl;
-    uses interface DisseminationUpdate;
-    uses interface DisseminationValue;
+    uses interface SpDisseminationUpdate;
+    uses interface SpDisseminationValue;
     uses interface Timer<TMilli> as Timer;
     uses interface Leds;
 }
@@ -44,7 +44,7 @@ implementation {
             // this is an issue for any dissemination protocol.
             //
             value.nonce++;
-            post DisseminationUpdate.change( value );
+            post SpDisseminationUpdate.change( value );
         }
     }
     
@@ -52,9 +52,9 @@ implementation {
     {
     }
     
-    event void DisseminationValue.changed( )
+    event void SpDisseminationValue.changed( )
     {
-        const command_t *p = call DisseminationValue.get( );
+        const command_t *p = call SpDisseminationValue.get( );
         call Leds.set( p->nonce );
     }
 }

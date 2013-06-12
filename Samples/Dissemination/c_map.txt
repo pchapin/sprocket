@@ -1,1 +1,1 @@
-DisseminatorC = 1
+SpDisseminatorC = 1

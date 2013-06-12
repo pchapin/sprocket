@@ -10,17 +10,18 @@
 configuration AppC {
 }
 implementation {
-    components MainC, DemoC, DisseminatorC, new TimerMilliC( ) as Timer, LedsC;
+    components MainC, DemoC, SpDisseminatorC, new TimerMilliC( ) as Timer, LedsC;
     components RPCControlC;
     
     DemoC -> MainC.Boot;
     DemoC.SpartanBoot -> RPCControlC;
     DemoC.RPCControl -> RPCControlC;
-    DemoC.DisseminationUpdate -> DisseminatorC;
-    DemoC.DisseminationValue -> DisseminatorC;
+    DemoC.SpDisseminationUpdate -> SpDisseminatorC;
+    DemoC.SpDisseminationValue -> SpDisseminatorC;
     DemoC.Leds -> LedsC;
     DemoC.Timer -> Timer;
-    /* activate "*" for */ DisseminatorC.NeighborUpdate -> [DisseminatorC].DisseminationUpdate;
+    /* activate "*" for */
+        SpDisseminatorC.NeighborUpdate -> [SpDisseminatorC].SpDisseminationUpdate;
     
 }
 

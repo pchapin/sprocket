@@ -17,9 +17,9 @@ object KeyWriter {
     outputFile.write("    const struct PublicKey myPublicKeys[] = {\n")
     for (i <- 0 until splitEntityNames.length) {
       val key = lookupPublicKey(splitEntityNames(i))
-      val keyPoint = key.getW()
-      val keyDataX = normalizeKeyValue(keyPoint.getAffineX().toByteArray)
-      val keyDataY = normalizeKeyValue(keyPoint.getAffineY().toByteArray)
+      val keyPoint = key.getW
+      val keyDataX = normalizeKeyValue(keyPoint.getAffineX.toByteArray)
+      val keyDataY = normalizeKeyValue(keyPoint.getAffineY.toByteArray)
 
       outputFile.write("    { { { \n")
       printAsCInitializerLEW(outputFile, keyDataX)
@@ -38,7 +38,7 @@ object KeyWriter {
     for (i <- 0 until splitEntityNames.length) {
       val key = lookupPrivateKey(splitEntityNames(i))
       // TODO: I believe private ECC keys can be one bit longer than the (X, Y) components of the public key.
-      val keyData = normalizeKeyValue(key.getS().toByteArray)
+      val keyData = normalizeKeyValue(key.getS.toByteArray)
 
       outputFile.write("    { {\n")
       printAsCInitializerLEW(outputFile, keyData)

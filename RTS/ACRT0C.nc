@@ -36,9 +36,9 @@ implementation {
         if( max_size < size + 4 ) return FAIL;
         if( message_buffer[1] <= remote_index ) return FAIL;
         
-        endpoint.interface_id = message_buffer[0];
-        endpoint.node_id      = message_buffer[2 + 2*remote_index];
-        endpoint.component_id = message_buffer[3 + 2*remote_index];
+        endpoint.interface_id = (message_buffer[0] >> 4);
+        endpoint.node_id      =  message_buffer[2 + 2*remote_index];
+        endpoint.component_id =  message_buffer[3 + 2*remote_index];
         
         if( call SessionKeyStorage.client_get_key( &endpoint, &session_key, entity_index ) == FAIL ) {
             // call Leds.led0Toggle( );

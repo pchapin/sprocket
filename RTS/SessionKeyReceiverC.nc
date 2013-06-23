@@ -134,7 +134,9 @@ implementation {
         else {
             struct SessionKey session_key;
             error_t session_key_result;
-            
+
+            // call Leds.led1Toggle( );
+
             #ifdef SKR_DEBUG
             printf( "SKR: Access granted\n" );
             printfflush( );

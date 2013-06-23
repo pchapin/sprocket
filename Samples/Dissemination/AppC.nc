@@ -20,7 +20,7 @@ implementation {
     DemoC.SpDisseminationValue -> SpDisseminatorC;
     DemoC.Leds -> LedsC;
     DemoC.Timer -> Timer;
-    /* activate "*" for */
+    activate "*" for
         SpDisseminatorC.NeighborUpdate -> [SpDisseminatorC].SpDisseminationUpdate;
     
 }

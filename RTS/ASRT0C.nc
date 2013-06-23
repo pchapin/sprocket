@@ -33,9 +33,9 @@ implementation {
         if( size < 8 ) return FAIL;     // At least a minimal header and a MAC.
 
         // TODO: Search for a matching MAC.
-        endpoint.interface_id = message_buffer[0];
-        endpoint.node_id      = client_address;
-        endpoint.component_id = message_buffer[3];
+        endpoint.interface_id = (message_buffer[0] >> 4);
+        endpoint.node_id      =  client_address;
+        endpoint.component_id =  message_buffer[3];
         
         if( call SessionKeyStorage.server_get_key( &endpoint, &session_key ) != SUCCESS ) {
             return FAIL;

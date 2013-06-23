@@ -32,8 +32,8 @@ object CertificateWriter {
       }
     }
 
-    outputFile.close
-    templateFile.close
+    outputFile.close()
+    templateFile.close()
   }
 
 }

@@ -1,8 +1,8 @@
 
-README.txt
-==========
+Minimum Model
+=============
 
-This program exercises the minimum model building code. The program runs on a single mote. It
+This program exercises the minimum model building code. The program runs on a single node. It
 turns on the green LED (LED #1) at boot time. It then repeatedly (see source code for details)
 rebuilds the model using the standard five credentials (see CredentialStorageC.nc). If a build
 overflows it turns on the red LED (LED #0) and leaves it on. In any case it turns on the blue

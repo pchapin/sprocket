@@ -1,6 +1,6 @@
 
-README.txt
-==========
+Remote Blink
+============
 
 This is the classic Blink example extended to use the features of SpartanRPC. There are two
 separate programs: the client (or "user") program and the server (or "provider") program. The

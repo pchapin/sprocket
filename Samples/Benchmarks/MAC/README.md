@@ -1,6 +1,6 @@
 
-README.txt
-==========
+Message Authentication Codes
+============================
 
 This version of the benchmark exercises the remote procedure call discipline with the addition
 of MAC processing using a predefined key.
@@ -19,5 +19,3 @@ To set up for this test some special adjustments need to be made.
 
 Timing the flashing of LED #0 over ~60 seconds shows that the test devices are capable of
 posting duties at a maximum rate of 87 posts/s with this program.
-
-Peter C. Chapin

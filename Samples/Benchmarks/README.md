@@ -1,5 +1,5 @@
 
-README.txt
+Benchmarks
 ==========
 
 These directories contain different versions of a simple "remote blink" application used for

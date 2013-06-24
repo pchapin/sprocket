@@ -1,6 +1,6 @@
 
-README.txt
-==========
+Sprocket Reference Manual Figures
+=================================
 
 This folder contains the figures used by the Sprocket Reference Manual. Most of these figures
 are in PIC format. The *.pic file is the source of the figure. It is compiled to a corresponding

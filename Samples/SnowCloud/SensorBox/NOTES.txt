@@ -1,0 +1,12 @@
+
+Sizes of "cleaned up" SensorBox before adding SpartanRPC:
+
+ROM = 36254
+RAM =  2868
+
+Sizes of "cleaned up" SensorBox after running through Sprocket:
+
+ROM = 36232
+RAM =  3490
+
+Sizes of SpartanRPC version of SensorBox:

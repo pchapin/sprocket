@@ -9,8 +9,8 @@ Prerequisites
 -------------
 
 * Java development kit (I used v1.7u15)
-* Scala (I used v2.10.1)
-* IntelliJ IDEA (I used v12.1)
+* Scala (I used v2.10.2)
+* IntelliJ IDEA (I used v12.1.4)
 * LaTeX (required for building the documentation)
 
 Development is done on Linux but it is likely that most things will work on Windows or any other
@@ -56,25 +56,20 @@ file named on the command line to the parser and then outputs the abstract synta
 created (using ANTLR's AST notation). This program does not preprocess the input (that must be
 done separately if it is desired).
 
-### Known Issues
+### Additional Thoughts
 
-This is a work in progress and so is likely to be buggy and incomplete. Here are a few known
-issues to consider.
+This is a work in progress and so is likely to be buggy and incomplete. Issues related to this
+grammar are on the GitHub issue tracker along with issues related to Sprocket in general. Here
+are a few additional thoughts.
 
 + The grammar contains some extensions to standard nesC related to SpartanRPC. These extensions
-  are intended to be upwardly compatible with regular nesC; even with the extensions enabled,
-  regular nesC programs should be parsed properly.
+  are intended to be upwardly compatible with nesC; even with the extensions enabled, regular
+  nesC programs should be parsed properly.
 
-+ The AST generation may not cover the entire language. In some cases spurious tokens may appear
-  in the ASTs. These will eventualy be removed. Also the structure of the ASTs may change (as I
-  learn what I'm doing).
++ The AST generation may not cover the entire language. Also in some cases spurious tokens that
+  should really be suppressed may appear in the AST. These quirks will eventualy be removed.
+  Also the structure of the ASTs may change.
 
-+ I may eventually provide a tree grammar to convert the ASTs into real parse trees (I'm not
++ I may eventually provide a tree grammar to convert the ASTs into real parse trees. I'm not
   clear if I absolutely need that for my own work right now, but in general it would be
-  desirable to have this ability).
-
-+ The parser currently uses ANTLR's backtracking mode. This makes for an easy to read grammar
-  (obviously a good thing) but in theory it opens the possibility of parse times that are
-  exponential in the number of input tokens. My experience with the parser so far is that in
-  real life parse times are just fine. However, it might be desirable to eventually do without
-  backtracking mode.
+  desirable to have this ability.

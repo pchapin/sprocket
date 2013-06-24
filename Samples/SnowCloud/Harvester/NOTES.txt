@@ -1,0 +1,13 @@
+
+Sizes of "cleaned up" Harvester before adding SpartanRPC:
+
+ROM = 24316
+RAM =  2274
+
+Sizes of "cleaned up" Harvester after running through Sprocket:
+
+ROM = 24292
+RAM =  2878
+
+Sizes of SpartanRPC version of Harvester:
+

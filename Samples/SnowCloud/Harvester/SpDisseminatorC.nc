@@ -42,7 +42,7 @@ implementation {
     
     component_id neighbors[] = {
         // Each component_id is { node_id, component_number }.
-        { 2, 1 }
+        { 1, 1 }
     };
     
     command component_set ComponentManager.elements( )

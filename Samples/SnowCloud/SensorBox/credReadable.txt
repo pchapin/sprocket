@@ -1,2 +1,5 @@
 N.control <- N
-N.control <- H
+N.control <- Hc
+N.collect <- N
+N.collect <- Hc
+N.collect <- Hd

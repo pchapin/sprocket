@@ -22,3 +22,23 @@ SensorBox (node 1)
      User Button SHORT (sampling mode)
        green light... User Button SHORT... light off (10 second start up)... red light on while
        sampling... all lights off when sampling done and ready for Harvester.
+
+=====
+
+The two roles of interest are the N.control and N.collect roles. There are a total of three
+entities are N (the nodes), Hd (the Harvester that can collect data), and Hc (the "Harvester"
+that can issue commands).
+
+The nodes need to propagate information forward so they need access to both roles. Thus the
+overall policy is
+
+1. N.control <- N
+2. N.control <- Hc
+3. N.collect <- N
+4. N.collect <- Hc (here I'm allowing a controller to also collect).
+5. N.collect <- Hd
+
+In principal the nodes should be deployed with credential #1 and #3. Each kind of harvester
+should be deployed with it's corresponding credentials (#2 and #4 for an Hc harvester, and #5
+for an Hd harvester). Actually the current implementation has every node transmitting all
+credentials (a little unnecessary).

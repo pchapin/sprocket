@@ -42,3 +42,24 @@ In principal the nodes should be deployed with credential #1 and #3. Each kind o
 should be deployed with it's corresponding credentials (#2 and #4 for an Hc harvester, and #5
 for an Hd harvester). Actually the current implementation has every node transmitting all
 credentials (a little unnecessary).
+
+=====
+
+Here is a more complex policy that is not current supportable (due to limitations in Sprocket)
+but it would be nice to lift those limitations to allow this.
+
+On Nodes:
+
+ Snowcloud.Control <- Snowcloud.Node
+ Snowcloud.Collect <- Snowcloud.Node
+ Snowcloud.Collect <- Snowcloud.Collab.User
+ Snowcloud.Node <- NodeID             # Notice that each node is its own entity.
+
+On Admin Harvester:
+
+ Snowcloud.Node <- AdminHarvester
+
+On Collection Harvesters (e.g. for UNH):
+
+ Snowcloud.Collab <- UNH
+ UNH.User <- GEO

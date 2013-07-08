@@ -1,5 +1,15 @@
+# Artifacts of IntelliJ
 .idea/workspace.xml
 build
 doc/scaladoc
+
+# Temporary directories created by Sprocket.
 Sprocket-Out
 Sprocket-Tmp
+
+# Files generated when compiling papers.
+main.aux
+main.bbl
+main.blg
+main.log
+main.pdf

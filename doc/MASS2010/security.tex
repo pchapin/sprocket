@@ -1,0 +1,71 @@
+\section{Securing RPC}
+\label{section-security-extensions}
+
+Our primary goal is to provide convenient security primitives that application programmers can
+use when developing heterogeneous wireless sensor networks. The RPC services presented in the
+preceding sections provide an abstraction for building network services. Now, we focus on a
+means to protect these services via a language-based authorization mechanism. This mechanism is
+a simple \emph{capability-based} authorization system, that is sufficiently high-level to hide
+the underlying message authentication scheme, while being sufficiently low-level to serve as a
+basis for more complex protocols in applications.
+
+\subsection{Capability-Based Security}
+
+A capability is an unforgeable reference to a resource, the possession of which is necessary to
+gain resource access \cite{884422}. In SpartanRPC resources are taken to be RPC services, and
+programmers may specify security policies associated with these services by requiring the
+activation of a capability for their usage. We envision that individual capabilities will
+be associated with statically assigned roles.
+
+\subsection{Syntax and Semantics}
+
+To declare security policy, an RPC service provider can modify a remote interface provides
+declaration with the syntax $\code{requires}\ C$ where $C$ is a string literal denoting a
+capability. For example:
+\begin{Verbatim}
+module LEDControllerC {
+    provides remote interface LEDControl
+        requires "K";
+}
+\end{Verbatim}
+This means that posting of any duty in \code{LEDControl} provided by this component requires
+activation of capability \code{K}. All capability requirements are declared statically in this
+manner, and all capabilities are given statically, i.e.~SpartanRPC does not support dynamic
+capability generation. This is reasonable because capabilities are associated with network
+services. Thus the number of needed capabilities scales with the number of interacting security
+domains and not with the total number of nodes.
+
+In order to use a secured service, clients may activate a capability $C$ when wiring to a
+protected component interface via the syntax $\code{auth}\ C$. For example, assuming that
+$\code{RemoteSelectorC}$ is a component manager for provider(s) of the protected \code{LEDControl}
+service described above:
+\begin{Verbatim}
+auth "K" ClientC.LEDControl ->
+    [RemoteSelectorC].LEDControl;
+\end{Verbatim}
+\vspace{0.4em}
+Any postings of duties from \code{LEDControl} in the \code{ClientC} component need not mention
+security at all---capabilities are activated at configuration wiring connections since that is
+where interface uses are reified with implementations.
+
+\subsection{Security Properties}
+
+The implementation of our security mechanism is described in more detail in
+Sect.~\ref{section-implementation}, but a summary is as follows. Capabilities are in one-to-one
+correspondence with AES symmetric keys. Activating a capability $C$ at a wiring connection
+entails signing all messages associated with duty postings over that wire with a MAC using the
+key denoted by $C$. Any service provider will verify these MACs under the key denoted by the
+capability $C$ required for the service. Since capabilities are known statically, we assume that
+keys are stored in ROM, so that a node's capabilities are exactly the keys it is deployed with.
+
+Our system does not provide any form of replay protection out of the box, but this can be added
+at the application level. For example an application could pass a counter as an additional duty
+parameter. The server could verify that the count increases monotonically as a simple form of
+replay protection.
+
+We feel that delegating replay protection to the application is appropriate since SpartanRPC is
+intended to be a low level infrastructure on which more complex systems can be built. Not all
+applications will need replay protection and it is our desire to keep the core overhead minimal.
+
+In addition our system does not currently offer any confidentiality service. However, extending
+our system to encrypt duty arguments is an area we intend to explore as future work.

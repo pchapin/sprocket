@@ -1,0 +1,23 @@
+\section{Conclusion}
+
+We have extended nesC with a light weight, link-layer, secure RPC facility, yielding a language
+called SpartanRPC. SpartanRPC is a middleware technology supporting secure WSN applications
+comprising multiple protection domains. It is ideal for settings in which multiple subnetworks
+administered by distinct social entities cooperate to obtain a holistic behavior. A
+language-level, capability-based authorization mechanism provides application programmers with
+an easy and effective means for specifying and enforcing security policies.
+
+Because of the long delays and unreliability inherent in radio communication, SpartanRPC treats
+remote execution of RPC services as fundamentally asynchronous. Inspired by existing nesC
+practice SpartanRPC provide task-like units of remote execution called \emph{duties}. In
+addition SpartanRPC extends nesC configurations to allow components on different nodes to be
+wired together in a dynamic manner, i.e.~remote wirings to RPC services can change during
+program execution. This accommodates typical routing and programming patterns in WSN
+applications.
+
+We have implemented SpartanRPC in the Sprocket framework \cite{sprocket}, wherein RPC features
+are transformed at compile into standard nesC code, and symmetric key cryptography and MACs
+underlies the authorization mechanism. Empirical results suggest that SpartanRPC as implemented
+in Sprocket is efficient and realistic for programming practice. We have illustrated the
+facility of the language itself with an implementation of secure directed diffusion in a
+heterogeneous trust environment.

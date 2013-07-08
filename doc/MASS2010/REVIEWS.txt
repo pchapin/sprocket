@@ -1,0 +1,262 @@
+MIME-Version: 1.0
+Subject: [IEEE MASS 2010] Your paper #1569313570  has been accepted
+Date: Sat, 10 Jul 2010 20:30:38 -0400
+From: mass2010-tpcchairs@cse.psu.edu
+To: Peter Chapin <pchapin@cems.uvm.edu>
+Cc: Christian Skalka <skalka@cems.uvm.edu>, gcao@cse.psu.edu,
+        mohapatra@cs.ucdavis.edu
+Sender: EDAS Conference Manager <help@edas-help.com>
+Reply-To: mass2010-tpcchairs@cse.psu.edu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Dear Mr. Peter Chapin:
+
+Congratulations! We are very happy to inform you that your paper
+#1569313570 ('SpartanRPC: Secure WSN Middleware for Cooperating
+Domains') has been accepted to appear in MASS’2010.
+
+This year we received 185 submissions of which 51 were accepted after a
+thorough review process. The reviews for your paper are attached below
+and can be found in EDAS at http://edas.info/showPaper.php?m=1569313570.
+We hope the comments will be useful for you to prepare the final
+camera-ready manuscript, which is due on August 20, 2010. The detailed
+instructions concerning your final paper preparation will be available
+shortly at https://mass2010.soe.ucsc.edu. Travel grant information and
+registration requirements can also be found in our web site. Please
+contact us if you have any questions.
+
+Once again, our congratulations on the acceptance of your paper. We look
+forward to seeing you in San Francisco.
+
+Best Regards,
+
+Guohong Cao and Prasant Mohapatra
+IEEE MASS’2010 Technical Program Co-Chairs
+
+======= Review 1 =======
+
+> > *** Contributions: What are the major issues addressed in the paper?
+>       Do you consider them important? (Pls. comment explicitly on the
+>       relevance of the paper to MASS topics, the technical depth and the
+>       importance of the problem addressed.) [Be brief]
+
+>
+> This paper proposes a secure RPC mechanism for sensors which can be a
+> useful middleware component in sensor networks. The approach is
+> similar to the existing TinyRPC approach except that TinyRPC does not
+> provide any security. Another difference is that TinyRPC is based on
+> nesC commands that wait for completion and yield a return value, while
+> the proposed SpartanRPC approach is based on nesC tasks that are
+> non-blocking. However, tasks do not take arguments, so this feature is
+> added by SpartanRPC. The proposed approach also supports dynamic
+> wirings between modules of the implementation and fine-grained
+> authorization policies. The authors present the design and
+> implementation of SpartanRPC, as well as its performance evaluation in
+> terms of memory usage and energy concumption. They also provide a
+> detailed example of usage by showing the implementation of Directed
+> Diffusion.
+> 
+> > *** Strengths: What are the major reasons to accept the paper? [Be
+>       brief]
+>
+> This is a well written paper that presents a solid work. The proposed
+> RPC mechanism potentially has some practical relevance; it is
+> definitely a useful abstraction that eases the work of programmers,
+> while on the other hand, practical relevance also depends on the scale
+> of adoption of this approach in the community.
+> 
+> > *** Weaknesses: What are the most important reasons NOT to accept
+>       the paper? [Be brief]
+> 
+> Compared to TinyRPC, the main novelty of SpartanRPC is that it
+> provides security features. Unfortunately, the design of those
+> security features has some weaknesses: the CBC-MAC mechanism as used
+> by the design has weaknesses (existential forgery attacks are
+> possible) and no replay protection is integrated in the solution
+> transparently.
+> 
+> > *** Detailed comments: Please provide detailed comments that will be
+>       helpful to the TPC for assessing the paper, as well as feedback
+>       to the authors.
+> 
+> This paper clearly advances the state-of-the-art and the proposed RPC
+> mechanism also has parctical value. However, the security aspects are
+> quite straightforward. Essentially, the idea is that remotely
+> invokable interfaces also define the capabilities that are needed to
+> access them. These capabilities are essentially symmetric keys. A
+> remote function call is implemented by serializing the parameters into
+> a packet, and attaching a Message Authentication Code which is
+> computed with the key associated with that remote function as a
+> required capability.
+>
+> It is assumed that capabilities are known statically, and there's no
+> dynamic capability generation. This may lead to some problems. If, for
+> instance, the application requires a nodes to invoke a remote function
+> on a neighboring node, then the key associated with that function must
+> be statically known by the caller node. However, as neighborhood
+> information may not be available before deployment, the caller must be
+> pre-configured with the keys of every other node. This can easily lead
+> to scalability problems, and it is not really consistent with the
+> concept of dynamic wirings.
+
+The intent is for capabilities to be associated with abstract services
+and not be node-specific. It is true that SpartanRPC requires
+pre-configuration of all necessary keys, but the number of keys is more
+reflective of the number of interacting networks (and their associated
+services) than the number of interacting nodes.
+
+RESOLUTION: Added a sentence in section IV.A to clarify this point.
+
+> Another problem is that replay protection is not handled at the RPC
+> level but it is left for the applications. This is bad security
+> practice. In addition, it is quite contradictory to design a
+> progarmming abstraction that hides one aspect of security (message
+> authentication and authorization) but does not hide another one
+> (replay protection). It is not elegant at all to require application
+> programmers to write code for keeping track and verifying message
+> sequence numbers in a routine that should not even know about messages
+> (e.g., LED control) as this is the main idea of the RPC abstraction in
+> the first place.
+
+This is a good point. Our feeling was that replay protection might not
+be needed in all applications and thus adding it to the SpartanRPC run
+time system would unnecessarily increase overhead in those cases. Our
+long term intention is to use SpartanRPC as a basis for an even higher
+level security infrastructure. Thus leaking certain security issues
+through SpartanRPC is not a problem because ultimately the programmer
+won't be working with SpartanRPC directly anyway.
+
+RESOLUTION: This is already covered fairly well in section IV.C.
+However, we added a sentence pointing out that replay protection might
+not be needed by all applications and that we are interested in keeping
+overhead to a minimum.
+
+> Essentially, the MAC computation is based on CBC-MAC using the AES
+> cipher. CBC-MAC has some known problems which need some carefulness in
+> the design. For instance, including the message length in the CBC-MAC
+> computation is often proposed as a precaution to prevent certain MAC
+> forgery attacks. Currently, in SpartanRPC, messages are one AES block
+> long, but this may change, and there's a risk that the MAC computation
+> remains the same. In any case, it is better to use a standard MAC
+> function instead of inventing new ones. CBC-MAC has standardized
+> versions (not the text-book versions that just require a O IV and then
+> standard CBC computation, but look at e.g., the specification of the
+> CCM mode), and there are other possibilities, such as HMAC.
+
+We considered using HMAC in SpartanRPC. However, we felt that for a
+proof-of-concept paper the current simple approach was adequate. A
+production quality version of SpartanRPC should use a more careful MAC
+algorithm.
+
+RESOLUTION: Added a sentence in section VI.E noting that we are aware
+that our MAC computation is simplistic but that we feel it is adequate
+as a proof of concept.
+
+> > *** Familiarity: Rate your familiarity with the topic of the paper.
+> 
+> Familiar (2)
+> 
+> > *** Recommendation: Your overall rating.
+> 
+> Weak Accept (Top 20%) (4)
+> 
+> ======= Review 2 =======
+> 
+> > *** Contributions: What are the major issues addressed in the paper?
+>       Do you consider them important? (Pls. comment explicitly on the
+>       relevance of the paper to MASS topics, the technical depth and
+>       the importance of the problem addressed.) [Be brief]
+> 
+> The authors create RPC middleware for sensor networks.
+> 
+> > *** Strengths: What are the major reasons to accept the paper? [Be
+>       brief]
+> 
+> 
+> 
+> > *** Weaknesses: What are the most important reasons NOT to accept
+>       the paper? [Be brief]
+> 
+> 
+> 
+> > *** Detailed comments: Please provide detailed comments that will be
+>       helpful to the TPC for assessing the paper, as well as feedback
+>       to the authors.
+> 
+> The authors of this paper propose and implement a middleware library
+> for sensor networks. This scheme imposes relatively low overhead in
+> terms of memory and energy consumption.
+> 
+> The paper is interesting and its result is interesting; however, there
+> are two small concerns. First, the effort seems largely to be one of
+> engineering and not really research. Engineering is certainly an
+> important part of systems work, the lessons learned from this
+> particular work are not clear. Given that, the library does seem
+> useful and could serve as a nice platform for others in the community
+> to build upon. The authors should explicitly note whether they plan to
+> release SpartanRPC publicly (the citation to [11] made it seem as if
+> there was some process, but it was a bit unclear).
+
+We could clarify this point.
+
+RESOLUTION: Due to lack of space we will not say more about this.
+However, the paper currently contains two references to the Sprocket
+home page which we feel adequately invites readers to download our
+implementation.
+
+> In general, the paper was well written.
+> 
+> > *** Familiarity: Rate your familiarity with the topic of the paper.
+> Familiar (2)
+> 
+> > *** Recommendation: Your overall rating.
+> Borderline (top 30%) (3)
+> 
+> ======= Review 3 =======
+> 
+> > *** Contributions: What are the major issues addressed in the paper?
+>       Do you consider them important? (Pls. comment explicitly on the
+>       relevance of the paper to MASS topics, the technical depth and
+>       the importance of the problem addressed.) [Be brief]
+> 
+> This paper presents SpartanRPC, a middleware technology supporting
+> secure WSN applications comprising multiple protection domains.
+> 
+> > *** Strengths: What are the major reasons to accept the paper? [Be
+>       brief]
+> 
+> This paper is well written with clear contribution
+> 
+> > *** Weaknesses: What are the most important reasons NOT to accept
+>       the paper? [Be brief]
+> 
+> The practical values of SpartanRPC are not clear to me.
+> 
+> > *** Detailed comments: Please provide detailed comments that will be
+>       helpful to the TPC for assessing the paper, as well as feedback
+>       to the authors.
+> 
+> This paper describes SpartanRPC, a secure middleware technology for
+> wireless sensor network (WSN) applications supporting cooperation
+> between distinct protection domains. The SpartanRPC system extends the
+> nesC programming language to provide a link-layer remote procedure
+> call (RPC) mechanism, along with an extension of nesC configuration
+> wirings that allow specification of remote, dynamic endpoints.
+> SpartanRPC also incorporates a capability-based security architecture
+> for protection of RPC resources in a heterogeneous trust environment,
+> via language-level policy specification and enforcement. The authors
+> also discuss an implementation of SpartanRPC based on program
+> transformation and AES cryptography and present empirical performance
+> results.
+> 
+> This paper is generally well written. As a novice of this field,
+> however, I cannot judge the practical values of SpartanRPC and its
+> technical importance.
+> 
+> > *** Familiarity: Rate your familiarity with the topic of the paper.
+> Novice (1)
+> 
+> > *** Recommendation: Your overall rating.
+> Borderline (top 30%) (3)
+> 

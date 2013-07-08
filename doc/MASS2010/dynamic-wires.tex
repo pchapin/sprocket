@@ -1,0 +1,134 @@
+\section{Dynamic Wires}
+\label{section-dynamic-wires}
+
+In an ordinary nesC program the ``wiring'' between components as defined by configurations is
+entirely static. The nesC compiler arranges for all connections and at run time the code invoked
+by each called command or signaled event is predetermined.
+
+In a remote procedure call system for wireless networks, this static arrangement is
+insufficient. A node can not, in general, know its neighbors at compilation time but rather must
+discover this information after deployment. In addition, the volatility of wireless links, and
+of the nodes themselves, means that a given node's set of neighbors will change over time. In
+this section we discuss the facility in SpartanRPC to allow \emph{dynamic wirings} for control
+flow from duty invocation via remotable interfaces to duty implementation, wherein the
+programmer has control over wiring endpoints and how they may change during program execution.
+
+\subsection{Component IDs, Component Managers}
+\label{section-componentmanager}
+
+We begin by discussing how remote components are identified for wiring. In order to uniquely
+identify components on the network, remotable components are specified via a two-element
+structure called a \code{component\_id} defined in Fig.~\ref{figure-componentmanager}. The
+\code{node\_id} member is the same node ID used by TinyOS and is set when the node is programmed
+during deployment. The local ID member is an arbitrary value defined by the programmer of the
+server node. Only components that are visible remotely need to have ID values assigned, however,
+the ID values must be unique \emph{on the node}.
+ 
+\begin{fpfig}[!t]{Component Manager Interface and Type Definitions}{figure-componentmanager}
+{
+\begin{Verbatim}
+typedef struct {
+    uint16_t node_id;
+    uint8_t  local_id;
+} component_id;
+
+typedef struct {
+    int count;
+    component_id *ids;
+} component_set;
+
+interface ComponentManager { 
+    command component_set elements();
+}
+\end{Verbatim}
+}
+\end{fpfig}
+
+A \emph{component manager} is a component that provides the \code{ComponentManager} interface
+defined in Fig.~\ref{figure-componentmanager}. It dynamically specifies a set of component IDs
+that ultimately serve as dynamic wiring endpoints.
+
+As a simple example, consider the component manager \code{RemoteSelectorC} as shown below:
+\begin{Verbatim}
+module RemoteSelectorC {
+  provides interface ComponentManager;
+}
+implementation {
+  component_id  broadcast  = {0xFFFF, 1};
+  component_set remote_set = {1, &broadcast};
+
+  command component_set
+    ComponentManager.elements() {
+        return result;
+    }
+}
+\end{Verbatim}
+
+This component manager always returns a component set containing a single component. The special
+SpartanRPC broadcast node ID is used (\code{0xFFFF}) indicating that all neighbors should be the
+target of the dynamic wire. The component ID on the neighbors is specified as 1 in this example.
+In a more complex example the component manager would compute the component set each time the
+dynamic wire is used, filling in an array of component IDs based on information gathered earlier
+in the node's lifetime.
+
+\subsection{Syntax and Semantics}
+
+In SpartanRPC we extend the syntax and semantics of nesC to allow the target of a connection to
+be dynamically specified by a component manager. The syntax of wirings, or connections, is
+extended as follows:
+\begin{Verbatim}
+  connection ::=
+      endpoint '->' dynamic_endpoint
+
+  dynamic_endpoint ::=
+      '[' IDENTIFIER ']' ('.' IDENTIFIER)*
+\end{Verbatim}
+\vspace{0.4em}
+
+Given a dynamic wiring of the form \code{C.I -> [RC].I}, we informally summarize its semantics as
+follows. First, we statically require that \code{RC} is a component manager, and that \code{I} is
+remotable. At run time, if control flows across this wire via posting of some duty \code{I.d}
+within \code{C}, the method \code{elements} in \code{RC} is invoked to obtain a set of component
+IDs. The duties \code{I.d} provided by those remote components will then be posted on the host
+machines via an underlying remote communication, the details of which are hidden from the
+SpartanRPC programmer. Note that since this call to \code{elements} may return more than one
+component ID, this is a sort of fan-out wiring.
+
+For example, consider a simple service that allows client nodes to turn on or off three LEDs on
+the server node. A client that wishes to use such a service could indicate its connection with
+one or more server nodes using a configuration such as:
+\begin{Verbatim}
+ClientC.LEDControl ->
+    [RemoteSelectorC].LEDControl;
+\end{Verbatim}
+\vspace{0.4em}
+
+On the server the component that provides the LED controlling service must indicate that it is
+to be provided remotely as shown in Sect.~\ref{section-duties-syntax}. The server's
+configuration does not need to connect anything to the remote interface explicitly.
+
+\subsection{Callbacks and First-Class IDs}
+
+We assume that the local component IDs for well known services will be agreed upon ahead of time
+by a social process outside of our system. By broadcasting to a well known local component ID, a
+node can use services on neighboring nodes without necessarily knowing their node IDs.
+
+If a node expects a reply from a service that it invokes, the calling node must set up a
+component with a suitable remote interface to receive the service's result. In SpartanRPC remote
+invocations can only transmit information in one direction. Bidirectional data flow requires
+separate dynamic wires. In this case the service would normally require the client to provide
+its component ID as an argument to the service invocation. The server could store that value for
+use by a server-side component manager.
+
+For example, assume that the LED controller on the server returns the old state of the LEDs
+whenever the LED value is changed. The server configuration would include an appropriate dynamic
+wire as follows
+\begin{Verbatim}
+LEDControllerC.LEDResult ->
+    [LEDControllerC].LEDResult;
+\end{Verbatim}
+
+The client must provide the LEDResult interface remotely to receive this result. In this example
+the \code{LEDControllerC} component is its own component manager. This makes it easy for the
+\code{elements} command to access global data that was recorded inside \code{LEDControllerC}
+when the service it provides was previously invoked. This is a common SpartanRPC idiom.

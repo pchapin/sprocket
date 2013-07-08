@@ -1,0 +1,118 @@
+
+%
+% NOTES ON RAW DATA COLLECTED
+% ===========================
+%
+% Without low power listening the client TX time varied from a minimum of about 3 mS to a
+% maximum of about 10 mS. (This was with, for example, the Baseline client). I assume this
+% variation is due to variations in TinyOS latency. It completely swamps the packet overhead due
+% to the MAC.
+%
+% Current sensing resistor = 14.9 $\Omega$
+% Baseline and Duties client were identical in the measurements below.
+%     TX pulse width 15-16 ms
+%     Vsense = 276 mV
+%     Isense = 18.5 mA
+%     Vmote  = 3.00 - 0.276 = 2.724
+%     Pmote  = 50.4 mW
+%     Compute burst: 28.0 mV => 1.88 mA => (3.00 - 0.028)*1.88mA = 5.59 mW
+%                    Duration = 3 ms => 16.8 uJ
+
+% Security client has an identical TX pulse profile.
+%     Compute burst: 28.0 mV => 1.88 mA => (3.00 - 0.028)*1.88mA = 5.59 mW
+%                    Duration = 4 ms => 22.4 uJ
+
+\section{Empirical Results}
+\label{section-empirical-results}
+
+The sensor nodes that are the target of our system are highly constrained devices with limited
+memory, CPU resources, and electrical power. Conserving the resources of the platform is a
+matter of high importance. Our system consumes additional resources because of the overhead
+needed to manage remote procedure calls and cryptographic operations.
+
+\subsection{Test Programs}
+
+To explore the performance of our system we conducted several experiments. Our test devices were
+two Tmote Sky wireless sensor nodes \cite{tmotesky-datasheet}. These devices are based on the
+Texas Instruments MSP430F1611 microcontroller \cite{msp430-datasheet} with 48 KiB of flash ROM,
+10 KiB of static RAM, and running at a clock frequency of 8 MHz. For wireless communication each
+node uses a 2.4 GHz IEEE 802.15.4 Chipcon CC2420 \cite{cc2420-datasheet} low power transceiver.
+The system software we used was TinyOS version 2.1.0 \cite{tinyos}.
+
+The client node executed a program that periodically invoked a service on the server node,
+passing that service an eight bit value. The server used the least significant three bits of
+that value to control the LEDs on the server mote. Several pairs of test programs were written
+that all performed the same essential function but in progressively more abstract ways. The
+``baseline'' programs did not use any of our extensions. All radio handling was done explicitly
+and no cryptography was used. The ``duties'' programs used dynamic wires and duties for RPC
+support. The ``security'' programs added the authorization support and exercised the full
+functionality of our system.
+
+In a realistic context the average energy consumption of the radio can often be reduced by using
+\emph{low power listening} \cite{moss-tep105}. In this mode the receiver runs with the radio off
+for significant periods of time, waking the radio up periodically to see if any remote devices
+are transmitting on the channel. In addition the transmitter broadcasts for a certain amount of
+extra time to ensure that its transmission will properly overlap with at least one receiver
+cycle. We used this mode in our test programs. As a result the extra transmission and reception
+energy required for each data packet completely overshadowed overhead due to the SpartanRPC
+extensions.
+
+Since our system hides the radio handling from the application, the use of low power listening
+becomes an issue for Sprocket to handle. Our implementation assumes that low power listening
+will be used in all cases and writes the stubs and skeletons accordingly. Sprocket currently
+uses a radio sleep interval of 10 ms with a 50\% duty cycle. When not actively transmitting
+Sprocket turns the transmitter radio off.
+
+\subsection{Memory Consumption}
+
+Table~\ref{tbl:memory-consumption} shows the overall memory consumption, as reported by the nesC
+compiler, of each test program.
+
+\begin{table}[!t]
+\newcommand\T{\rule{0pt}{2.1ex}}
+\centering
+\caption{Memory consumption of test programs.}
+\label{tbl:memory-consumption}
+\begin{tabular}{|l|rr|rr|} \hline
+                   & \multicolumn{2}{|c|}{ROM \T} & \multicolumn{2}{|c|}{RAM} \\ \hline
+                   & Bytes \T & \% & Bytes & \%  \\ \hline \hline
+Baseline Client \T & 13096 & --- & 378  & --- \\ \hline
+Baseline Server \T & 12576 & --- & 306  & --- \\ \hline \hline
+Duties Client   \T & 13568 & 3.6 & 398  & 5.3 \\ \hline
+Duties Server   \T & 12624 & 0.4 & 308  & 0.6 \\ \hline \hline
+Security Client \T & 22662 & 73  & 608  & 61  \\ \hline
+Security Server \T & 21978 & 75  & 534  & 74  \\ \hline
+\end{tabular}
+\end{table}
+
+The dramatic increase in memory consumption of the security enabled programs is a consequence of
+the pure software AES implementation used for the cryptographic operations
+\cite{erdelsky-rijndael-2002}. The RAM increase is largely due to the buffer space required for
+encryption and may be subject to further optimization. Most of the extra code and data space can
+be reused for each security enabled remote invocation. Support for security on additional
+dynamic wires or remote interfaces requires only about the same amount of overhead as is
+required for the plain duty case.
+
+\subsection{Energy Consumption}
+
+We also evaluated the energy consumption of the three client programs. This was done by placing
+a 14.9 $\Omega$ current sensing resistor in series with the 3.0 V power supply and observing the
+power supply current waveform on an oscilloscope.
+
+In our experiments the transmitter pulse width varied between 15 and 16 ms, and was the same for
+all three programs. The energy consumed during transmission was 780 $\mu$J. Just before the
+transmitter pulse started, a small increase in power supply current was observed lasting for 3
+ms (in the baseline and duties-only case) to 4 ms (in the security enabled case). We assume this
+increase is due to activities on the node that are done just prior to enabling the radio for
+transmission. This \newterm{compute burst} consumed 17 $\mu$J of energy in the first two
+programs and 22 $\mu$J of energy in the security enabled case. Presumably the additional energy
+used in the security case is at least partially due to the cryptographic computations.
+
+Despite our term ``compute burst,'' it is likely that some of this energy was actually being
+used to power up various supporting components related to the upcoming transmitter pulse. For
+example the CC2420 radio requires that its voltage regulator and oscillator be turned on and
+allowed to stabilize for a time before signals can actually be transmitted
+\cite{cc2420-datasheet}. For example, Even when fully active the microcontroller draws a maximum
+current of only about 500 $\mu$A \cite{msp430-datasheet}. In our environment a 500 $\mu$A
+current burst of 4 ms corresponds to just 6 $\mu$J of energy which is clearly a minority of the
+observed energy.

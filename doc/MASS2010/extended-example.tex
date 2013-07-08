@@ -1,0 +1,184 @@
+\section{Example}
+\label{section-example}
+
+To illustrate the usefulness of our design we implemented a skeleton program that uses directed
+diffusion to gather temperature events in a heterogeneous network. The directed diffusion
+algorithm requires that nodes communicate with a dynamically changing subset of neighbors. The
+dynamic wire mechanism of our system makes it straightforward for a component manager to compute
+the subset of neighbors currently needed in each communication. \emph{Who} receives a
+communication is computed independently from \emph{what} is communicated.
+
+In addition, the algorithm requires the use of two distinct communication pathways. Nodes
+interested in receiving data communicate their interest forward over the network toward sensors.
+Nodes that observe the data communicate results backward toward the interested nodes. In our
+example we choose to protect these pathways with multiple capabilities.
+
+\subsection{Directed Diffusion in Multiple Domains}
+
+The directed diffusion algorithm \cite{intanagonwiwat-2003} is an approach for diffusing data
+across a wireless sensor network. The algorithm allows a node to express an \emph{interest} in
+data of a certain kind. In our example interests are expressed as temperature thresholds. Any
+node that observes a temperature greater than the threshold is requested to report that data
+back to the interested node. A certain data rate, expressed as a time interval between
+transmissions, is associated with each interest. Initially a node seeking temperature data
+floods the network using an interest with a low data rate. As data events find their way back to
+the interested node, that node selectively \emph{reinforces} certain immediate neighbors by
+retransmitting the interest with a higher associated data rate to just those neighbors.
+
+Each node maintains a cache of active interests. When a node observes or receives a data event
+it sends the data to all immediate neighbors that have expressed direct or indirect interest in
+it. Since not every neighbor is interested in all data, only a subset of neighbors are involved
+in each data transmission.
+
+Each node also maintains a cache of data events that have been recently seen. This cache is
+used, in part, to measure the actual rate at which data is received from various neighbors. This
+information is made available to the reinforcement algorithm so that an appropriate decision can
+be made as to which nodes might be suitable to reinforce.
+
+\subsection{Interfaces}
+
+Interest and data event propagation are handled by separate interfaces, as shown in
+Fig.~\ref{figure-ddinterfaces}, each containing a single duty.
+\begin{fpfig}[!t]{Directed Diffusion Interfaces}{figure-ddinterfaces}
+{
+\begin{Verbatim}
+interface InterestManagement {
+    duty void set_interest(
+        uint16_t sender_node_id,
+        int      temp_threshold,
+        int      interval,
+        int      duration);
+}
+
+interface DataManagement {
+    duty void set_data(
+        uint16_t sender_node_id,
+        uint16_t originator_node_id,
+        int      temp_value)
+}
+\end{Verbatim}
+}
+\end{fpfig}
+
+A node expresses interest in temperature data above a certain threshold and at a certain data
+rate by posting the \code{set\_interest} duty on its neighboring nodes. Similarly a node passes
+data to its interested neighbors by posting the \code{set\_data} duty.
+
+\subsection{Configuration}
+
+The interest and data caches, which we call ``managers,'' are the two central components of our
+application. The interest manager provides the \code{Interest\-Management} interface remotely
+and uses the same interface on other components. The data manager provides and uses the
+\code{Data\-Management} interface in a similar way. Both components serve as their own component
+managers, using internal information to specify the destination nodes of each outgoing post
+operation.
+
+In our example interest propagation is be controlled by two capabilities. The shared
+\code{ext\_interest} capability allows a node from any protection domain to request a low data
+rate from nodes in any other domain. The \code{int\_interest} capability is defined internally
+and independently by each protection domain, and allows a node in the same domain to request a
+high data rate.
+
+The main configuration contains, in part, the following wiring for the interest manager:
+\begin{Verbatim}
+auth "ext_interest"
+InterestManagerC.NeighborSensors ->
+    [InterestManagerC].InterestManagement;
+auth "int_interest"
+InterestManagerC.NeighborSensors ->
+    [InterestManagerC].InteresttManagement;
+\end{Verbatim}
+\vspace{0.3em}
+
+Because the interest manager provides and uses the same interface, it defines
+\code{NeighborSensors} as an alias for the \code{Interest\-Management} interface that it uses
+remotely. When the interest manager posts the \code{set\_interest} duty, that duty is invoked in
+all neighbors \emph{currently} selected by its own, internal component manager. These post
+operations are authorized using both interest capabilities; neighbors can be in multiple
+protection domains. In this example no attempt is made to track which neighbors are in which
+domains. As a result two messages are sent to each neighbor selected by the interest manager,
+but this could be improved by using separate component managers for the internal and external
+domains.
+
+\subsection{Interest Management}
+
+The interest manager has a partial specification as follows:
+\begin{Verbatim}
+module InterestManagerC {
+    provides interface ComponentManager;
+    provides remote interface
+        InterestManagement as ExtManagement
+            requires "ext_interest";
+    provides remote interface
+        InterestManagement as IntManagement
+            requires "int_interest";
+    uses interface InterestManagement
+        as NeighborSensors;
+}
+\end{Verbatim}
+
+The \code{set\_interest} duty is provided for both internal and external post operations. The
+implementation is essentially the same. However, the duty used by other protection domains
+ignores requests for data rates that are too high.
+
+Because the interest manager is its own component manager, setting up target node addresses
+entails updating an internal \code{component\_set} variable as appropriate. In the case when a
+new interest is received the interest manager propagates that interest to all neighbors. This is
+done inside the interest manager's \code{set\_interest} duty with the following code:
+
+\begin{Verbatim}
+remote_set.ids   = &remote_components;
+remote_set.count = 1;
+remote_components[0].node_id  = 0xFFFF;
+remote_components[0].local_id = INTEREST_ID;
+post NeighborSensors.set_interest( ... );
+\end{Verbatim}
+\vspace{0.3em}
+
+The ``well known'' local ID of the interest manager is used to specify which component on the
+neighbor nodes is to process the duty. The implementation of the \code{elements} command in the
+\code{Component\-Manager} interface merely returns \code{remote\_set} computed above. Before the
+posting of \code{set\_interest} returns, \code{remote\_set} is used to prepare the outgoing
+packet. After the post is complete \code{remote\_set} and \code{remote\_components} can be
+reused without affecting any pending radio transmissions.
+
+In the more complicated case where an interest is being reinforced, the interest manager must
+use information in the data cache to compute which neighbors need reinforcing. Although
+SpartanRPC allows a component manager to dynamically select neighbor nodes, the component used
+as a component manager is statically bound. Thus in this example the interest manager can not
+switch its component manager to, for example, the data manager. To work around this, the
+interest manager communicates with the data manager using connections not shown here. With the
+data manager's help the interest manager computes appropriate neighbors dynamically before
+posting \code{set\_interest} on those neighbors.
+
+\subsection{Data Management}
+
+The data manager has a dual structure where the implementation of the \code{set\_data} duty
+simply adds the data event to the data cache, and the implementation of a timer fired event
+performs the task of propagating data to interested nodes. The data manager manipulates the
+timer frequency to match the highest required data rate. However since not all data needs to be
+sent to all neighbors at such a high rate, only a dynamically changing subset of neighbors is
+selected for each timer event. This is done by adjusting an internal \code{component\_set}
+before posting the \code{set\_data} duty.
+
+We further assume that nodes will only want to accept data events from authorized producers. All
+legitimate posts of \code{set\_data} must be done using the \code{data} capability. The main
+configuration thus also contains dynamic wires such as:
+\begin{Verbatim}
+auth "data"
+DataManagerC.NeighborSensors ->
+    [DataManagerC].DataManagement;
+\end{Verbatim}
+\vspace{0.3em}
+The specification of the data manager is, in part:
+\begin{Verbatim}
+module DataManagerC {
+    provides interface ComponentManager;
+    provides interface DataManagement
+        requires "data";
+    uses interface DataManagement
+        as NeighborSensors;
+}
+\end{Verbatim}
+Notice that there are no security related artifacts in the body of the data manager's
+implementation.

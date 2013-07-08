@@ -1,0 +1,108 @@
+\section{Introduction}
+\label{section-intro}
+
+As WSN technology becomes more ubiquitous applications of overlapping yet independently
+controlled sensor networks will begin to appear. Networks from cooperating but distinct security
+domains may wish to use each other's nodes to increase the resolution, spacial coverage, or
+lifespan of certain sensing or control functions. For example, assume that two distinct networks
+are deployed to the same space such that nodes from both networks can communicate with each
+other. While the primary purpose of the two networks might be independent, their administrators
+might nevertheless agree to collaborate on certain supporting functionality such as data
+collection and analysis.
+
+Although in some cases data collected by each security domain could be shared off-network,
+perhaps via Internet connected gateways, certain advantages could be gained by enabling
+in-network interactions. For example if one network is partitioned due to a failed node, the
+separated partitions might be able to continue communicating by routing their messages over a
+cooperating network's nodes.
+
+In situations where low latency is important, such as with time synchronization protocols
+\cite{ganeriwal-kumar-srivastava-2003}, in-network interactions between independent, cooperating
+WSNs would be more effective than attempting to synchronize two networks via long distance
+Internet links. Tracking applications \cite{brooks-ramanathan-sayeed-2003} could also benefit
+from in-network interactions between cooperating networks. Handing off tracking information from
+one network to another via an Internet link would require activating a potentially large number
+of nodes in each network in order to send information to their respective gateways. This creates
+power consumption concerns. Other potential applications where in-network interactions could
+play a role include secure routing protocols in heterogeneous trust environments
+\cite{senroute-ahnj03}, transport and network layer protocols \cite{perillo-heinzelman-2005},
+and even mote-based web servers supporting secure channels \cite{1049776}.
+
+High level applications can also benefit from in-network interactions between cooperating WSNs.
+For example, the use of WSNs to facilitate emergency care in disaster situations has been
+described \cite{citeulike:4460555,1038146}. While this previous work has focused on WSNs in a
+single security domain, it is likely that multiple domains would be in use during many
+emergencies as first responders from different organizations or different political
+jurisdictions work together. In those cases it is not realistic to assume that each domain would
+have Internet connectivity; the disaster site might be too remote or the supporting network
+infrastructure might be non-functional. Direct interaction between the WSNs of cooperating
+domains becomes an effective way for them to share information.
+
+In this paper we describe novel middleware technology to support WSN applications in this
+setting. Our system, which we call SpartanRPC, provides a new form of link-layer RPC as a
+natural extension of the nesC programming model, and \emph{language based authorization} based
+on symmetric-key cryptography. As other authors have observed \cite{may-tinyrpc-2007}, RPC is an
+appropriate abstraction for node services on the network and supports whole-network
+(vs.~node-specific) programming. We further observe that RPC allows nodes to provide flexible,
+modular services without the need for reprogramming, a kind of ``micro web services.''
+\emph{Secure} RPC is also clearly desirable in a heterogeneous trust environment.
+
+\subsection{Overview and Contributions}
+
+Previous related work illustrates interest in and useful applications of RPC in a WSN context.
+For example, the Marionette system uses network layer RPC for remote (PC-based) analysis and
+debugging of WSNs \cite{whitehouse-marionette-2006}. The Fleck operating system provides a small
+pre-defined set of RPC services for WSN applications, while the secFleck system extends this
+with a form a secure RPC \cite{hu-secfleck-2009}. SpartanRPC differs from these systems in that
+it extends the nesC programming language to allow programmer definition (unlike secFleck) of
+secure RPC services that can be accessed by nodes within the network itself (unlike Marionette).
+Our system is similar to and inspired by TinyRPC \cite{may-tinyrpc-2007}, except the latter does
+not provide security and has a different semantics that is not as expressive and flexible as our
+approach.
+
+Major contributions of our work include an RPC design that is consistent with existing nesC
+semantics, including an asynchronous ``task-like'' conception of RPC and \emph{dynamic wires} as
+a natural extension of configuration wirings to allow flexibility in remote communication. We
+also provide a mechanism for fine-grained RPC authorization. Finally we created an
+implementation of SpartanRPC \cite{sprocket} from which we obtained empirical results showing
+that SpartanRPC features are not onerous in terms of additional space and energy consumption.
+   
+A primary goal of the SpartanRPC design is to provide RPC capabilities as transparently as
+possible. This means at least that the low-level communication details should be hidden from the
+user. Beyond that, it means that RPC features should be provided in a manner that fits in with
+existing nesC semantics.
+
+\paragraph{Asynchronous Execution Model} In nesC a \emph{command} is a synchronous unit of
+control; when one is called, it is pushed onto the call stack and the current continuation waits
+for the command to complete and yield a result. In contrast, when a \emph{task} is posted it is
+placed in a queue for execution at some future time, and the calling context continues
+immediately. We propose a task-like mechanism for RPC invocation, that allows \emph{remote
+  postings}; in this our approach differs from TinyRPC that envisioned RPC as a form of command
+\cite{may-tinyrpc-2007}. However, our mechanism differs from tasks in two important ways: first,
+we allow arguments to be passed in RPC calls, and second, the module that posts an ordinary task
+must define it, whereas we want to allow modules to execute functionality defined non-locally.
+We therefore introduce the \emph{duty} mechanism. Duties may be posted like a task, but passed
+arguments and provided by modules for posting by other (possibly non-local) modules. Duties are
+discussed in Sect.~\ref{section-duties}.
+
+\paragraph{Dynamic Wires} The SpartanRPC design provides a minimalist extension of configuration
+wiring syntax with abstractions for remote communication. In our system components can provide
+remotable interfaces, and in configuration definitions these interfaces can be wired to locally
+or non-locally. However, wirings to remote interfaces must specify the host of the wired-to
+component, and our syntax requires the user to provide an inherently dynamic definition of
+endpoint hosts to allow fan-out wirings that can change at run-time. Since SpartanRPC works at
+the link layer, we believe this flexibility is fundamental in a general WSN setting where
+neighborhoods can be expected to change frequently due to node repositioning, failure, or
+changes in radio signal strengths. Dynamic wires are discussed more in
+Sect.~\ref{section-dynamic-wires}.
+
+\paragraph{Fine-Grained Authorization Policies} Research on WSN security has addressed secure
+routing \cite{senroute-ahnj03}, link layer security \cite{karlog-tinysec-2004}, cryptography
+\cite{bertoni-2006} and key distribution \cite{camtepe-bulent-05}, and hardware issues
+\cite{perrig-2004}. This previous work has established a strong low-level foundation for
+security in WSNs. We believe that secure link-layer RPC is an appealing middleware solution in
+WSNs because it allows programmatic specification of previously ad-hoc network-level behavior,
+while imposing relatively small syntactic and efficiency overhead. SpartanRPC also allows
+multiple symmetric keys to be used to protect multiple security domains within a network in a
+simple and usable manner. Our security mechanism is discussed in more detail in
+Sect.~\ref{section-security-extensions}.

@@ -1,0 +1,91 @@
+\section{Duties and Remotability}
+\label{section-duties}
+
+Because of the slow, unreliable nature of wireless communications we believe it is unrealistic
+for RPC services in WSNs to be synchronous. Instead we believe that the semantics of tasks are
+closer to being a correct abstraction. They are not quite right however, as RPC services will
+typically require arguments to be passed, and while the poster of a task defines it, an RPC
+service invokes remotely defined functionality. We therefore define a new RPC abstraction called
+a \emph{duty}.
+
+\subsection{Syntax and Semantics}
+\label{section-duties-syntax}
+
+Duties are declared in interfaces and syntactically resemble command declarations. Instead of
+using the reserved word \code{command} the new reserved word \code{duty} is used. Duties are
+allowed to take parameters (with restrictions as discussed below) but must return the type
+\code{void}. For example the following interface describes an RPC service for remotely flashing
+a mote LED:
+\begin{Verbatim}
+interface LEDControl {
+    duty void setLeds(uint8_t ctl);
+}
+\end{Verbatim}
+
+Duties are defined in modules in a manner similar to the way tasks, commands, or events are
+defined. The reserved word \code{duty} is again used on the definition. Like commands and events
+the name of the duty is qualified by the name of the interface in which it is declared.
+Including a duty in an interface definition automatically implies that the interface can be
+remotely invoked, or is \emph{remotable} in the sense formalized in
+Sect.~\ref{section-remotable}. Any remotable interface provided by a component must be specified
+as \code{remote} in its provides specification, for example:
+\begin{Verbatim}
+module LEDControllerC {
+    provides remote interface LEDControl;
+}
+implementation {
+    duty void LEDControl.setLeds(uint8_t ctl)
+    { ... }
+}
+\end{Verbatim}
+
+A module on the client node that wishes to use a remotable interface simply posts the duty in
+the same manner as tasks are posted. The use of \code{post} emphasizes the asynchronous nature
+of the invocation.
+\begin{Verbatim}
+module LoggerC {
+    uses interface LEDControl;
+}
+implementation {
+    ...
+    post LEDControl.setLeds(42);
+}
+\end{Verbatim}
+
+Note that the standard component semantics of nesC provide here a natural abstraction of
+``where'' the RPC call goes, just as e.g.~a normal command invocation will go through a
+component interface that is disconnected from its implementation. Like a normal command
+invocation, configuration wirings determine where duty control flows. However, in SpartanRPC
+duty invocation control may flow to a component residing on a different network node. The
+invoking module must be connected to the remote modules by way of a dynamic wire as described in
+Sect.~\ref{section-dynamic-wires}.
+
+When a duty is posted by a client node it may run at some time in the future on the server node.
+The client node continues at once without waiting for the duty to start, i.e.~duty postings are
+asynchronous in the same manner that tasks are. Once posted the client has no direct way to
+determine the status of the duty. Also, due to the unreliability of the network a posted duty
+may not run at all.
+
+It is possible for a duty to be posted multiple times by a client or by multiple clients.
+Because duties are implemented as nesC tasks as discussed in Sect.~\ref{section-implementation},
+any posts of a particular duty received by a node while a previous post of that duty is pending
+are lost. However, this does not introduce any new problems because duty execution is not
+guaranteed in any case.
+
+\subsection{Remotable Interfaces}
+\label{section-remotable}
+
+We impose certain requirements on RPC service definitions for ease of implementation. First,
+since WSN nodes do not share state we disallow passing references to duties---such a reference
+would be meaningless on the receiving node. Thus we define remotable types:
+\begin{definition}A type is \emph{remotable} iff it satisfies the following inductive
+  definition: The nesC built-in arithmetic types, including enumeration types, are remotable,
+  and arrays of remotable types and structures containing remotable types are remotable.
+\end{definition}
+Since a remotable interface describes RPC services, we require that they specify duties taking
+only arguments of remotable type; also, remotable interfaces can only contain duties, to ensure
+meaningful remote usage.
+\begin{definition}
+  An interface is \emph{remotable} iff it only provides duties whose argument types are
+  remotable.
+\end{definition}

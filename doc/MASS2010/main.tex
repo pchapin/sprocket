@@ -1,0 +1,59 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILE    : main.tex
+% SUBJECT : Master document for the MASS 2010 paper.
+% AUTHOR  : (C) Copyright 2009 by Peter C. Chapin and Christan Skalka
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt, conference, compsocconf]{IEEEtran}
+
+% --------
+% Packages
+% --------
+\usepackage{cite}
+\usepackage[pdftex]{graphicx}
+\graphicspath{{./}}
+\DeclareGraphicsExtensions{.pdf}
+\usepackage{fancyvrb}
+\fvset{fontsize=\small \vspace{0.4em}}
+\usepackage{url}
+%\usepackage{hyperref}
+%\hypersetup{bookmarks=false}
+\usepackage{fp-frame}
+
+% ------
+% Macros
+% ------
+\input{macros}
+
+
+\begin{document}
+% ----------
+% Title page
+% ----------
+\input{frontmatter}
+
+% ----------------
+% Document content
+% ----------------
+\input{introduction}
+\input{duties}
+\input{dynamic-wires}
+\input{security}
+\input{extended-example}
+\input{implementation}
+\input{empirical-results}
+\input{conclusion}
+
+% ------------------------------
+% Appendix and related materials
+% ------------------------------
+
+\IEEEtriggeratref{11}   % Puts a column break before indicated reference.
+\bibliographystyle{IEEEtran}
+\bibliography{../references-WSN}
+% You must have a proper ".bib" file and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+
+\end{document}

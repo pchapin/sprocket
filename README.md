@@ -8,9 +8,9 @@ SpartanRPC and Sprocket are research projects at the University of Vermont.
 Prerequisites
 -------------
 
-* Java development kit (I used v1.7u15)
-* Scala (I used v2.10.2)
-* IntelliJ IDEA (I used v12.1.4)
+* Java development kit (I used v1.7u51)
+* Scala (I used v2.11.0)
+* IntelliJ IDEA (I used v13.1.2)
 * LaTeX (required for building the documentation)
 
 Development is done on Linux but it is likely that most things will work on Windows or any other

@@ -8,8 +8,8 @@
       <element id="module-output" name="Sprocket" />
       <element id="library" level="project" name="ANTLR" />
       <element id="library" level="project" name="BouncyCastle" />
-      <element id="library" level="application" name="scala-library-2.10" />
       <element id="library" level="project" name="ScalaTest" />
+      <element id="library" level="application" name="scala-library-2.11" />
     </root>
   </artifact>
 </component>

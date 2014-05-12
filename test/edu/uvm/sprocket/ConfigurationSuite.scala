@@ -7,9 +7,9 @@
 package edu.uvm.sprocket
 
 import org.scalatest.{Assertions, FunSuite}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class ConfigurationSuite extends FunSuite with Assertions with ShouldMatchers {
+class ConfigurationSuite extends FunSuite with Assertions with Matchers {
 
   test("Basic configuration") {
     // This test is rather limited. It should be enhanced at some point.

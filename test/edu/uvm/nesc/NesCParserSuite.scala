@@ -7,11 +7,11 @@
 package edu.uvm.nesc
 
 import org.scalatest.{Assertions, FunSuite}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import java.io.{FileInputStream, File}
 import org.antlr.runtime.{CommonTokenStream, ANTLRInputStream}
 
-class NesCParserSuite extends FunSuite with Assertions with ShouldMatchers {
+class NesCParserSuite extends FunSuite with Assertions with Matchers {
   
   private val testRoot       = new File("testData")
   private val testSyntax     = new File(testRoot, "Syntax")

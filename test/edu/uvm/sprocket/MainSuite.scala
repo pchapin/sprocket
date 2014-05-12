@@ -7,9 +7,9 @@
 package edu.uvm.sprocket
 
 import org.scalatest.{Assertions, FunSuite}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class MainSuite extends FunSuite with Assertions with ShouldMatchers {
+class MainSuite extends FunSuite with Assertions with Matchers {
 
   test("Dummy Test") {
     println("Hello, World!")

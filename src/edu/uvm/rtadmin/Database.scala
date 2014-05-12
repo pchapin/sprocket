@@ -133,7 +133,7 @@ object Database {
         counter = lines.count(p => p.isDigit) + 1
       }
       val fw = new FileWriter(inFile, true) // Write to end of file.
-      fw.write(myRole + " "+ (counter) + "\n")
+      fw.write(myRole + " "+ counter + "\n")
       fw.close()
     }
   }

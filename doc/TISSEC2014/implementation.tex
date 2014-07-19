@@ -1,0 +1,600 @@
+\section{The SpartanRPC Implementation}
+\label{section-implementation}
+
+In this section we describe the implementation of the SpartanRPC system
+using $RT_0$ trust management for authorization. We call our
+implementation \Sprocket \cite{sprocket}. \Sprocket\ rewrites a
+SpartanRPC program into a pure nesC program and provides a supporting
+runtime system. Program rewriting converts remote duty postings into a
+nesC messaging protocol. The main task of the runtime system is to
+implement the encapsulated, underlying security protocols for
+authorization of remote duty postings.
+
+\subsection{Authorization and Security Protocols}
+\label{section-security-protocols}
+\label{section-underlying-protocols}
+
+\Sprocket\ implements SpartanRPC authorization using a combination of
+public and symmetric key cryptography. We use the TinyECC library
+\cite{Liu-Peng-TinyECC-2008} for public key functionality, and AES
+encryption for symmetric key functionality. TinyECC uses elliptic curve
+cryptography for more efficient public key operations in WSNs. Using AES
+has the benefit of hardware support on many current embedded platforms,
+e.g.~those employing the Chipcon CC2420 radio.
+
+There are three security protocols for authorized duty postings,
+illustrated in \autoref{figure-sprocketrt-protocol}, that operate
+asynchronously. First, a credential exchange protocol in which \RT\
+credentials are communicated between nodes and authorization levels for
+various entities are computed, i.e.~the \emph{minimum model} as
+described in \autoref{section-security-extensions}. Second, a session
+key protocol in which symmetric keys for multiple authorized service
+invocations are computed between a client and server. And third, an
+authorized service invocation protocol in which duty postings are
+generated and checked. This decomposition of authorized service
+invocation into three protocols supports efficiency especially through
+the use of symmetric keys for multiple service invocations. Its
+asynchronous nature is also appropriate in an asynchronous TinyOS
+setting.
+
+\subsubsection{Credential Exchange}
+
+\begin{figure}[t]
+  \input{Figures/SprocketRT-Protocol}
+  \centerline{\raise 1em\box\graph}
+  \vspace{2mm}
+  \caption{SpartanRPC Security Protocol Elements}
+  \label{figure-sprocketrt-protocol}
+\end{figure}
+
+\label{section-certificate-format}
+
+SpartanRPC credentials are implemented as signed certificates. All
+SpartanRPC-enabled nodes contain a certificate sender component and a
+certificate receiver component to transfer certificates between nodes
+and to verify them and interpret the credentials they represent. Both
+components run as background daemons, performing their function
+asynchronously. A SpartanRPC-enabled node is deployed with a collection
+of certificates in read-only storage representing that node's
+credentials, which are determined by some external means. Once the node
+is booted, the certificate sender starts a periodic timer. When the
+timer fires, the node link-layer broadcasts (i.e.~only to neighbors) all
+certificates in its certificate storage that are mentioned in the
+\texttt{enable} clauses of the dynamic wires used during program
+execution. To prevent adjacent node certificate broadcasts from
+colliding, the certificate broadcast interval is modulated randomly by
+$\pm 10$\%. For example if the nominal broadcast interval is one minute,
+the actual time varies randomly between 54 and 66 seconds.
+
+The certificate distribution strategy is robust in the face of new nodes
+being added to the network or intermittent radio connectivity. If a node
+fails to receive certain certificates from its neighbors it will have
+another opportunity to do so when those neighbors rebroadcast their
+certificates. There is a trade off between the broadcast interval,
+responsiveness, and network energy consumption. A short broadcast
+interval allows authorizations to succeed ``quickly'' since neighbors
+become aware of the necessary credentials early, but at the cost of
+increased radio traffic and power consumption.
+
+Once a newly received certificate has been verified, the credential it
+represents is extracted and stored. The credential storage also contains
+the $RT_0$ minimum model implied by the currently known collection of
+credentials. Each time a new credential is added to storage, the minimum
+model is updated. This is done by repeatedly applying authorization
+logic inference rules implied by the credentials to the current model
+until a fixed point is reached, i.e.~a logical closure \cite{Li:DCFTML}.
+Thus, each node maintains a local view of authorization levels for
+network entities based on received credentials.
+
+\begin{figure}[t]
+  \input{Figures/Certificate-Formats}
+  \centerline{\raise 1em\box\graph}
+  \vspace{2mm}
+  \caption{Intersection Certificate Format (parenthesized numbers indicate byte counts)}
+  \label{figure-certformats}
+\end{figure}
+
+Our certificate representation of an \RT\ credential contains the public
+keys denoting entities mentioned in the credential. Roles are identified
+by one byte numeric codes and are scoped by the entity defining the
+role. Credential forms are distinguished by numbers $\{ 1, 2, 3, 4 \}$.
+Certificates are also signed by their issuing authority. Conveniently,
+the issuing authority is always mentioned in a credential, e.g.~the
+issuing authority of $\cred{A.r}{B}$ is $A$, so the means to verify the
+certificate (i.e.~the relevant public key) is always included with it
+for free. This does not introduce a security problem. Since entities are
+identified directly by their keys, an attacker who creates a new key is
+simply creating a new entity.
+
+The over-the-air format for the intersection certificate is illustrated
+in \autoref{figure-certformats}. The other certificate forms are
+organized in a similar way. The certificate starts with a certificate
+type identifier byte, and then follows the written form of the \RT\
+credential with a signature appended to the end. Role names are mapped
+to single byte role numbers specified by the entity defining the role.
+
+Certificates range in size from 124 bytes for the membership credential
+to 166 bytes for the intersection credential. This is larger than the
+maximum payload size limit of TinyOS T-Frame Active Message packets as
+transported by IEEE 802.15.4 \cite{802.15.4,hui-tep125}. It is much
+larger than the default maximum payload size of 28 bytes used by TinyOS
+\cite{levis-tep111}. Consequently the certificates are fragmented into
+four messages requiring a maximum payload size of 46 bytes. The choice
+of using four fragments is a trade off between an excessive number of
+fragments on one hand and excessive memory use for packet buffers on the
+other. Also the session key negotiation messages described in
+\autoref{section-session-key-negotiation} require 44 bytes in any case.
+
+% These fragments are sent back to back with a 200 ms delay between each
+% to allow the receiver time to assemble them. Fragments are sent in
+% order with no fragment identifiers. To stay synchronized with the
+% sender, receivers expect to receive all the fragments in a timely
+% manner. If a fragment is not received within 750 ms of the previous
+% fragment, the partial certificate is discarded on the assumption that
+% the expected fragment was lost.
+
+Verification of \RT\ certificates is the most computationally expensive
+component of our system as we discuss in
+\autoref{section-empirical-results}. Thus, we want to minimize the
+amount of effort spent on verification. To this end, we append a 16-bit
+Fletcher checksum to each certificate. Nodes maintain a database of
+certificate Fletcher checksums to quickly check whether a certificate
+has already been received and verified. It is necessary to include this
+checksum rather than rely on the checksum provided by the underlying
+network stack because the later value covers frame headers that are not
+part of the certificate. Fletcher checksums are commonly used in WSNs
+since their error detection properties are almost as good as CRCs with
+significantly reduced computational cost \cite{fletcher-1982}.
+
+% Currently certificates carry no lifetime information and are
+% considered to be valid forever. This is not ideal since a certificate
+% issuer may eventually change her policy but currently has no way to
+% revoke old certificates. However, adding a feature for certificate
+% revocation introduces non-monotonicity into the semantics of the
+% authorization logic
+% \cite{Li01nonmonotonicity,Rivest:1998:WEC:647502.728327}. Adding an
+% expiration time to the certificates is more logically appealing but
+% would require nodes to support real time services and some degree of
+% time synchronization. This is a non-trivial extension of our basic
+% system that is beyond the scope of our work.
+
+\subsubsection{Session Key Negotiation}
+\label{section-session-key-negotiation}
+
+Public key cryptography is much too computationally expensive to use for
+routine duty posting authorizations. Sprocket's run time system
+addresses this by negotiating session keys between the sender (client)
+and receiver (server) nodes.
+
+%\autoref{figure-sessionkey-daemon} shows the session key
+%processing architecture of a node.
+%
+%\begin{figure}[htbp]
+%  \input{Figures/SessionKey-Daemon}
+%  \centerline{\raise 1em\box\graph}
+%  \caption{Session Key Processing Architecture}
+%  \label{figure-sessionkey-daemon}
+%\end{figure}
+%
+
+The client maintains a session key storage that is indexed by the triple
+$(N, C, I)$ where $N$ is the remote node ID, $C$ is the remote component
+ID, and $I$ is the remote interface ID. A session key is thus created
+for each combination of these IDs. The server also maintains a session
+key storage indexed by $(N, C, I)$. In this case $N$ is the node ID of
+the client and $C$, $I$ are the component and interface IDs on the
+server to which that client is communicating. Since any given node can
+be both server and client, each session key storage entry has a flag to
+indicate the nature (client-side or server-side) of the session key.
+
+% Because the session key storage is indexed by node ID and not by the
+% requesting entity's key, this causes a (minor?) anomaly: If a client
+% invokes a service ``as A'' and then later tries to invoke that same
+% service ``as B'' the second invocation will use the session key
+% created for the first. This is only a problem if A has access to the
+% service but B does not. Note that it's not a problem for the server:
+% the node is in domain A, with access, regardless. It's only a problem
+% for a client that is trying to ``dumb down'' a particular request;
+% access might succeed unintentionally.
+%
+% Fixing this would require storing some kind of key identifier (the
+% whole key?) in the session key storage entry. Then duty post messages
+% would need to include this identifier as well. This has non-trivial
+% implications for memory and network overhead.
+
+The first time a client attempts to access a service on a particular
+server, it will send a session key negotiation request. When a server
+receives a session key negotiation request message from a client node
+$N$ containing the public key $K_{cp}$ of the requesting entity (as
+mentioned in the \code{as} clause of the dynamic wire) and the $(C, I)$
+address of the desired service, the following steps are taken:
+\begin{longenum}
+\item Authorization of $K_{cp}$ for service $(C, I)$ is checked using
+  the \RT\ minimum model computed by the certificate receiver. If
+  authorization fails nothing more is done.
+\item A session key is computed using elliptic curve Diffie-Hellman and
+  added to the session key storage under the proper $(N, C, I)$ value.
+  The key is stored as a remote client key.
+\item A message is returned to the client containing the server's public
+  key $K_{sp}$ and the original $(N, C, I)$ values used by the client.
+  This is so the client is able to compute the same session key and
+  associate it with the proper endpoint from its perspective.
+\end{longenum}
+
+The session key negotiation protocol is a simple Diffie-Hellman key
+agreement protocol that combines the public key of the peer entity with
+the private key of the local entity. The implementation does not include
+any nonces as would be done, for example, with the ECMQV protocol
+\cite{ISO-IEC-1170-3:2008}. As a result any renegotiated session keys
+between the same entities would be identical. However, this is not a
+serious problem because the implementation does not currently
+renegotiate session keys. Furthermore the ECMQV protocol entails three
+exchanged messages and additional computations and so would further
+increase the burden on nodes.
+
+A potentially more serious concern is that the simple protocol described
+here might be vulnerable to a man in the middle attack, whereby an
+active attacker negotiates independent session keys with each peer and
+is able to modify messages sent between those peers. However, in \RT\
+private keys are identities directly so a man in the middle without
+access to either the client or server's private key would appear as a
+new entity, presumably without authorized access.
+
+% Note that under this protocol every session key computed between nodes
+% $N_A$ and $N_B$ for the same requesting entity will be the same. This
+% is not a problem since the server node uses $(C, I)$ to look up the
+% session key in its storage. If a node attempts to access an
+% unauthorized service, no entry for that $(C, I)$ will exist in the
+% server's session key storage and access will fail.
+
+\subsubsection{Authorized RPC Invocations}
+
+Authorized RPC invocations are made with MACs on invocation messages
+using AES session keys. Verification of a MAC by the receiver
+constitutes authorization since a session key for a particular client
+and service is negotiated only after client credentials have been
+verified as providing proof of compliance to authorization policy.
+\autoref{figure-post} shows the format of authorized invocation request
+messages. The interface and duty IDs, both four bit values, are packed
+into the initial byte of the message. Following is the number of
+receivers, the $(N, C)$ addresses of the receiving components, and the
+duty arguments.
+
+\begin{figure}[t]
+  \input{Figures/Post-Format}
+  \centerline{\raise 1em\box\graph}
+  \caption{Duty Post Message}
+  \label{figure-post}
+\end{figure}
+
+Since invocation of an RPC service on multiple hosts can be made at once
+in a fan-out wiring (see \autoref{section-dynamic-wires}), a single
+invocation request message may apply to multiple servers in the
+neighborhood of the client. To conserve bandwidth, fan-out invocation
+messages include multiple MACs, since separate session keys are
+negotiated with each of $n$ servers, allowing a single message to invoke
+the same service on the servers. If the duty arguments consume $d$ bytes
+of data, then invocation messages consume $2 + 6n + d$ bytes. In the
+common case where $n = 1$ invocation messages contain $8$ bytes of
+overhead. As we describe above our implementation uses a 46~byte message
+buffer size as required for sending certificate fragments. Our
+experience suggests that using the same buffer size for invocation
+messages allows for reasonable values of both $d$ and $n$.
+
+% Alternatively an implementation could send multiple invocation
+% messages with one for each server, reducing the number of MACs
+% required on each message to one. However, that greatly increases radio
+% traffic since the duty arguments and active message overhead must be
+% duplicated for each message.
+
+To conserve space in the invocation messages we only use a 32~bit MAC.
+Such a small MAC would not normally be considered secure. However,
+wireless sensor networks generate data so slowly that attacking even
+such a short MAC is not considered feasible
+\cite{karlog-tinysec-2004,luk-minisec-2007}.
+
+\subsubsection{More on Security Properties}
+\label{section-security-properties}
+
+As in \autoref{section-security-model}, we stress that our scheme is
+intended to enforce authorization, which we achieve via the protocols
+described above. Integrity is a side effect of this, since we use MACs
+to enforce authorization, which are computed over complete message
+payloads and are verified by the receiver. Although confidentiality is
+not directly supported by our current protocols, it could be easily
+added. In particular payloads could be encrypted using negotiated
+session keys (payloads are currently sent as plaintext).
+
+Our system does not provide any form of replay protection out of the
+box, but this can be added at the application level. For example an
+application could pass a counter or time stamp as an additional duty
+argument. The server could verify that the argument increases
+monotonically as a simple form of replay protection. The space required
+for counter or time stamp information would increase message sizes, but
+this is unavoidable for any solution to replay protection. Delegating
+replay protection to the application is appropriate since SpartanRPC is
+intended to be a low level infrastructure on which more complex systems
+can be built. Furthermore the need for replay protection is likely to be
+application specific.
+
+Perhaps the most problematic vulnerability of our system is to denial of
+service (DoS) attacks-- unlike e.g.~replay, for which countermeasures
+can be readily implemented at the application level, it is not clear how
+DoS attacks could be mitigated without significant changes to the
+underlying security protocols. For example, a constant flood of
+certificates over the correct channel would place receiving nodes in a
+constant state of signature verification, potentially consuming large
+amounts of CPU time and energy. Mitigation of such attacks is outside
+the scope of this work but has been discussed in the literature
+\cite{4431860}.
+
+\paragraph{A note on multicast security} Fan-out wirings are a common
+idiom, and provide a form of multicast communication. However, the use
+of MACs for security in a multicast setting presents well-known
+challenges. In particular, while $n$-way Diffie-Hellman can be used to
+negotiate secret keys between $n$ actors, such a scheme cannot be used
+in light of the possibly heterogeneous authorization requirements we
+anticipate. For example, suppose a node $A$ fan-out wires to service $s$
+on distinct nodes $B$ and $C$, and suppose also that $A$ is authorized
+for $s$ on both nodes but that $B$ is not authorized for $s$ on $C$ and
+vice-versa. If a single session key were negotiated between $A$, $B$,
+and $C$ in this case, then $B$ could make unauthorized use of $C$'s
+version of $s$ and vice-versa. While a variety of techniques have been
+proposed to mitigate this problem \cite{canetti-1999}, most typically
+rely on very large multicast groups and are not applicable in our
+setting. Thus, we handle fan-out wirings using multiple MACs as
+described above.
+
+\subsection{Identifying Services Over the Air}
+
+RPC service endpoints are identified by the 4-tuple $(N, C, I, D)$ where
+$N$ is the TinyOS ID of the node on which a duty is implemented. $C$ is
+the local component ID assigned to each component that provides a
+remotable interface. $I$ is an interface ID, required since a component
+may provide more than one remotable interface. Interface IDs are
+component-level unique. Finally $D$ is a duty ID, which must be
+interface-level unique.
+
+In the current version of \Sprocket, $(C, I)$ values are assigned
+statically by an arbitrary (automated or social) process. \Sprocket\
+accepts configuration files that define the association between $(C, I)$
+values and the entities to which they refer. Duties are numbered in the
+order in which they appear in their enclosing interface definitions.
+
+Some RPC systems, such as ONC RPC, allow each node to provide a registry
+of RPC services available on that node \cite{RFC-1833}. When a large
+number of RPC services are provided by a node it becomes unreasonable to
+expect clients to have hard coded knowledge of the endpoint identifiers
+for all those services. Instead clients communicate with the single well
+known registry to obtain endpoint identifiers that were dynamically
+assigned. In contrast we assume this configuration information is known
+a priori to all interacting actors. It is unclear if sensor networks
+could benefit from a more sophisticated technique for defining and
+communicating endpoint identifiers, but it would be an interesting topic
+for future work.
+
+\subsection{Rewriting SpartanRPC to nesC}
+
+There are five major features requiring SpartanRPC-to-nesC rewriting by
+\Sprocket: interface definitions, call sites where remote services are
+invoked, duty definitions, dynamic wires, and server components
+providing remote interfaces. In addition \Sprocket\ generates a stub
+component for each dynamic wire, and a skeleton component for each
+remote interface. Finally \Sprocket\ generates configurations that wrap
+server components. Here we summarize rewriting strategies for these
+features.
+
+% The implementation doesn't actually wrap server components yet.
+% Instead wiring to skeletons is done manually after Sprocket runs.
+% Generating the wrapping components should be easy. Globally changing
+% existing configurations to use the wrapping components will require
+% some refactoring of Sprocket and would be more involved.
+
+\subsubsection{Interfaces, Call Sites, and Duty Definitions}
+
+Duty declarations in interfaces are rewritten to command declarations by
+substituting \code{command} for \code{duty}. Since nesC commands are
+allowed to have arbitrary parameters, duties with parameters present no
+complications. \Sprocket\ verifies that if an interface contains a duty,
+then the only declarations in that interface are duties. \Sprocket\
+further verifies that the parameters of each duty, if any, conform to
+the restrictions described in \autoref{section-remotable}.
+
+% Some of these checks are not yet implemented, but they should present
+% no problems. The current implementation only supports duties with
+% parameters of primitive types (no structure types). A more significant
+% limitation is that currently only interfaces with a single duty are
+% supported. Generalizing to multiple duties in an interface should be
+% straight forward.
+
+Call sites where duties are posted are rewritten to command invocations
+by substituting \code{call} for \code{post}. Only post operations
+applied to duties are rewritten in this way. Finally, duty definitions
+are rewritten to command definitions by also substituting \code{command}
+for \code{duty}.
+
+\subsubsection{Authorization Interfaces}
+
+The rewriting process makes use of two interfaces that mediate the
+interaction between the \Sprocket\ generated code and the security
+processing components of the run-time system.
+\autoref{figure-client-server-authorization} shows how a message,
+entering from the left, is extended with authorization information by
+the client and then passed to the server where the authorization
+information is checked.
+
+\begin{figure}[htbp]
+  \input{Figures/Authorization-Interfaces}
+  \centerline{\raise 1em\box\graph}
+  \caption{Client/Server Authorization Architecture}
+  \label{figure-client-server-authorization}
+\end{figure}
+
+The \texttt{AuthorizationClient} interface abstracts the details of how
+an authorized message is prepared before being sent. The
+\texttt{AuthorizationServer} interface abstracts the details of how
+authorized messages are processed after they are received. This design
+allows for pluggable authorization mechanisms. Future versions of
+\Sprocket\ could potentially support other authorization schemes than
+those described here, in a modular fashion.
+
+The authorization interfaces provide their services in a split-phase
+manner so that potentially long-running authorization computations can
+be performed while allowing the node to continue other functions. In the
+current implementation, two kinds of authorization are supported. On the
+client side the precise method used depends on the dynamic wire over
+which a particular communication takes place. On the server side it
+depends on the presence of a \code{requires} clause on the remotely
+provided interface.
+
+The full $RT_0$ mechanism is supported by client and server components
+\texttt{ACRT0C} and \texttt{ASRT0C} respectively (details about this
+mechanism are discussed in \autoref{section-security-extensions} and
+\autoref{section-security-protocols}). In addition a ``null''
+authorization is supported by client and server components
+\texttt{ACNullC} and \texttt{ASNullC} respectively. The null
+authorization components perform no operation. They are used for dynamic
+wires that do not require authorization and remote interfaces provided
+publicly by servers.
+
+\subsubsection{Dynamic Wires}
+
+In the following, we use italics for metavariables that range over
+arbitrary identifiers. The reader is referred to the rewriting schema
+defined in \autoref{figure-dynamic-wire-rewriting}. Configurations
+containing dynamic wires are rewritten to configurations that statically
+wire the using component \code{\textit{ClientC}} to a stub
+\code{Spkt\_\textit{n}} that interacts with the appropriate component
+manager \code{\textit{SelectorC}} and that handles radio communication.
+Every stub generated by \Sprocket\ is uniquely identified over the scope
+of the entire program by an arbitrary integer $n$. The
+\code{\textit{AuthorizerC}} component is \code{ACNullC} in the case
+where no authorization is requested.
+
+\begin{figure}[!t]
+\begin{textbox}{3.0in}
+\begin{Verbatim}[commandchars=\\\{\}, fontsize=\small]
+\textrm{\textit{Dynamic Wire}}
+    \textit{ClientC}.\textit{I} -> [\textit{SelectorC}].\textit{I};
+
+\textrm{\textit{Rewritten as\ldots}}
+    components Spkt_\textit{n};
+    \textit{ClientC}.\textit{I} -> Spkt_\textit{n};
+    Spkt_\textit{n}.ComponentManager -> \textit{SelectorC};
+    Spkt_\textit{n}.AuthorizationClient -> \textit{AuthorizerC};
+    Spkt_\textit{n}.Packet -> AMSenderC;
+    Spkt_\textit{n}.AMSend -> AMSenderC;
+\end{Verbatim}
+\end{textbox}
+\caption{Dynamic Wire Rewriting}
+\label{figure-dynamic-wire-rewriting}
+\end{figure}
+
+In contrast a dynamic wire using either an \code{enable} or \code{as}
+clause is rewritten the same way except that the
+\code{\textit{AuthorizerC}} component is \code{ACRT0C}. Furthermore, the
+list of enabled credentials is added to local certificate storage by
+\Sprocket. Certificates in storage are periodically beaconed at run-time
+as described above. Finally, the entity on whose behalf the RPC
+invocation is performed is specified in the session key negotiation
+message sent to the server, also as described above.
+
+The \code{Spkt\_\textit{n}} stub provides the same interface provided by
+\code{\textit{ClientC}}. Wherever a duty is posted by
+\code{\textit{ClientC}} in source code, the rewritten call invokes code
+in the stub that was specialized to handle that duty. The stub calls
+into the component manager at run time to obtain a list of the dynamic
+wire's endpoints and then prepares a data packet containing remote
+endpoint addresses and marshaled duty arguments. Finally the stub calls
+through the \code{AuthorizationClient} interface to perform whatever
+authorization is needed.
+
+\subsubsection{Remote Services}
+
+For nodes supporting RPC services, \Sprocket\ generates a skeleton
+component for each remote interface provided. This skeleton contains a
+task corresponding to each duty provided in the interface, and every
+generated skeleton is distinguished by a unique integer $n$ taken from
+the same numbering space as the generated stubs.
+
+% \autoref{figure-server-skeleton-generation} shows the form of a
+% generated skeleton for an interface $I$ providing a single duty $d$
+% that takes a single integer parameter. This is for purposes of
+% illustration; the scheme is generalized in an obvious manner.
+
+%\begin{figure}[!t]
+%\begin{textbox}{3.0in}
+%\begin{Verbatim}[commandchars=+\[\], fontsize=\small]
+%+textrm[+textit[Server Component]]
+%    module +textit[ServerC] {
+%        provides remote interface +textit[I] requires +textit["A.g"];
+%        +textit[other (local) uses/provides]
+%    }
+%
+%+textrm[+textit[Skeleton generated as+ldots]]
+%    module Spkt_+textit[n] {
+%        uses interface +textit[I];
+%        uses interface Receive;
+%        uses interface AuthorizationServer;
+%    }
+%    implementation {
+%
+%        +textit[int value_1;]
+%        +textit[task void d() {]
+%            +textit[call I.d(value_1);]
+%        +textit[}]
+%
+%        event message_t *Receive.receive( ... ) {
+%            ...
+%        }
+%    }
+%\end{Verbatim}
+%\end{textbox}
+%\caption{Server Skeleton Generation}
+%\label{figure-server-skeleton-generation}
+%\end{figure}
+
+When messages are received on a node that provides RPC services, they
+are examined to see if they are duty postings and thus to be handled by
+a skeleton. If so, the \code{AuthorizationServer} interface is used to
+authorize the message. If authorization succeeds, the task corresponding
+to the specified duty is posted. That task simply calls into
+\code{\textit{ServerC}} through the original interface
+\code{\textit{I}}. Thus the task-like behavior of duties is ultimately
+implemented using actual nesC tasks inside the server skeletons. Duty
+parameters are conveyed via module-level variables accessed by the duty
+tasks (since nesC tasks do not take formal arguments).
+
+For each component that provides at least one remote interface,
+\Sprocket\ creates a configuration that wires the corresponding
+skeleton(s) to that component. This new configuration wraps the original
+component and replaces uses of the original component in other
+configurations in the program.
+
+% In this Figure, as is the case for client-side code, the
+% \code{\textit{AuthorizerC}} component is either \code{ASRT0C} or
+% \code{ASNullC} depending on whether the original remote interface
+% specified authorization or not.
+
+% This is the part that isn't implemented yet. Right now skeleton wiring
+% is done manually.
+
+%\begin{figure}[!t]
+%\begin{textbox}{3.0in}
+%\begin{Verbatim}[commandchars=+\[\], fontsize=\small]
+%configuration +textit[ServerC]_SpktC {
+%    +textit[other (local) uses/provides]
+%}
+%implementation {
+%    components +textit[ServerC], Spkt_+textit[n];
+%    Spkt_+textit[n].+textit[I] -> +textit[ServerC];
+%    Spkt_+textit[n].Receive -> AMReceiverC;
+%    Spkt_+textit[n].AuthorizationServer -> +textit[AuthorizerC];
+%    +textit[pass local uses/provides directly to ServerC]
+%}
+%\end{Verbatim}
+%\end{textbox}
+%\caption{Server Skeleton Wiring}
+%\label{figure-server-skeleton-wiring}
+%\end{figure}
+

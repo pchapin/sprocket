@@ -1,0 +1,111 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILE    : main.tex
+% SUBJECT : Master document for the TISSEC 2014 paper.
+% AUTHOR  : (C) Copyright 2014 by Peter C. Chapin and Christan Skalka
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[prodmode,acmtissec]{acmsmall}
+
+% --------
+% Packages
+% --------
+\usepackage{fancyvrb}
+\usepackage{stmaryrd}
+\usepackage[english]{fp-autoref}
+\usepackage{fp-frame}
+\usepackage{soul}
+\usepackage{mathpartir}
+\usepackage{comment}
+\usepackage{url}
+
+% ------
+% Macros
+% ------
+\include{macros}
+
+% -----
+% Figures made Chris' way 
+% -----
+\input{figures}
+
+% To be filled in after the paper is accepted.
+%\acmVolume{V}
+%\acmNumber{N}
+%\acmArticle{A}
+%\acmYear{YYYY}
+%\acmMonth{0}
+
+\markboth{P. Chapin and C. Skalka}{RPC Authorization in Sensor Networks}
+
+% Title portion
+\title{SpartanRPC: Remote Procedure Call Authorization in Wireless Sensor Networks}
+\author{PETER CHAPIN and CHRISTIAN SKALKA \affil{University of Vermont}}
+
+\begin{abstract}
+  We describe SpartanRPC, a secure middleware technology that supports
+  cooperation between distinct security domains in wireless sensor
+  networks. SpartanRPC extends nesC to provide a link-layer remote
+  procedure call (RPC) mechanism, along with an enhancement of
+  configuration wirings that allow specification of remote, dynamic
+  endpoints. RPC invocation is secured via an authorization logic that
+  enables servers to specify access policies, and requires clients to
+  prove authorization. This mechanism is implemented using a
+  combination of symmetric and public key cryptography. We report on
+  benchmark testing of a prototype implementation, and on an
+  application of the framework that supports secure collaborative use
+  and administration of an existing WSN data gathering system.
+\end{abstract}
+
+\category{D.3.4}{Programming Languages}{Processors}[Compilers \and
+Run-time environments]
+\category{C.3}{Computer Systems Organization}{Special-Purpose and
+  Application-Based Systems}[Real-time and embedded systems]
+\category{C.2.4}{Computer-Communication Networks}{Distributed
+  Systems}[Client/server]
+
+\terms{Security, Languages}
+
+\keywords{remote procedure call, sensor networks, trust management}
+
+\acmformat{Peter Chapin and Christian Skalka. 2014. SpartanRPC: Remote
+  Procedure Call Authorization in Wireless Sensor Networks}
+
+\begin{document}
+
+\begin{bottomstuff}
+  Christian Skalka’s work was supported by a grant from the Air Force
+  Office of Scientific Research Young Investigator Program (AFOSR YIP).
+
+  Author's addresses: P. Chapin, (Current address) Computer Information
+  Systems Department, Vermont Technical College; C. Skalka, Computer
+  Science Department, University of Vermont.
+\end{bottomstuff}
+
+\maketitle
+
+% ----------------
+% Document content
+% ----------------
+\input{introduction}
+\input{duties}
+\input{dynamic-wires}
+\input{security}
+\input{extended-example}
+\input{implementation}
+\input{empirical-results}
+\input{snowcloud}
+\input{conclusion}
+
+% ------------------------------
+% Appendix and related materials
+% ------------------------------
+
+\bibliographystyle{ACM-Reference-Format-Journals}
+\renewcommand{\showDOI}[1]{\unskip}
+\bibliography{references-AccessControl,references-Meta,references-Security,references-WSN}
+
+% History dates
+\received{Month Year}{Month Year}{Month Year}
+
+\end{document}

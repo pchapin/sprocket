@@ -1,0 +1,68 @@
+\section{Security Protocol}
+\label{section-protocol}
+
+We evaluate our security protocol in the context of a Dolev-Yao attacker \cite{something}. Such
+an attacker has complete power over the network but no ability to defeat any cryptography nor
+tamper with any node. \pnote{This isn't very realistic for a WSN since the nodes are physically
+  vulnerable. However, it is a fairly standard model and probably reasonable for our purposes.}
+
+The protocol consists of three parts
+\begin{enumerate}
+\item Distribution of certificates
+\item Session key negotiation
+\item Normal RPC messages
+\end{enumerate}
+
+The primary security property we wish to guarantee is: \textit{no service should be accessible
+  by a client that is not authorized for that service}.
+
+\subsection{Certificate Distribution}
+\lable{section-certificate-distribution}
+
+The certificate distribution protocol is secure against a Dolev-Yao attacker.
+\begin{enumerate}
+\item Certificates contain only public information. An adversary is free to read them.
+\item Blocking certificates is safe due to monotonicity of $RT_0$. Modified certificates will
+  fail to verify.
+\item Certificates can be replayed with no ill effect (except possibly denial of service).
+\item An adversary can send unrelated certificates although a denial of service attack is
+  possible by flooding a receiver with useless certificates and pushing useful ones out of its
+  certificate storage area.
+\end{enumerate}
+
+\subsection{Session Key Negotiation}
+\label{section-session-key-negotiation}
+
+Because of the high computational cost of public key cryptography, especially relative to the
+abilities of a typical wireless sensor node, our system negotiates session keys for each dynamic
+wire connection. Let $A_n$ denote a client node $n$ in security domain $A$, and $B_m$ denote a
+server node $m$ in security domain $B$. For any particular client node a session key is
+negotiated for each $(m, C, I, D)$ tuple. Since the session key only depends on the public and
+private keys of the interacting security domains, the same session key may, in general, be
+negotiated multiple times for different services or different neighbor nodes. However a client
+can not use a previously negotiated session key to access a unauthorized service on the security
+domain as an authorized service. This is because the server only records session keys for
+authorized services; the lack of a recorded key for a particular service implies that
+authorization has not yet been done.
+
+The specific protocol is as follows
+\begin{verbatim}
+
+1. A_n -> B_m : A, (m, C, I, D)
+2. B_m -> A_n : B, (m, C, I, D)
+  A_n computes session key for SELF -> (m, C, I, D) communications
+
+\end{verbatim}
+
+In step 1 the client sends a message to the server indentifying itself along with the desired
+service endpoint (as denoted by the $(C, I, D)$ triple. The server checks authorization of the
+client key $A$ and then computes a session key using the Diffie-Hellman key agreement protocol.
+The session key is recorded in a cache on the server node for future use.
+
+In step 2 the server sends a message to the client indentifying itself and echoing the full
+service endpoint. The client computes the session key and records it in its cache.
+
+Notice that a man-in-the-middle attack is not possible here because the $RT$ trust management
+system uses the public keys themselves as principals. If a middle node $M$ is able to negotiate
+a session key with the server, then $M$ must be an authorized key and thus a legitimate user of
+the service anyway.

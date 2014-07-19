@@ -1,0 +1,97 @@
+\expandafter\ifx\csname graph\endcsname\relax
+   \csname newbox\expandafter\endcsname\csname graph\endcsname
+\fi
+\ifx\graphtemp\undefined
+  \csname newdimen\endcsname\graphtemp
+\fi
+\expandafter\setbox\csname graph\endcsname
+ =\vtop{\vskip 0pt\hbox{%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.125in
+    \rlap{\kern 0.000in\lower\graphtemp\hbox to 0pt{$A.r \leftarrow B.s \cap C.t$\hss}}%
+    \special{pn 8}%
+    \special{pa 0 500}%
+    \special{pa 250 500}%
+    \special{pa 250 250}%
+    \special{pa 0 250}%
+    \special{pa 0 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 0.125in\lower\graphtemp\hbox to 0pt{\hss 4\hss}}%
+    \special{pa 250 500}%
+    \special{pa 1000 500}%
+    \special{pa 1000 250}%
+    \special{pa 250 250}%
+    \special{pa 250 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 0.625in\lower\graphtemp\hbox to 0pt{\hss $A$ (40)\hss}}%
+    \special{pa 1000 500}%
+    \special{pa 1250 500}%
+    \special{pa 1250 250}%
+    \special{pa 1000 250}%
+    \special{pa 1000 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 1.125in\lower\graphtemp\hbox to 0pt{\hss $r$\hss}}%
+    \special{pa 1250 500}%
+    \special{pa 2000 500}%
+    \special{pa 2000 250}%
+    \special{pa 1250 250}%
+    \special{pa 1250 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 1.625in\lower\graphtemp\hbox to 0pt{\hss $B$ (40)\hss}}%
+    \special{pa 2000 500}%
+    \special{pa 2250 500}%
+    \special{pa 2250 250}%
+    \special{pa 2000 250}%
+    \special{pa 2000 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 2.125in\lower\graphtemp\hbox to 0pt{\hss $s$\hss}}%
+    \special{pa 2250 500}%
+    \special{pa 3000 500}%
+    \special{pa 3000 250}%
+    \special{pa 2250 250}%
+    \special{pa 2250 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 2.625in\lower\graphtemp\hbox to 0pt{\hss $C$ (40)\hss}}%
+    \special{pa 3000 500}%
+    \special{pa 3250 500}%
+    \special{pa 3250 250}%
+    \special{pa 3000 250}%
+    \special{pa 3000 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 3.125in\lower\graphtemp\hbox to 0pt{\hss $t$\hss}}%
+    \special{pa 3250 500}%
+    \special{pa 4000 500}%
+    \special{pa 4000 250}%
+    \special{pa 3250 250}%
+    \special{pa 3250 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 3.625in\lower\graphtemp\hbox to 0pt{\hss sig (42)\hss}}%
+    \special{pa 4000 500}%
+    \special{pa 4750 500}%
+    \special{pa 4750 250}%
+    \special{pa 4000 250}%
+    \special{pa 4000 500}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.375in
+    \rlap{\kern 4.375in\lower\graphtemp\hbox to 0pt{\hss chk (2)\hss}}%
+    \hbox{\vrule depth0.500in width0pt height 0pt}%
+    \kern 4.750in
+  }%
+}%

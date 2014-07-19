@@ -1,0 +1,297 @@
+\section{Example: Secure Directed Diffusion}
+\label{section-example}
+
+To illustrate our language design we have implemented a secured version
+of the well-known directed diffusion protocol \cite{intanagonwiwat-2003}
+for ad-hoc routing of data in a sensor network. It is one example of the
+publish/subscribe paradigm for data gathering. In our secure version
+facilities for subscribing to a data stream are defined as secure RPC
+services by data stream providers. Directed diffusion supports multi-hop
+data collection, so this example illustrates how our link layer RPC
+service supports network layer communication. It also serves as a good
+benchmark application for empirical observations reported in
+\autoref{section-empirical-results}. We provide another extended example
+in a real prototype application of SpartanRPC in
+\autoref{section-snowcloud}.
+
+The directed diffusion algorithm \cite{intanagonwiwat-2003} allows a
+node to subscribe to a data stream by expressing an \emph{interest} in
+it. In our example, an interest is expressed as temperature data above a
+given threshold. A certain data rate, expressed as a time interval
+between samples, is associated with each interest. Initially a node
+seeking temperature data floods the network using an interest with a low
+data rate. As data events find their way back to the interested node,
+that node selectively \emph{reinforces} certain immediate neighbors by
+retransmitting the interest with a higher associated data rate to just
+those neighbors. Also, in our version of directed diffusion we imagine
+that it is to be implemented in a network comprising multiple security
+domains, and specify that subscription to data streams requires certain
+authorization levels as defined by policy. We omit the policy
+specification in this example to focus on the language API. An example
+policy specification is presented and discussed in
+\autoref{section-snowcloud}.
+
+\begin{comment}
+  \subsection{Directed Diffusion in Multiple Domains}
+
+  To demonstrate our authorization logic, we imagine that subscription
+  to a data stream requires a certain authorization level. Assume that
+  the Federal Emergency Management Agency (FEMA) manages a role
+  \code{tempControllers} that specifies entities with the authority to
+  define who can use the temperature sensing service. FEMA does not own
+  any sensor networks itself but is nevertheless trusted to make
+  appropriate delegation decisions, and so can function as a kind of
+  certificate authority.
+
+  FEMA can delegate control over the service to the state of Vermont
+  \code{V} by issuing a certificate denoting the following credential:
+  \begin{displaymath}
+    \code{FEMA.tempControllers} \leftarrow \code{V}
+  \end{displaymath}
+
+  Note this certificate will be signed by FEMA. The state of Vermont can
+  then place fire departments in various jurisdictions into a
+  \code{tempUsers} role by issuing, for example, its own signed
+  certificates denoting the following credentials:
+
+  \begin{mathpar}
+    \code{V.tempUsers} \leftarrow  \code{A}
+
+    \code{V.tempUsers} \leftarrow  \code{B}
+  \end{mathpar}
+
+  where \code{A} is the \RT\ entity of the Addison town fire department
+  and \code{B} is the \RT\ entity of the Burlington city fire
+  department.
+
+  The sensor network of the Addison town fire department protects access
+  to the temperature sensing application using the governing role
+  \code{A.t}. The nodes are deployed with the following credential
+  pre-loaded to serve as access control policy.
+
+  \begin{displaymath}
+    \code{A.t} \leftarrow \code{FEMA.tempControllers.tempUsers}
+  \end{displaymath}
+
+  This policy allows access to an entity \code{E} if a FEMA
+  \code{tempController} says \code{E} is a \code{tempUser}. The Addison
+  town fire department nodes are also deployed with the following
+  certificates gathered off-line from public sources such as FEMA's web
+  site.
+
+  \begin{mathpar}
+    \code{FEMA.tempControllers} \leftarrow \code{V}
+
+    \code{V.tempUsers} \leftarrow \code{A}
+  \end{mathpar}
+
+  These certificates prove that \code{A} is a \code{tempUser} according
+  to at least one FEMA certified \code{tempController}. Similarly the
+  Burlington city fire department protects its temperature sensing
+  application using the governing role \code{B.t}. Its nodes are
+  deployed with a similar policy statement and with certificates showing
+  that \code{B} is a member of \code{V.tempUsers}.
+
+  If both fire departments are called upon to work together fighting a
+  large fire, their sensor networks will now be able to interoperate,
+  for purposes of temperature sensing, \emph{with no prior
+    coordination.} Furthermore suppose the fire rages out of control and
+  the fire department from neighboring Crown Point, New York, \code{C}
+  is called in to assist. The new nodes introduced by \code{C} will also
+  be able to interoperate with both sets of existing nodes provided they
+  are deployed with certificates such as the following, where \code{N}
+  is the \RT\ entity of the state of New York:
+
+  \begin{mathpar}
+    \code{FEMA.tempControllers} \leftarrow \code{N}
+
+    \code{N.tempUsers} \leftarrow \code{C}
+  \end{mathpar}
+
+  In our example we implemented the program for the Addison town fire
+  department. However, the other programs are identical, from the point
+  of view of temperature sensing, except for changes in the governing
+  role on the remote services and changes in the deployed policy and
+  certificates.
+\end{comment}
+
+\subsection{Interfaces}
+
+Interest and data propagation are handled by separate interfaces, as
+shown in \autoref{figure-ddinterfaces}, each containing a single duty.
+
+\begin{fpfig}[!t]{Directed Diffusion Interest and Data Management Interfaces}{figure-ddinterfaces}
+{
+\vspace{0.6em}
+\begin{Verbatim}[fontsize=\small]
+    interface InterestManagement {
+        duty void set_interest(uint16_t sender_node, int temp_threshold, 
+                               int interval, int duration);
+    }
+
+    interface DataManagement {
+        duty void set_data(uint16_t sender_node, uint16_t originator_node, 
+                           int temp_value);
+    }
+\end{Verbatim}
+\vspace{0.3em}
+}
+\end{fpfig}
+
+A node expresses interest in temperature data above a certain threshold
+and at a certain data rate by posting the \code{set\_interest} duty on
+its neighboring nodes. The duration parameter of the
+\code{set\_interest} duty specifies a lifetime of the interest. Once an
+interest expires it is removed from the node's interest cache.
+Temperature values are expressed as integers presumably corresponding to
+the output of an analog to digital converter. Similarly time intervals
+are expressed as integer multiples of some unit time, the exact value of
+which is arbitrary.
+
+A node passes data to its interested neighbors by posting the
+\code{set\_data} duty on those neighbors. The \code{originator\_node} is
+the ID of the node where the data was originally observed; the node
+soliciting this data will typically want to know its provenance.
+
+Both of these interfaces include the sender's node ID as an explicit
+parameter. The nodes use that information to track paths through the
+network. Although the node ids are also part of the low level radio
+packets sent between the nodes, we chose for demonstration purposes to
+manage the interest and data information strictly at a higher level in
+the protocol stack. As usual greater efficiency may be possible by
+mixing protocol layers.
+
+\subsection{Configuration}
+
+The interest and data caches, which we call ``managers,'' are the two
+central components of our application. The interest manager provides the
+\code{Interest\-Management} interface remotely and uses the same
+interface on other components. The data manager provides and uses the
+\code{Data\-Management} interface in a similar way. Both components
+serve as their own component managers, using internal information to
+specify the destination nodes of each outgoing post operation.
+
+The main configuration contains, in part, the following wiring for the
+interest manager:
+
+\begin{lrbox}{\savebigbox}
+\begin{minipage}{4.5in}
+\vspace{0.6em}
+\begin{Verbatim}[fontsize=\small]
+enable "*" for InterestManagerC.NeighborSensors ->
+                  [InterestManagerC].InterestManagement;
+\end{Verbatim}
+\vspace{0.3em}
+\end{minipage}
+\end{lrbox}
+\centerline{\usebox{\savebigbox}}
+
+In this example, we assume the nodes are deployed with a single default
+entity as their identity. As discussed in
+\autoref{section-rpc-client-side}, because the \code{as} clause is
+missing this wiring makes the invocation on behalf of that entity. We
+anticipate that single entity nodes will be common.
+
+Because the interest manager provides and uses the same interface, it
+defines \code{NeighborSensors} as an alias for the
+\code{Interest\-Management} interface that it uses remotely. When the
+interest manager posts the \code{set\_interest} duty, that duty is
+invoked in all neighbors \emph{currently} selected by its own, internal
+component manager. These post operations are authorized using
+credentials available to the invoking node; neighbors can be in multiple
+security domains.
+
+\subsection{Authorized Interest Management}
+
+The interest manager has a partial specification as follows, which we
+assume resides in a domain controlled by some \texttt{Admin} entity.
+Observe that its \texttt{InterestManagement} interface requires
+authorization for the \texttt{Admin.OK} role:
+
+\begin{lrbox}{\savebigbox}
+\begin{minipage}{4.9in}
+\vspace{0.6em}
+\begin{Verbatim}[fontsize=\small]
+module InterestManagerC {
+    provides interface ComponentManager;
+    provides remote interface InterestManagement requires "Admin.OK";
+    uses interface InterestManagement as NeighborSensors;
+}
+\end{Verbatim}
+\vspace{0.3em}
+\end{minipage}
+\end{lrbox}
+\centerline{\usebox{\savebigbox}}
+
+Because the interest manager is its own component manager, setting up
+target node addresses entails updating an internal
+\code{component\_set}. In the case when a new interest is received the
+interest manager propagates that interest to all neighbors. This is done
+inside the interest manager's \code{set\_interest} duty as shown in
+\autoref{figure-interest-propagation}.
+
+\begin{figure}[!t]
+\begin{textbox}{3.25in}
+\begin{Verbatim}[fontsize=\small]
+remote_set.ids   = &remote_components;
+remote_set.count = 1;
+remote_components[0].node_id  = 0xFFFF;
+remote_components[0].local_id = INTEREST_ID;
+post NeighborSensors.set_interest( ... );
+\end{Verbatim}
+\end{textbox}
+\caption{Propagation of New Interests}
+\label{figure-interest-propagation}
+\end{figure}
+
+The ``well known'' local component ID of the interest manager is used to
+specify which component on neighbor nodes is to process the duty. The
+implementation of the \code{elements} command in the
+\code{Component\-Manager} interface merely returns \code{remote\_set}
+computed above. Before the posting of \code{set\_interest} returns,
+\code{remote\_set} is used to prepare the outgoing packet. After the
+post is complete \code{remote\_set} and \code{remote\_components} can be
+reused without affecting any pending radio transmissions.
+
+% There is an issue with the current implementation and broadcasts. The
+% session key storage doesn't know how to initiate session key
+% negotiation with multiple neighbors (with unknown IDs) at once. This
+% issue is solvable. The runtime system needs to maintain a list of
+% neighboring nodes. Whenever the SpartanRPC broadcast address is used,
+% the runtime system would do a multicast to the neighbor list instead.
+% The neighbor list is discovered and maintained by yet another
+% background process. It should be a small list so memory consumption
+% should be minimal.
+
+In the more complicated case where an interest is being reinforced, the
+interest manager must use information in the data cache to compute which
+neighbors need reinforcing. Although SpartanRPC allows a component
+manager to dynamically select neighbor nodes, the component used as a
+component manager is statically bound. Thus in this example the interest
+manager cannot switch its component manager to, for example, the data
+manager. To work around this, the interest manager communicates with the
+data manager using connections not shown here. With the data manager's
+help the interest manager computes appropriate neighbors dynamically
+before posting \code{set\_interest} on those neighbors. The data manager
+implementation has a similar structure and authorization mechanism.
+
+\begin{comment}
+  \subsection{Data Management}
+
+  The data manager has a dual structure where the implementation of the
+  \code{set\_data} duty simply adds the data event to the data cache,
+  and the implementation of a timer fired event performs the task of
+  propagating data to interested nodes. The data manager manipulates the
+  timer frequency to match the highest required data rate. However since
+  not all data needs to be sent to all neighbors at such a high rate,
+  only a dynamically changing subset of neighbors is selected for each
+  timer event. This is done by adjusting an internal
+  \code{component\_set} before posting the \code{set\_data} duty.
+
+  We further assume that nodes will only want to accept data events from
+  authorized producers. All legitimate posts of \code{set\_data} must be
+  done using the same role as for interests. The specification of the
+  data manager provides interface \code{DataManagement} requiring role
+  \code{Admin.OK} but there are no security related artifacts in the
+  body of the data manager's implementation.
+\end{comment}

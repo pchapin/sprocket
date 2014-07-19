@@ -1,0 +1,348 @@
+\section{Security Policy Specification and Program Logic}
+\label{section-security-extensions}
+
+In this section we discuss how to extend the language setting described
+previously with security features. The goal is a language framework
+where RPC services require authorization for use, and where
+authorization policies support collaboration between multiple security
+domains. To this end we adapt a distributed trust management system
+\cite{chapin-skalka-wang-acmcs08} for policy specification. This system
+secures WSN application programming by way of the SpartanRPC API.
+
+\subsection{Security Policy Language}
+
+Authorization in trust management systems is more expressive than in
+traditional access control schemes such as access control lists or role
+based access control (RBAC) \cite{Sandhu:RBACM}. In these simpler
+models, access is based on identities of principals. But in the
+distributed scenarios we are considering here, creating a single local
+database of all potential requesters is untenable. Where there are
+multiple domains of administrative control, no single authorizer can
+have direct knowledge of all users of the system. Furthermore, in highly
+dynamic and volatile environments, no single entity in-network can be
+expected to keep pace with changes in an authoritative manner. Finally,
+basing authorization purely on identity is not a sufficiently expressive
+or flexible approach, since security in modern distributed systems
+utilizes more sophisticated features (e.g.~delegation). These problems
+are addressed by the use of trust management systems such as the \RT\
+framework \cite{Li:DRBTMF}. We use the system $\RT_0$ in this
+foundational presentation due to its simplicity, but other $\RT$
+variants \cite{Li:DCDTM,Li:RRBTMF} could be adapted.
+
+Like other trust management systems such as SPKI/SDSI \cite{RFC-2693},
+\RT\ represents principals as public keys and does not attempt to
+formalize the connection between a key and an individual. The \RT\
+literature usually refers to principals as \newterm{entities}. \RT\
+allows each entity to define \emph{roles} in a name space that is local
+to that entity. An authorizer associates permissions with a particular
+role; to access a resource a requester must prove membership in the
+role. In this way \RT\ provides a form of role based access control.
+
+To define a role, an entity issues credentials that specify the role's
+membership. Some of these credentials may be a part of private policy,
+others may be signed by the issuer and made publicly available as
+certificates. The overall membership of a role is taken as the union of
+the memberships specified by all known defining credentials.
+
+Let $A, B, C, \ldots$ range over entities and let $r, s, t, \ldots$
+range over role names. A role $r$ local to an entity $A$ is denoted by
+$A.r$. \RT\ credentials are of the form $\cred{A.r}{f}$, where $f$ can
+take on one of four forms to obtain one of four credential types:
+\begin{longenum}
+
+\item $\cred{A.r}{E}$. This form asserts that entity $E$ is a member of
+  role $A.r$.
+
+\item $\cred{A.r}{B.s}$. This form asserts that all members of role
+  $B.s$ are members of role $A.r$. Credentials of this form can be used
+  to delegate authority over the membership of a role to another entity.
+
+\item $\cred{A.r}{B.s.t}$. This form asserts that for each member $E$ of
+  $B.s$, all members of role $E.t$ are members of role $A.r$.
+  Credentials of this form can be used to delegate authority over the
+  membership of a role to all entities that have the attribute
+  represented by $B.s$. The expression $B.s.t$ is called a \emph{linked
+    role}.
+
+\item $\cred{A.r}{q_1 \cap \cdots \cap q_n}$. Where the $q_i$ are
+  qualified role names such as $B.s$. This form asserts that each entity
+  that is a member of all roles $q_1,\ldots, q_n$ is also a member of
+  role $A.r$. The expression $q_1 \cap \cdots \cap q_n$ is called an
+  \emph{intersection role}. In our implementation only two constituent
+  roles $q_1$ and $q_2$ are allowed in an intersection role. This does
+  not limit expressivity since intermediate roles can be introduced as
+  necessary to handle larger intersections.
+
+\end{longenum}
+For all credential forms $\cred{A.r}{f}$, the principal $A$ is called
+the \emph{issuer} of the credential. An example credential set is
+presented and discussed in \autoref{section-snowcloud}.
+
+The formal semantics of \RT\ can be expressed in terms of \datalog\
+\cite{Li:DRBTMF}. The translation of \RT\ credentials to \datalog\
+requires only a single relation \textit{isMember} to assert when a
+particular entity is a member of a particular role. A type (1)
+credential, called a \newterm{membership credential}, is translated into
+\datalog\ simply as a fact. For example the credential $\cred{A.r}{E}$
+becomes the fact $\textit{isMember}(E, A, r)$. The other three
+credential types are translated into \datalog\ rules. For example, the
+type (3) credential $\cred{A.r}{B.s.t}$ becomes the following \datalog\
+rule:\footnote{Logical variables are shown prefixed with `\textit{?}'}
+
+\begin{displaymath}
+\textit{isMember}(\textit{?x}, A, r) \leftarrow
+  \textit{isMember}(\textit{?y}, B, s),
+  \textit{isMember}(\textit{?x}, \textit{?y}, t).
+\end{displaymath}
+
+The meaning of an \RT\ credential $\semantics{C}$ is the \datalog\ fact
+or rule to which it translates. Let $\creds$ be a set of \RT\
+credentials split into two disjoint subsets $\creds = \creds_f \amalg
+\creds_r$ where $\creds_f$ is the set of all membership credentials. The
+meaning of $\creds$, which we denote as $\semantics{\creds}$, is the
+minimum model of the \datalog\ program $\semantics{\creds_r}$ using
+$\semantics{\creds_f}$ as input \cite{Abiteboul:FD}. The authorizer
+associates an access permission with a particular role, say $A.g$, that
+we call the \newterm{governing role}. Hence we formally define
+authorization in a given credential environment $\creds$ as follows:
+
+\begin{definition}
+  Given a credential set $\creds$, entities $A$ and $E$, and role $g$,
+  \emph{$E$ is authorized for $A.g$ in $\creds$}, denoted $\creds \vdash
+  E \in A.g$, if and only if $\textit{isMember}(E, A, g)$ is in
+  $\semantics{\creds}$.
+\end{definition}
+
+One appealing characteristic of the $RT_0$ trust management system is
+monotonicity. Negative credentials that explicitly remove entities from
+roles are not supported. Consequently if an authorizer has incomplete
+information she might deny access that would otherwise be granted, but
+she will never grant access that should have been denied. This property
+is essential in a WSN context where the unreliability of wireless
+communication together with the limited memory resources of sensor nodes
+make it impossible to \emph{guarantee} complete information about all
+roles.
+
+Our system requires the requester to provide all necessary credentials
+using some external means to obtain them. Methods for doing, for
+example, distributed credential chain discovery have been described
+\cite{Li:DCDTM} but we feel they would be prohibitively expensive in a
+WSN context. The best approach for collecting a complete set of
+credentials may be application specific, and thus we regard it as
+outside the scope of this work.
+
+The use of $RT_0$ means that principles cannot switch to roles of lesser
+privilege, as is often desirable in accordance with the principle of
+least privilege. However, variants of \RT\ are available that support
+switching to less privileged roles \cite{Li:RRBTMF}, and that could be
+used in SpartanRPC instead of $RT_0$. Also techniques for supporting
+certificate revocation in an \RT-style trust management framework have
+been explored \cite{lbi-fc01}.
+
+\begin{comment}
+  \paragraph{ECC Public Key Cryptography} Trust management systems such
+  as \RT\ depend on public key cryptography. Distributed certificates
+  are protected with digital signatures made using the issuer's private
+  key. Furthermore public key cryptography is used to authenticate
+  message senders to ensure that the entity requesting a service is the
+  entity it claims to be. However, public key cryptography is
+  computationally expensive and this presents a problem for limited
+  devices such as wireless sensor network nodes.
+
+  The on-node cryptographic computations required by our system are
+  digital signature verification, session key negotiation using
+  Diffie-Hellman key exchange, and message authentication code (MAC)
+  computation using a session key. Of these three operations the first
+  two involve complex public key cryptography. The MAC computation
+  occurs much more frequently but is much cheaper since it uses hardware
+  accelerated symmetric key cryptography. In fact, the motivation behind
+  creating session keys is to avoid public key operations for every
+  message.
+
+  Although the RSA public key cryptosystem has been implemented on
+  sensor nodes \cite{Gura04comparingelliptic,wang-2006}, the resource
+  consumption required to do so is considerable. However, the
+  feasibility of using elliptic curve public key cryptosystems (ECC) on
+  such platforms has been repeatedly demonstrated
+  \cite{1049776,Malan:2008:IPI:1387663.1387668,Liu-Peng-TinyECC-2008,Szczechowiak:2008:NTL:1786014.1786040}.
+  Hardware implementations of ECC for resource limited devices have also
+  been demonstrated \cite{kumar-2006,4604657}.
+
+  ECC can achieve much higher security for a given number of key bits
+  saving memory and network bandwidth relative to other public key
+  cryptosystems. In our implementation, described in detail in
+  \autoref{section-implementation}, we use 160 bit ECC keys, providing a
+  security similar to 1024 bit RSA keys \cite{lenstra-verheul-2001}. We
+  believe this is a reasonable level of security for the anticipated
+  applications.
+\end{comment}
+
+\subsection{Program Logic}
+
+Our authorization model can be viewed as a client-server interaction;
+respective sides of the interaction protocol are summarized separately
+as follows.
+
+\subsubsection{RPC Server Side Logic}
+\label{section-rpc-server-side}
+
+RPC service providers establish policy by assigning governing roles
+$A.g$ to remote interface implementations. Service providers also
+possess a set of assumed credentials $\creds$ which establish an
+authorization environment by providing initial server side authorization
+policy. As we will describe in detail, the set $\creds$ may grow as
+additional credentials are communicated to servers. Finally, in the
+presence of security, client invocations of any RPC service are not
+anonymous, but are performed on behalf of some entity $B$, which must be
+a member of the governing role $A.g$ to use the protected service.
+
+In summary, access to an RPC level is allowed if and only if the
+property $\creds \vdash B \in A.g$ holds, where:
+\begin{itemize}
+  \item $B$ is the identity of the RPC client
+  \item $A.g$ is the governing role of the RPC service
+  \item $\creds$ are the credentials known to the RPC host server
+\end{itemize}
+RPC service programmers specify governing roles as part of module
+definitions---specifically at remote interface \texttt{provides}
+clauses. Hence, governing roles are associated with interface
+\emph{implementations}, not interfaces themselves. This allows
+application flexibility, in that the same interface can be implemented
+with various authorization levels within the same network. Syntax is as
+follows:
+
+\begin{Verbatim}[fontsize=\small, commandchars=\\\{\}]
+\centerline{provides remote interface \textit{I} requires \textit{A.g}}
+\end{Verbatim}
+
+Note the minor modification to previously introduced syntax for remote
+module definitions via the \texttt{requires} keyword.
+
+\subsubsection{RPC Client Side Logic}
+\label{section-rpc-client-side}
+
+In order to use a secure remote module, RPC clients wire to it as for
+unsecured modules (see \autoref{section-wiringsyntax}), but with two
+additional capabilities: (1) the client specifies under what \RT\ entity
+the invocations will be performed, and (2) the client may also specify
+credentials in their possession which are to be activated for use in the
+invocation. Syntax is as follows:
+
+\begin{Verbatim}[fontsize=\small, commandchars=\\\{\}, codes={\catcode`*=3\catcode`!=8}]
+\centerline{enable "*C!1, \ldots, C!n*" as "*B*" for C.I -> [M].J}
+\end{Verbatim}
+
+For any invocation made through this wiring the credentials $C_1,
+\ldots, C_n$ will be remotely added to the RPC server's database for the
+authorization decision, via a process detailed in
+\autoref{section-implementation}. Note that these credentials \emph{need
+  not establish authorization entirely by themselves}, rather they will
+be \emph{added} to the server's existing credentials, all of which will
+be used in the authorization decision. A special form of the
+\code{enable} clause using \code{"*"} for the list of credentials is
+also supported. This form indicates that all credentials known to the
+client should be communicated to the server.
+
+Each node is deployed with a collection of ECC key pairs, one for each
+entity the node represents. When an invocation is made the entity $B$
+mentioned in the \code{as} clause of the dynamic wire is used in the
+request. The \code{as} clause is optional; if it is omitted a
+distinguished \newterm{default entity} is used for the invocation.
+
+% The reader will also note the syntax \texttt{assuming "$D_1, \ldots,
+% D_k$"} above, which denotes the client's assumptions about credentials
+% already known to the RPC server(s). Although this language does not
+% have run-time relevance per se, its purpose is to allow static
+% checking of enabled credentials on the client side. That is, the
+% client possesses static knowledge of the governing role $A.r$ required
+% to use modules provided as $[M].J$. \cnote{There is a problem here,
+% how will the client know this? Note that this is a different matter
+% than knowing about interfaces, which are ``constant''-- we have
+% already allowed that different modules may implement interfaces at
+% different security levels, so how do we ``keep track'' of them? It
+% would be nice to resolve this, since static checking of this form is
+% an appealing feature...} The system will statically verify the
+% property $$C_1, \ldots, C_n, D_1, \ldots, D_k \vdash B \in A.r$$ and
+% report an error in case the specified credentials are insufficient to
+% establish authorization. Note that the client need not actually
+% possess credentials $D_1, \ldots, D_K$ for this check to succeed;
+% also, it may be the case that these credentials are not in fact known
+% by the server, so that a successful check does not guarantee runtime
+% authorization.
+
+\begin{comment}
+  \subsubsection{Example}
+  \label{section-security-example}
+
+  Suppose that an existing network deployment \code{NetA} is imaged with
+  a component \code{SamplingRateC} which provides a means to control
+  sampling rates through an interface \code{SamplingRate}. Further,
+  since sampling rate modification is a sensitive operation, the network
+  administrators require \code{NetA.control} authorization to use this
+  component:
+
+  \begin{lrbox}{\savebigbox}
+  \begin{minipage}{5.0in}
+  \vspace{0.6em}
+  \begin{Verbatim}[fontsize=\small]
+  module SamplingRateC {
+      provides remote interface SamplingRate requires "NetA.control";
+  }
+  \end{Verbatim}
+  \vspace{0.3em}
+  \end{minipage}
+  \end{lrbox}
+  \centerline{\usebox{\savebigbox}}
+
+  \noindent Any node supporting this component will transparently
+  receive \RT\ credentials from neighboring nodes and attempt to use
+  those credentials to establish that each client entity is a member of
+  the \code{NetA.control} role in the formal sense described above.
+
+  Suppose also that nodes in \code{NetA} are deployed with the credential
+
+  \begin{displaymath}
+  \code{NetA.control} \leftarrow \code{WSNAdmin.control}
+  \end{displaymath}
+
+  Here the role \code{WSNAdmin.control} is administered by some
+  overarching network authority. However this authority need not be
+  physically ``present'' in the network during operation. Instead the
+  credential above represents \code{NetA}'s access control policy: any
+  entity blessed by \code{WSNAdmin} as a controller can control
+  \code{NetA}.
+
+  Suppose further that another subnet, called \code{NetB}, wishes to
+  modify the sampling rate of \code{NetA}. A node in \code{NetB} might
+  be imaged with the following credentials, among possibly others:
+
+  \begin{eqnarray}
+  \code{WSNAdmin.control} & \leftarrow & \code{NetB.control} \\
+  \code{NetB.control}     & \leftarrow & \code{NetB}
+  \end{eqnarray}
+
+  Note that credential (1) is issued by the \code{WSNAdmin} authority,
+  while credential (2) is issued by \code{NetB}. Critically, direct
+  communication with \code{NetA} authorities to obtain these credentials
+  is unnecessary.
+
+  In order to invoke this service the wiring as shown in
+  \autoref{figure-secure-wire} could be made on the client side. Note
+  the activation of the necessary credentials, as well as the
+  specification of client identity as \code{NetB}.
+
+  \begin{figure}[!t]
+  \begin{textbox}{3.0in}
+  \begin{Verbatim}[fontsize=\small]
+  enable
+    "WSNAdmin.control <- NetB.control, 
+      NetB.control    <- NetB" as "NetB"
+  for 
+    ClientC.SamplingRate -> [RemoteSelectorC];
+  \end{Verbatim}
+  \end{textbox}
+  \caption{Security Enabled Dynamic Wire}
+  \label{figure-secure-wire}
+  \end{figure}
+
+\end{comment}

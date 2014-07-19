@@ -1,0 +1,49 @@
+\expandafter\ifx\csname graph\endcsname\relax
+   \csname newbox\expandafter\endcsname\csname graph\endcsname
+\fi
+\ifx\graphtemp\undefined
+  \csname newdimen\endcsname\graphtemp
+\fi
+\expandafter\setbox\csname graph\endcsname
+ =\vtop{\vskip 0pt\hbox{%
+    \special{pn 8}%
+    \special{pa 0 250}%
+    \special{pa 750 250}%
+    \special{pa 750 0}%
+    \special{pa 0 0}%
+    \special{pa 0 250}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.125in
+    \rlap{\kern 0.375in\lower\graphtemp\hbox to 0pt{\hss $K_p$ (40)\hss}}%
+    \special{pa 750 250}%
+    \special{pa 1000 250}%
+    \special{pa 1000 0}%
+    \special{pa 750 0}%
+    \special{pa 750 250}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.125in
+    \rlap{\kern 0.875in\lower\graphtemp\hbox to 0pt{\hss $N$\hss}}%
+    \special{pa 1000 250}%
+    \special{pa 1250 250}%
+    \special{pa 1250 0}%
+    \special{pa 1000 0}%
+    \special{pa 1000 250}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.125in
+    \rlap{\kern 1.125in\lower\graphtemp\hbox to 0pt{\hss $C$\hss}}%
+    \special{pa 1250 250}%
+    \special{pa 1500 250}%
+    \special{pa 1500 0}%
+    \special{pa 1250 0}%
+    \special{pa 1250 250}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.125in
+    \rlap{\kern 1.375in\lower\graphtemp\hbox to 0pt{\hss $I$\hss}}%
+    \hbox{\vrule depth0.250in width0pt height 0pt}%
+    \kern 1.500in
+  }%
+}%

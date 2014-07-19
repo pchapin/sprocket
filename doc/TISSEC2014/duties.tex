@@ -1,0 +1,110 @@
+\section{Duties and Remotability}
+\label{section-duties}
+
+The wireless communication in a WSN is typically unreliable due to
+frequent node failures and interference effects. Furthermore the data
+transfer rate in a WSN based on the IEEE 802.15.4 link layer protocol
+is much less than in other common networked environments. For example
+the CC2420 radio used in our experiments, a typical WSN device,
+supports a data rate of only 250\,Kbps
+\cite{cc2420-datasheet}. Consequently we believe it is unrealistic for
+RPC services in WSNs to be synchronous. Instead we believe the
+semantics of nesC tasks are a more appropriate abstraction. They are
+not quite right however, since RPC services, unlike nesC tasks, will
+typically require arguments to be passed. Also a nesC task can only be
+posted in the module where it is defined. In contrast an RPC service
+invokes remotely defined functionality. We therefore define a new RPC
+abstraction called a \emph{duty}.
+
+\subsection{Syntax and Semantics}
+\label{section-duties-syntax}
+
+Duties are declared in interfaces and syntactically resemble command
+declarations. Instead of using the reserved word \code{command} the new
+reserved word \code{duty} is used. Duties are allowed to take
+parameters, with restrictions as discussed below, but must return the
+type \code{void}. For example the following interface describes an RPC
+service for remotely controlling a collection of LEDs:
+
+\begin{Verbatim}[fontsize=\small, commandchars=\\\[\]]
+\centerline[interface LEDControl { duty void setLeds(uint8_t ctl); }]
+\end{Verbatim}
+
+Duties are defined in modules in a manner similar to the way tasks,
+commands, or events are defined. The reserved word \code{duty} is again
+used on the definition. Like commands and events the name of the duty is
+qualified by the name of the interface in which it is declared.
+Including a duty in an interface definition automatically implies that
+the interface can be remotely invoked, or is \emph{remotable} in the
+sense formalized in \autoref{section-remotable}. Any remotable interface
+provided by a component must be specified as \code{remote} in the
+component's list of provided interfaces. The first code sample in
+\autoref{figure-duty-usage} shows an \code{LEDControllerC} component
+that provides the \code{LEDControl} interface remotely-- i.e.~that
+allows remote nodes to control LED status lights on a board. A more
+extended example of duty implementation and usage is provided in
+\autoref{section-example}.
+
+A module on the client node that wishes to use a remote interface simply
+posts the duty in the same manner as tasks are posted. The use of
+\code{post} emphasizes the asynchronous nature of the invocation. An
+example duty posting is illustrated in \autoref{figure-duty-usage}. The
+standard component semantics of nesC provide a natural abstraction of
+``where'' the RPC call goes, just as e.g.~a normal command invocation
+will go through a component interface that is disconnected from its
+implementation. Like a normal command invocation, configuration wirings
+determine where duty control flows. However, in SpartanRPC duty
+invocation control flows to a component residing on a different network
+node. The invoking module must be connected to the remote modules by way
+of a dynamic wire as described in \autoref{section-dynamic-wires}.
+
+\begin{fpfig}[t]{Duty Implementation and Invocation Examples}{figure-duty-usage}
+{
+\begin{center}
+%\begin{minipage}[t]{0in}
+\vspace{0.5em}
+\begin{Verbatim}[fontsize=\small]
+         module LEDControllerC { provides remote interface LEDControl; }
+         implementation {
+           duty void LEDControl.setLeds(uint8_t ctl) { ... }
+         } 
+ 
+         module LoggerC { uses interface LEDControl; }
+         implementation {
+           void f() { ... post LEDControl.setLeds(42); }
+         }
+\end{Verbatim}
+\vspace{0.1em}
+%\end{minipage}
+\end{center}
+}
+\end{fpfig}
+
+When a duty is posted by a client it may run at some time in the future
+on the server node. The client node continues at once without waiting
+for the duty to start. Once posted the client has no direct way to
+determine the status of the duty. Also, due to the unreliability of the
+network a posted duty may not run at all. SpartanRPC does not attempt to
+retransmit or even detect failed duty invocations; postings occur at
+most once. Any error semantics for duty postings must be implemented by
+the application developer.
+
+\subsection{Remotable Interfaces}
+\label{section-remotable}
+
+We impose certain requirements on RPC service definitions for ease of
+implementation. First, since WSN nodes do not share state we disallow
+passing references to duties---such a reference would be meaningless on
+the receiving node. Thus we define remotable types:
+\begin{definition}A type is \emph{remotable} if and only if it satisfies
+  the following inductive definition: The nesC built-in arithmetic
+  types, including enumeration types, are remotable, and structures
+  containing remotable types are remotable.
+\end{definition}
+Since a remotable interface describes RPC services, we require that they
+specify duties taking only arguments of remotable type; also, remotable
+interfaces can only contain duties, to ensure meaningful remote usage.
+\begin{definition}
+  An interface is \emph{remotable} if and only if it only provides
+  duties whose argument types are remotable.
+\end{definition}

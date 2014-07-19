@@ -1,0 +1,312 @@
+\section{Empirical Analysis of Overhead}
+\label{sec:empirical-results}
+\label{section-empirical-results}
+
+The practicality of our system depends on its cost in terms of memory
+and processor overhead. In this section we report on performance
+measurements made on our implementation. In summary, we show that our
+combined use of public and private key cryptography in the underlying
+security protocol imposes a low amortized cost over time, despite high
+costs for initial authorizations.
+
+\paragraph{Test Environment and Programs.} Since many communication
+chips now support hardware AES encryption, we were primarily interested
+in demonstrating performance using that feature. In particular, the
+popular MEMSIC TelosB wireless sensor mote \cite{telosb-datasheet} uses
+a Chipcon CC2420 transceiver with hardware encryption. Unfortunately,
+the standard TOSSIM simulation environment does not model hardware
+encryption for TinyOS 2.1, so all of our tests were performed on real
+hardware. We used TelosB motes, with 10\,KB of RAM, 48\,KB of ROM and an
+8\,MHz MSP430 microcontroller running TinyOS 2.1.2 \cite{tinyos}.
+
+We exercised our system using both small test programs and using our
+implementation of the directed diffusion example described in
+\autoref{section-example}. The small test programs consisted of a simple
+client/server pair where the client repeatedly sent a message containing
+a single 16~bit value to the server. The purpose of these tests was to
+explore the overhead induced by our system with minimal obscuring
+effects from application logic. The percentage overhead observed with
+the small programs is thus a worst case overhead. In contrast, the
+directed diffusion example allowed us to test the behavior of the system
+in a more realistic, long-running setting. It serves as a demonstration
+that our system is feasible in practice, and allowed us to exercise our
+system in a multi-mote, multi-hop network environment.
+
+\subsection{Memory Overhead for Security Features}
+
+The \Sprocket\ run time system uses several memory caches to hold key
+material, credential information, and the minimum model implied by the
+set of known credentials. These caches are statically allocated but must
+be stored in RAM since their contents are dynamic.
+Table~\ref{table-ram-consumed} summarizes the RAM consumption of the
+various storage areas used by the current implementation.
+
+\begin{table}[!t]
+  \newcommand\T{\rule{0pt}{2.1ex}}
+  \centering
+  \tbl{RAM consumed by various storage areas}
+  {
+  \begin{tabular}{|l|r|r|r|} \hline
+    \textit{Storage Area} \T & \textit{\# Items} & \textit{Bytes/Item} & \textit{Total Bytes} \\
+    \hline \hline
+
+    Session Keys ($n_k$) \T & 10 & 22 & 220 \\ \hline 
+    Public Keys ($n_p$)  \T & 12 & 40 & 480 \\ \hline
+    Credentials ($n_c$ ) \T & 12 & 16 & 192 \\ \hline
+    Model ($n_m$)        \T & 16 &  6 &  96 \\ \hline \hline
+    \textbf{Total} \T & \multicolumn{3}{r|}{ \textbf{988} } \\ \hline
+  \end{tabular}
+  }
+  \label{table-ram-consumed}
+\end{table}
+
+The number of items in each cache are tunable parameters. The optimum
+settings depend on the intended application. The values in
+Table~\ref{table-ram-consumed} attempt to strike a balance between
+usability and flexibility on one hand and excessive memory consumption
+on the other. In applications where these needs are more clearly known a
+priori, the sizes of the caches can be adjusted to potentially result in
+lower memory consumption.
+
+Table~\ref{table-test-program-ram} shows the overall memory consumption
+of two small client/server pairs. The baseline pair handle all
+communication through normal Active Message packets that are explicitly
+programmed by the user. The SpartanRPC pair uses our system which
+includes support for certificate distribution and verification, session
+key management, authorization logic, and MAC computations.
+
+\begin{table}[!t]
+  \newcommand\T{\rule{0pt}{2.1ex}}
+  \centering
+  \tbl{Memory consumption of test programs}
+  {
+  \begin{tabular}{|l|r|r|} \hline
+    \textit{Test Program} \T & \textit{RAM Bytes} & \textit{ROM Bytes} \\
+    \hline \hline
+
+    Baseline Client   \T &  349 & 10982 \\ \hline 
+    Baseline Server   \T &  283 & 10490 \\ \hline
+    SpartanRPC Client \T & 2222 & 23108 \\ \hline
+    SpartanRPC Server \T & 2126 & 23394 \\ \hline
+  \end{tabular}
+  }
+  \label{table-test-program-ram}
+\end{table}
+
+Although the overhead incurred by the \Sprocket\ runtime system is
+significant on our test platform, nearly 80\% of RAM and 50\% of ROM
+resources are still available. Furthermore, these memory usage numbers
+scale to denser neighborhoods and extended RPC services.
+
+% The directed diffusion application consumes 27826 bytes of ROM and
+% 3105 bytes of RAM.
+
+\subsection{Transient and Steady State Processor Overhead} 
+
+The execution performance of our system displays two distinct behaviors.
+The first is a transient behavior that occurs after a node boots when
+certificates are exchanged and session keys are negotiated between the
+new node and its neighbors. The second is a steady-state behavior that
+occurs during normal operation. The transient overhead of our system is
+large but the steady state overhead is not. In a quasi-static
+environment where new nodes enter the network infrequently the transient
+costs are amortized and it is the small, steady state overhead that
+dominates.
+
+To explore the steady state overhead three tests were conducted.
+\begin{longenum}
+\item A baseline test where the message handling was done explicitly
+  using traditional Active Message interfaces.
+\item A duties test where the \Sprocket\ system was used but no
+  authorization was requested. This is equivalent to using the
+  authorization components \texttt{ACNullC} and \texttt{ASNullC} in
+  \autoref{figure-client-server-authorization}.
+\item A MAC test where authorization was requested but where the session
+  key storage areas were preloaded with appropriate session keys.
+\end{longenum}
+
+Table~\ref{table-steady-state} shows the maximum rate at which messages
+could be sent and received by the test programs mentioned above. Note
+that the MAC test made use of the hardware assisted AES support provided
+by the CC2420 radio chip. These results show that maximum message send
+rates decrease by a factor of 7\% due to the addition of our duties
+program logic (our security API), and further decreases by a factor of
+25\% due to MAC calculations. We note that the latter overhead would be
+incurred in any system using CC2420 MAC calculations.
+
+\begin{table}[!t]
+  \newcommand\T{\rule{0pt}{2.1ex}}
+  \centering
+  \tbl{Maximum message transfer rate}
+  {
+  \begin{tabular}{|l|r|r|} \hline
+    \textit{Test} \T & \textit{messages/s} & \textit{\% Reduction} \\
+    \hline \hline
+
+    Baseline \T & 128 &   -- \\ \hline 
+    Duties   \T & 119 &  7.0 \\ \hline
+    MAC      \T &  87 & 32.0 \\ \hline
+  \end{tabular}
+  }
+  \label{table-steady-state}
+\end{table}
+
+The transient runtime overhead of our system can be subdivided into
+three primitive operations: the time required to transmit and verify a
+certificate, the time required to build the minimum model, and the time
+required to negotiate a session key. Two of these operations require
+lengthy public key computations and dominate the transient behavior of
+our system. Thus the performance of our system in this regard is closely
+tied to the performance provided by TinyECC, which we used with default
+settings (no optimizations). Table~\ref{table-transient-time} shows the
+times required for each of the primitive transient operations in our
+implementation.
+
+% TinyECC provides a number of tunable parameters that can be used to
+% optimize performance by trading off space and time
+% \cite{Liu-Peng-TinyECC-2008}. In our tests, since we had no particular
+% application constraints in mind, we used the TinyECC ``out of the
+% box.'' However, TinyECC's optimizations can be used to tune the
+% performance of our system to better match a particular application.
+% For example, activating the Shamir Trick cut certificate verification
+% time in half at the expense of increasing RAM usage by nearly 700
+% bytes.
+
+\begin{table}[tbhp]
+  \newcommand\T{\rule{0pt}{2.1ex}}
+  \centering
+  \tbl{Transient processing time}
+  {
+  \begin{tabular}{|l|r|} \hline
+    \textit{Operation} \T & \textit{Time} \\ \hline \hline
+
+    Certificate Verification     \T &  82s \\ \hline 
+    Minimum Model Construction   \T & 370$\mu$s \\ \hline
+    Session Key Negotiation      \T &  80s\\ \hline
+  \end{tabular}
+  }
+  \label{table-transient-time}
+\end{table}
+
+The time required to build the minimum model is directly related to the
+number and nature of the credentials involved. In our test we used a
+collection of five representative credentials, one of each type. In any
+case this time is entirely negligible compared to the other transient
+operations.
+
+% There might be a termination problem with my algorithm for updating
+% the minimum model despite the fact that the method I'm using is
+% theoretically guaranteed to terminate. In particular if the model is
+% too large it might be possible for the algorithm to run infinitely,
+% alternating between replacing two different tuples in the limited
+% space.
+
+The time quoted for session key negotiation represents the time required
+for both negotiating partners to compute the session key. In the current
+implementation the two negotiating nodes do this sequentially with the
+server node computing the session key before responding to the client
+node. This was done in case the session key computation failed on the
+server to ensure that the client does not falsely believe a session key
+was successfully negotiated.
+
+\subsection{Transient State Times for Directed Diffusion}
+
+As argued above, the overhead imposed by our system is primarily the
+time the network spends in a initial transient state when credentials
+are verified and session keys are negotiated. Subsequently, the network
+enters a steady state during which the main cost is a 32\% reduction in
+\emph{maximal} message send rates due to hardware MAC computation. In
+order to evaluate the performance of our system in a realistic
+application, we therefore quantified the transient state times of the
+secure directed diffusion application described in
+\autoref{section-example}. In our experiments we elected a single node
+to repeatedly express an interest and we observed how long was required
+for that interest to flood the network. This time depends on three major
+factors:
+\begin{enumerate}
+\item The number of certificates transferred.
+\item The number of neighbors for each node.
+\item The number of hops to the ``far'' edge of the network.
+\end{enumerate}
+We conducted two experiments, one on a single hop (star) network and 
+another on a multi-hop (mesh) network.
+
+In the single hop case, transient time $T$ can be described by the
+following equation:
+
+\begin{displaymath}
+T = n_c B + V + n_n K
+\end{displaymath}
+
+where $B$ is the certificate broadcast interval, $V$ is the certificate
+verification time, $K$ is the session key negotiation time, $n_c$ is the
+number of certificates and $n_n$ is the number of neighbors. Since $B$
+was set to 90 seconds, which is greater than $V$, certificate
+verification for $n_c$ certificates takes time $n_c B + V$ given a 90
+second system initialization period. And since session keys need to be
+negotiated with $n_k$ neighbors in turn, $T$ also comprises a $n_nK$
+delay. Table~\ref{table-one-hop-transient} shows the transient time
+required to flood a network where all nodes are one-hop neighbors of the
+root node. Values are given for three different policies with different
+numbers of certificates transferred from the root to the neighbors.
+
+\begin{table}[tbhp]
+  \newcommand\T{\rule{0pt}{2.1ex}}
+  %\tbl{}%Transient time in directed diffusion}
+  {
+  \begin{minipage}{.5\linewidth}
+    \centering
+    \tbl{Single hop transient time}
+    {
+    \begin{tabular}{|l|r|r|r|} \hline
+      \textit{\# neighbors} \T & \textit{1 Cert }
+                               & \textit{2 Certs}
+                               & \textit{3 Certs} \\ \hline \hline
+
+      1 \T &  4m03s & 5m27s &  6m52s \\ \hline
+      2 \T &  5m16s & 6m50s &  8m24s \\ \hline
+      3 \T &  6m32s & 7m57s &  9m30s \\ \hline
+      4 \T &  7m50s & 9m22s & 10m51s \\ \hline
+    \end{tabular}
+    }
+    \label{table-one-hop-transient}
+  \end{minipage}%
+  \begin{minipage}{.5\linewidth}
+    \centering
+    \tbl{Multi-hop transient time}
+    {
+    \begin{tabular}{|l|r|r|r|} \hline
+      \textit{Run} \T & \textit{1 hop }
+                      & \textit{2 hops}
+                      & \textit{3 hops} \\ \hline \hline
+
+      1 \T &  4m05s & 7m24s & 9m10s \\ \hline
+      2 \T &  3m12s & 5m12s & 6m30s \\ \hline
+      3 \T &  3m57s & 7m37s & 9m15s \\ \hline
+      4 \T &  4m09s & 7m15s & 8m49s \\ \hline
+      \textit{Average} \T &  3m51s & 6m52s & 8m23s \\ \hline
+    \end{tabular}
+    }
+    \label{table-multi-hop-transient}
+  \end{minipage}
+  }
+\end{table}
+
+We explored the behavior of our system in a multi-hop environment by
+creating a linear mesh network. Each node (except the root) had a single
+downstream neighbor. All nodes were booted simultaneously and the time
+required for interest information to reach each node was observed. The
+policy used required only a single certificate to be transferred between
+nodes. Table~\ref{table-multi-hop-transient} shows the results of
+several runs.
+
+The reason for variations in transient times over each run was due to a
+randomized element in the protocol, specifically a randomized $\pm 10\%$
+interval in certificate broadcast times to avoid collisions. In these
+results it is essential to note that for hops $> 2$, extra transient
+time is comprised solely of session key negotiation times (80s per
+session key, see Table~\ref{table-transient-time}) that are forced by
+duty postings as interests propagate through the network. Certificates
+are broadcast and verified in parallel throughout the network upon
+system boot up, during the same time period required for the root's
+interest to propagate through the first and second hops.

@@ -1,0 +1,300 @@
+\section{Introduction}
+\label{section-intro}
+
+SpartanRPC is an extension of the nesC programming language
+\cite{Gay-nesC-2003} that supports application development in a
+decentralized, open world security model for wireless sensor networks
+(WSNs). Traditional networks have long enjoyed support for an open world
+security model via public key based security architectures such as the
+secure sockets layer (SSL). The goal of our work is to introduce an open
+world security model to the TinyOS programming environment for embedded
+device programming.
+
+Currently, TinyOS security models are very simple and support only a
+closed world paradigm. TinySec \cite{karlog-tinysec-2004} and MiniSec
+\cite{luk-minisec-2007} are based on shared secrets and generally assume
+that an entire network comprises a single security domain. Furthermore,
+these systems support confidentiality and integrity properties, but not
+access control, a.k.a. authorization. In contrast SpartanRPC includes
+primitive features for specifying and enforcing authorization policies
+and allows multiple security domains to interact within a single
+network. SpartanRPC security mechanisms leverage public key cryptography
+and an authorization logic to support an open world model where shared
+secrets are not required a priori.
+
+\subsection{Overview and Applications}
+\label{section-overview}
+
+The SpartanRPC system provides an applications programming interface for
+managing resource access control in a WSN. It allows network
+administrators to define security policies that mediate access to
+specified resources on network nodes, and allows subnetworks from
+different security domains to interact. A \emph{resource} in SpartanRPC
+is user-defined functionality programmed in an extension of nesC, and
+accessible via RPC by client code programmed in the same extension of
+nesC. Thus, while previous systems have explored the problem of
+establishing multiple security domains in a WSN
+\cite{Claycomb:2011:NNL:1889383.1889450}, and other have considered RPC
+in WSNs \cite{may-tinyrpc-2007}, SpartanRPC combines these features for
+secure WSN application development in TinyOS. Furthermore, SpartanRPC's
+expressive authorization logic allows specification of fine-grained and
+decentralized security policies, better supporting collaborations
+between multiple security domains.
+
+Since the SpartanRPC API is flexible and easily accessible to TinyOS
+programmers, these features can be readily used in a variety of
+application spaces. Consider a first-responder situation, in which
+multiple social entities must interact and cooperate on an ad-hoc basis.
+Recent work has shown the effectiveness of WSNs in such scenarios
+\cite{citeulike:4460555,1038146}, in their ability to coordinate
+multiple data collection and communication devices in an easily
+deployable manner. However, data collection and communication in this
+scenario (and other similar ones) must be a secured resource, due to
+e.g.~requirements of the Health Insurance Portability and Accountability
+Act. Furthermore, security must be coordinated on-site in a WSN
+comprising subnetworks administered separately (police, medical units
+from different hospitals, etc.), and no prior coordination between
+domains can generally be assumed. The SpartanRPC system is designed to
+address these types of scenarios.
+
+% For example, data communication can be treated as a secure resource by
+% setting data access policies for individual nodes. WSN data
+% communication protocols typically implement a \emph{publish/subscribe}
+% semantics, whereby users of data ``subscribe'' to data produced by
+% ``publishers''. Directed diffusion \cite{intanagonwiwat-2003} is one
+% such protocol, where network nodes express \emph{interest} in certain
+% types of data to neighboring nodes, which is subsequently reported to
+% them when it is produced (published). In \autoref{section-example} we
+% show how authorization policies can be assigned to interest update
+% facilities on network nodes, which in effect imposes an access policy
+% on data subscription in the network.
+
+For example, if an emergency medical technician (EMT) emplaces a WSN to
+monitor patient locations and vital signs, a security policy can be
+imposed whereby responding police departments can emplace their own WSN,
+and through it access patient identity and location data but \emph{not}
+medical data directly from the EMT's network. This direct data access
+will often be necessary due to real-time constraints and lack of
+Internet connectivity in emergency situations.
+
+Time synchronization is another important WSN function that is security
+sensitive, since many higher-level protocols rely on it. A number of
+previous authors have considered secure time synchronization in the
+presence of ``insider'' attacks
+\cite{Manzo:2005:TSA:1102219.1102238,Ganeriwal:2008:STS:1380564.1380571},
+whereby nodes within the network may be compromised and function as
+malicious actors capable of corrupting the protocol. In particular, the
+FTSP protocol can be attacked by a single compromised ``root'' node
+injecting false timing information into the network
+\cite{Manzo:2005:TSA:1102219.1102238}, even when symmetric keys are used
+for secure information exchange. However, the threat model in this work
+treats all nodes in a network as equally compromisable. In cases where a
+connected sub-network is more resistant to compromise, due to
+e.g.~differences in hardware, a SpartanRPC policy can be established
+whereby only nodes in the most tamper-resistant sub-component of the
+network may function as roots. FTSP time sync updates on any given node
+can be defined to require a root authorization level. This implies that
+nodes requiring secure time synchronization must be at most a single
+radio hop from a root node, but nodes willing to accept possibly
+corrupted time sync data can extend the network indefinitely. Note that
+in this scenario, SpartanRPC policies adapt to heterogeneity in network
+device hardware, vs.~network administration as in the previous example.
+
+Other potential applications of our system include secure routing
+protocols in heterogeneous trust environments \cite{senroute-ahnj03},
+transport and network layer protocols \cite{perillo-heinzelman-2005},
+tracking protocols \cite{brooks-ramanathan-sayeed-2003}, and even
+mote-based web servers supporting secure channels \cite{1049776}.  
+
+As a concrete application example, in \autoref{section-snowcloud} we
+describe our implementation of a WSN application for environmental data
+sampling and collection. The node software provides remote resources for
+data collection or node control. Access to these resources, in
+particular via a distinguished sink node that is under control of some
+user, is mediated by a security policy. Depending on the user's
+credentials, only data collection, or collection and control, or
+neither, will be allowed. Thus, we can specify that data end users can
+be provided with sink nodes that only allow collection, whereas system
+administrators can also control the network from theirs. And since user
+populations may be part of different social entities than system
+administration, our policy language allows authorization of a social
+entity itself to administer its own user base for data collection. This
+supports collaboration between different institutions which is a
+hallmark of this particular application.
+
+\subsection{Security Goals}
+\label{section-security-model}
+
+The main security-related goal of our work is to provide fine-grained
+\emph{authorization} a.k.a. \emph{access control} in a WSN. We support
+an \emph{open world} setting, where principals do not share secrets a
+priori, and employ an authorization logic capable of expressing rich
+security policies \cite{Li:DRBTMF}. As in various authorization
+frameworks for more traditional distributed systems \cite{RFC-2693},
+principals are identified as asymmetric key pairs, so that possession of
+a private key is necessary and sufficient to establish a principal's
+identity. With this understanding of identity, our underlying security
+protocols support authentication of resource users through the use of a
+Diffie-Hellman protocol. We assume that WSN nodes are provided with
+private keys a priori by a trusted certification authority. Thus, we are
+not concerned with communication of private keys.
+
+Because WSN nodes are assumed to possess private keys, our system is
+vulnerable to hardware tampering, which we consider out-of-scope for
+this work. Modulo this, our system ensures that only authenticated
+principals capable of proving compliance with a specified
+authorization policy may access a protected resource. Authorization is
+proved by communication of credentials to the authorizer in the form
+of certificates, as discussed in
+\autoref{section-security-extensions}. We note that the onus of
+credential communication is on the requester, not the authorizer, who
+only passively receives credentials. This implies that access may not
+be granted in case incomplete credential sets are provided. Although
+this incompleteness has been addressed in traditional distributed
+systems via e.g.~distributed credential chain discovery
+\cite{chapin-skalka-wang-acmcs08}, these approaches are relatively
+heavyweight and difficult to implement in a WSN. The validity and
+integrity of the certificates themselves are established via signature
+verification by the authorizer.
+
+In order to authenticate requesters, and to improve the efficiency of
+normal message transfers between a requester and an authorizer,
+symmetric session keys are computed using a simple Diffie-Hellman key
+agreement protocol \cite{Diffie:2006:NDC:2263321.2269104} as described
+in \autoref{section-session-key-negotiation}. The version of
+Diffie-Hellman we use is not susceptible to man-in-the-middle attacks
+because of the way principles are directly represented by their keys.
+Thanks to this, and our certificate representation of credentials, the
+SpartanRPC authorization scheme is not susceptible to man-in-the-middle
+attacks, where an unauthorized principal (i.e.~a device not holding the
+private key denoting an authorized principal) can obtain access to
+resource. This claim is supported by relevant technical discussion in
+\autoref{section-implementation}. We consider other security properties
+of our system, relevant to DoS, replay, and confidentiality, in
+\autoref{section-security-properties} following a more detailed
+discussion of the language model implementation.
+
+% We emphasize that the main security goal of the work presented here is
+% an authorization mechanism able to support policies for the practical
+% scenarios discussed in \autoref{section-overview}. In
+% \autoref{section-snowcloud}, we demonstrate the effectiveness of our
+% authorization framework in a relevant use-case.
+
+\subsection{Technical Foundations}
+
+Technical foundations underlying our secure RPC design include
+programming language-based techniques, asynchronous RPC semantics, and
+public key (PK) based authorization logics.
+
+\paragraph{Language-Based Security} SpartanRPC provides language-level
+abstractions for defining remote services and associated security
+policies. Programmers are presented with an extension of nesC, with new
+features for defining remote access controlled services, and for
+invoking those services at specific authorization levels. This hides the
+implementation details of underlying security protocols and only
+requires mastery of a simple authorization logic. SpartanRPC programs
+are compiled in the same manner as nesC programs, in fact the SpartanRPC
+compiler rewrites SpartanRPC programs to nesC code and compiles the
+latter.
+
+\paragraph{Asynchronous Remote Procedure Call} As other authors have
+observed \cite{may-tinyrpc-2007}, RPC is an appropriate abstraction for
+node services on the network and supports whole-network
+(vs.~node-specific) programming. Secure RPC is well-studied in a
+traditional networking environment, and is a natural means of layering
+security over a distributed communication abstraction.
+
+It is necessary for RPC invocation in a WSN to be asynchronous, since
+synchronous call-and-return to a remote node would significantly impede
+performance in the best case and cause deadlock in the worst. In order
+to minimally impact the nesC programming model, we define RPC invocation
+as a form of \emph{remote task}. Local tasks are units of
+programmer-defined asynchronous computation in nesC, so treating remote
+computational services as remote tasks fits well in this paradigm.
+Remote tasks can be invoked on one-hop neighbors, providing a link layer
+service on which network layer services can be built. For example in
+\autoref{section-example} we illustrate how a secure multi-hop data
+collection protocol can be built using our link layer service.
+
+\paragraph{PK-Based Authorization Policies} SpartanRPC provides
+language-level abstractions for specifying RPC authorization policies.
+The policy language we support is \RT\ \cite{Li:DRBTMF}, which allows
+network entities to communicate composable credentials for authorizing
+service invocations. Credentials are typically signed by certificate
+authorities and do not require shared secrets to validate. SpartanRPC
+certificates use elliptic curve cryptography (ECC) \cite{bertoni-2006}
+signatures which are validated during an initial authorization phase.
+ECC is significantly more tractable than RSA in a WSN setting. Following
+the initial authorization phase our protocol establishes a shared AES
+key for computing message authentication codes (MACs) during subsequent
+invocations of a given service by the same node. Since hardware AES is
+available on common WSN radio chipsets, we obtain highly efficient
+performance for secure invocations following authorization. This is
+demonstrated with empirical results reported in
+\autoref{section-empirical-results}.
+
+\subsection{Outline of Paper}
+
+In \autoref{section-duties} we describe the fundamental language
+abstraction we provide for defining remote services, called duties. In
+\autoref{section-dynamic-wires} we describe a modification of remote
+services that accommodates dynamically changing communication
+neighborhoods. In \autoref{section-security-extensions} we define our
+authorization logic, and show how to specify duty posting policies and
+how they are enforced in the implementation. In
+\autoref{section-example} we provide the extended example of secure
+directed diffusion. In \autoref{section-implementation} we summarize
+novel and important features of our implementation. In
+\autoref{section-empirical-results} we discuss empirical results of
+system performance. In \autoref{section-snowcloud} we describe a
+realistic application of our system. We conclude with a discussion of
+related work in \autoref{section-conclusion}.
+
+% The benefits of this technology are manifold. Subnetworks from
+% cooperating but distinct security domains could use each other's nodes
+% to increase the resolution, spacial coverage, or lifespan of certain
+% sensing or control functions. For example, assume that two distinct
+% networks are deployed to the same space such that nodes from both
+% networks can communicate with each other. While the primary purpose of
+% the two networks would be independent, their administrators might
+% nevertheless agree to collaborate on certain supporting functionality
+% such as raw data collection, time synchronization, routing, fault
+% tolerance, etc.
+
+% Although in some cases data collected by each security domain could be
+% shared off-network, perhaps via Internet connected gateways,
+% advantages can be gained by enabling in-network interactions. For
+% example if one network is partitioned due to a failed node, the
+% separated partitions might be able to continue communicating by
+% routing their messages over a cooperating network's nodes. In
+% situations where low latency is important, such as with time
+% synchronization protocols \cite{ganeriwal-kumar-srivastava-2003},
+% in-network interactions between independent, cooperating networks
+% would be more effective than attempting to synchronize two networks
+% via long distance Internet links.
+
+% Tracking applications \cite{brooks-ramanathan-sayeed-2003} could also
+% benefit from in-network interactions between cooperating networks.
+% Handing off tracking information from one network to another via an
+% Internet link would require activating a potentially large number of
+% nodes in each network in order to send information to their respective
+% gateways. This creates power consumption concerns.
+
+% Other potential applications of our system include secure routing
+% protocols in heterogeneous trust environments \cite{senroute-ahnj03},
+% transport and network layer protocols \cite{perillo-heinzelman-2005},
+% tracking protocols \cite{brooks-ramanathan-sayeed-2003}, and even
+% mote-based web servers supporting secure channels \cite{1049776}.
+
+% High level applications can also benefit from in-network interactions
+% between cooperating networks. For example, the use of WSNs to
+% facilitate emergency care in disaster situations has been described
+% \cite{citeulike:4460555,1038146}. While this previous work has focused
+% on WSNs in a single security domain, it is likely that multiple
+% domains would be in use during many emergencies as first responders
+% from different organizations or different political jurisdictions work
+% together. In those cases it is not realistic to assume that each
+% domain would have Internet connectivity; the disaster site might be
+% too remote or the supporting network infrastructure might be
+% non-functional. Direct interaction between the WSNs of cooperating
+% domains becomes an effective way for them to share information.

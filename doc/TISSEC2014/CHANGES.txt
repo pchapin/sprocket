@@ -1,0 +1,53 @@
+The submitted paper is an extension of this previously published work:
+
+@inproceedings{chapin-skalka-SpartanRPC,
+  author = {Peter Chapin and Christian Skalka},
+  title = {{SpartanRPC}: Secure {WSN} Middleware for Cooperating
+    Domains},
+  booktitle = {Proceedings of the Seventh {IEEE} International
+    Conference on Mobile Ad-hoc and Sensor Systems},
+    year = {2010},
+  location = {San Francisco, California, USA},
+  month = {November},
+  pdf = {http://www.cs.uvm.edu/~pchapin/papers/SpartanRPC.pdf}
+}
+
+Major differences between the submitted work and the previously
+published work include the following.
+
++ The authorization system in the submitted work has been
+  significantly enhanced in terms of its basic model, logical
+  specification, and underlying implementation.
+
+  - Model: In the submitted work we assume an open-world model where
+    identities of service users need not be known a priori. In our
+    previous work we assume a closed-world model where identities of
+    users must be known.
+ 
+  - Logical specification: In the submitted work we provide actors a
+    rich policy language based on the system RT. In our previous work
+    authorization was essentially based on simple access control lists.
+
+  - Implementation: In the submitted work we implement authorization
+    credentials as signed certificates, and public-key cryptography
+    supports an open-world security model. We also use MACs and
+    session keys to establish secure channels for authorized
+    communication. In our previous work we only use statically
+    assigned symmetric keys (distributed in an unspecified manner) to
+    communicate over secure channels. Finally, our new implementation
+    includes a set of protcols for in-network RT authorization.
+ 
++ The programming language defined in the submitted work includes new
+  primitive syntax and semantics for managing security policies in the
+  authorization logic introduced here.
+
++ The Empirical Results section has been extended to include results
+  based on the new system, including performance measurements pertaining
+  to certificate processing, and session key generation.
+
++ A new application example in a real WSN system has been developed
+  and analyzed. Security policies in this application example use the
+  authorization logic introduced in this submitted work.
+
++ The related work discussion has been updated to reflect more recent
+  state-of-the-art.

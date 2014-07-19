@@ -1,0 +1,36 @@
+
+Test Plan
+=========
+
+1. Component Timing
+
+These tests exercise the different components of the system in isolation.
+
++ MAC computation
+  a) Program #1: Client -> Server message using traditional Active Message facilities
+  b) Program #2: Client -> Server message using unsecured duties
+  c) Program #3: Client -> Server message using secure (MAC) duties with preloaded key
+
++ Session key negotiation time with preloaded public keys.
+  a) Client transmits negotiation message
+  b) Serve computes session key; sends it's public key to client
+  c) Client computes session key
+
++ Certificate exchange and verification time.
+  a) Client transmits a certificate
+  b) Server receives certificate and verifies it.
+
+
+2. Directed Diffusion Timing
+
+These tests exercise the full system in the directed diffusion example. The network consists of
+a single node in domain A that is one hop from three nodes in domain B and two hops from an
+additional node in domain B.
+
++ A transmits interest repeatedly (once per second)
+  a) How long until that interest is known by all nodes?
+  b) When a new node is added, how long does it take for the system to stablize again?
+
++ The node two hops from A transmits data repeatdly
+  a) How long before the data arrives at A?
+  b) When a new node is added, how long does it take for the system to stablize again?

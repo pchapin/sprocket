@@ -1,0 +1,27 @@
+.PS
+
+Client: box ht 1.4 wid 1.6;
+move;
+Server: box ht 1.4 wid 1.6;
+"{\small Client Authorizer}" at Client.nw above ljust;
+"{\small Server Authorizer}" at Server.nw above ljust;
+
+C: box wid 1.3 "{\small AuthorizationClient}" "{\small (interface)}" with .c at (Client.c + (0, -0.30));
+S: box wid 1.3 "{\small AuthorizationServer}" "{\small (interface)}" with .c at (Server.c + (0, -0.30));
+
+ACNul: box wid 0.6 height 0.35 "{\small ACNullC}" with .sw at (C.nw + (0, 0.30));
+ACRT0: box wid 0.6 height 0.35 "{\small ACRT0C}"  with .se at (C.ne + (0, 0.30));
+ASNul: box wid 0.6 height 0.35 "{\small ASNullC}" with .sw at (S.nw + (0, 0.30));
+ASRT0: box wid 0.6 height 0.35 "{\small ASRT0C}"  with .se at (S.ne + (0, 0.30));
+
+move to C.n; arrow to ACNul.s;
+move to C.n; arrow to ACRT0.s;
+move to S.n; arrow to ASNul.s;
+move to S.n; arrow to ASRT0.s;
+
+move to C.e; arrow dashed to S.w "Auth." above;
+
+move to C.w; left; move 0.7; right; arrow 0.7 "Message" above rjust;
+move to S.e; arrow 0.7 "Message" above ljust;
+
+.PE

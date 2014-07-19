@@ -1,0 +1,139 @@
+\expandafter\ifx\csname graph\endcsname\relax
+   \csname newbox\expandafter\endcsname\csname graph\endcsname
+\fi
+\ifx\graphtemp\undefined
+  \csname newdimen\endcsname\graphtemp
+\fi
+\expandafter\setbox\csname graph\endcsname
+ =\vtop{\vskip 0pt\hbox{%
+    \special{pn 8}%
+    \special{pa 0 625}%
+    \special{pa 500 625}%
+    \special{pa 500 375}%
+    \special{pa 0 375}%
+    \special{pa 0 625}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.500in
+    \rlap{\kern 0.250in\lower\graphtemp\hbox to 0pt{\hss {\small Timer}\hss}}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 700 475}%
+    \special{pa 800 500}%
+    \special{pa 700 525}%
+    \special{pa 700 475}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 500 500}%
+    \special{pa 700 500}%
+    \special{fp}%
+    \special{pa 800 700}%
+    \special{pa 1700 700}%
+    \special{pa 1700 300}%
+    \special{pa 800 300}%
+    \special{pa 800 700}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.500in
+    \rlap{\kern 1.250in\lower\graphtemp\hbox to 0pt{\hss {\small Sender}\hss}}%
+    \special{pa 800 1400}%
+    \special{pa 1700 1400}%
+    \special{pa 1700 1000}%
+    \special{pa 800 1000}%
+    \special{pa 800 1400}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 1.200in
+    \rlap{\kern 1.250in\lower\graphtemp\hbox to 0pt{\hss {\small CertStorage}\hss}}%
+    \special{pa 2000 1400}%
+    \special{pa 2900 1400}%
+    \special{pa 2900 1000}%
+    \special{pa 2000 1000}%
+    \special{pa 2000 1400}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 1.200in
+    \rlap{\kern 2.450in\lower\graphtemp\hbox to 0pt{\hss {\small KeyStorage}\hss}}%
+    \special{pa 3200 1400}%
+    \special{pa 4100 1400}%
+    \special{pa 4100 1000}%
+    \special{pa 3200 1000}%
+    \special{pa 3200 1400}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 1.200in
+    \rlap{\kern 3.650in\lower\graphtemp\hbox to 0pt{\hss {\small CredStorage}\hss}}%
+    \special{pa 2600 700}%
+    \special{pa 3500 700}%
+    \special{pa 3500 300}%
+    \special{pa 2600 300}%
+    \special{pa 2600 700}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.500in
+    \rlap{\kern 3.050in\lower\graphtemp\hbox to 0pt{\hss {\small Receiver}\hss}}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 1225 800}%
+    \special{pa 1250 700}%
+    \special{pa 1275 800}%
+    \special{pa 1225 800}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 1250 1000}%
+    \special{pa 1250 800}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 2551 978}%
+    \special{pa 2450 1000}%
+    \special{pa 2528 933}%
+    \special{pa 2551 978}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 3050 700}%
+    \special{pa 2539 955}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 3572 933}%
+    \special{pa 3650 1000}%
+    \special{pa 3549 978}%
+    \special{pa 3572 933}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 3050 700}%
+    \special{pa 3561 955}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 1225 100}%
+    \special{pa 1250 0}%
+    \special{pa 1275 100}%
+    \special{pa 1225 100}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 1250 300}%
+    \special{pa 1250 100}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.150in
+    \rlap{\kern 1.250in\lower\graphtemp\hbox to 0pt{{\small \ TX}\hss}}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 3075 200}%
+    \special{pa 3050 300}%
+    \special{pa 3025 200}%
+    \special{pa 3075 200}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 3050 0}%
+    \special{pa 3050 200}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.150in
+    \rlap{\kern 3.050in\lower\graphtemp\hbox to 0pt{{\small \ RX}\hss}}%
+    \hbox{\vrule depth1.400in width0pt height 0pt}%
+    \kern 4.100in
+  }%
+}%

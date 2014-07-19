@@ -1,0 +1,204 @@
+\expandafter\ifx\csname graph\endcsname\relax
+   \csname newbox\expandafter\endcsname\csname graph\endcsname
+\fi
+\ifx\graphtemp\undefined
+  \csname newdimen\endcsname\graphtemp
+\fi
+\expandafter\setbox\csname graph\endcsname
+ =\vtop{\vskip 0pt\hbox{%
+    \special{pn 8}%
+    \special{pa 550 1400}%
+    \special{pa 2150 1400}%
+    \special{pa 2150 0}%
+    \special{pa 550 0}%
+    \special{pa 550 1400}%
+    \special{fp}%
+    \special{pa 2650 1400}%
+    \special{pa 4250 1400}%
+    \special{pa 4250 0}%
+    \special{pa 2650 0}%
+    \special{pa 2650 1400}%
+    \special{fp}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by -1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 0.000in
+    \rlap{\kern 0.550in\lower\graphtemp\hbox to 0pt{{\small Client Authorizer}\hss}}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by -1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 0.000in
+    \rlap{\kern 2.650in\lower\graphtemp\hbox to 0pt{{\small Server Authorizer}\hss}}%
+    \special{pa 700 1250}%
+    \special{pa 2000 1250}%
+    \special{pa 2000 750}%
+    \special{pa 700 750}%
+    \special{pa 700 1250}%
+    \special{fp}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by -1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 1.000in
+    \rlap{\kern 1.350in\lower\graphtemp\hbox to 0pt{\hss {\small AuthorizationClient}\hss}}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by 1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 1.000in
+    \rlap{\kern 1.350in\lower\graphtemp\hbox to 0pt{\hss {\small (interface)}\hss}}%
+    \special{pa 2800 1250}%
+    \special{pa 4100 1250}%
+    \special{pa 4100 750}%
+    \special{pa 2800 750}%
+    \special{pa 2800 1250}%
+    \special{fp}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by -1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 1.000in
+    \rlap{\kern 3.450in\lower\graphtemp\hbox to 0pt{\hss {\small AuthorizationServer}\hss}}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by 1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 1.000in
+    \rlap{\kern 3.450in\lower\graphtemp\hbox to 0pt{\hss {\small (interface)}\hss}}%
+    \special{pa 700 450}%
+    \special{pa 1300 450}%
+    \special{pa 1300 100}%
+    \special{pa 700 100}%
+    \special{pa 700 450}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.275in
+    \rlap{\kern 1.000in\lower\graphtemp\hbox to 0pt{\hss {\small ACNullC}\hss}}%
+    \special{pa 1400 450}%
+    \special{pa 2000 450}%
+    \special{pa 2000 100}%
+    \special{pa 1400 100}%
+    \special{pa 1400 450}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.275in
+    \rlap{\kern 1.700in\lower\graphtemp\hbox to 0pt{\hss {\small ACRT0C}\hss}}%
+    \special{pa 2800 450}%
+    \special{pa 3400 450}%
+    \special{pa 3400 100}%
+    \special{pa 2800 100}%
+    \special{pa 2800 450}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.275in
+    \rlap{\kern 3.100in\lower\graphtemp\hbox to 0pt{\hss {\small ASNullC}\hss}}%
+    \special{pa 3500 450}%
+    \special{pa 4100 450}%
+    \special{pa 4100 100}%
+    \special{pa 3500 100}%
+    \special{pa 3500 450}%
+    \special{fp}%
+    \graphtemp=.5ex
+    \advance\graphtemp by 0.275in
+    \rlap{\kern 3.800in\lower\graphtemp\hbox to 0pt{\hss {\small ASRT0C}\hss}}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 1060 534}%
+    \special{pa 1000 450}%
+    \special{pa 1092 496}%
+    \special{pa 1060 534}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 1350 750}%
+    \special{pa 1076 515}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 1608 496}%
+    \special{pa 1700 450}%
+    \special{pa 1640 534}%
+    \special{pa 1608 496}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 1350 750}%
+    \special{pa 1624 515}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 3160 534}%
+    \special{pa 3100 450}%
+    \special{pa 3192 496}%
+    \special{pa 3160 534}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 3450 750}%
+    \special{pa 3176 515}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 3708 496}%
+    \special{pa 3800 450}%
+    \special{pa 3740 534}%
+    \special{pa 3708 496}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 3450 750}%
+    \special{pa 3724 515}%
+    \special{fp}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 2700 975}%
+    \special{pa 2800 1000}%
+    \special{pa 2700 1025}%
+    \special{pa 2700 975}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 2000 1000}%
+    \special{pa 2700 1000}%
+    \special{da 0.050}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by -1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 1.000in
+    \rlap{\kern 2.400in\lower\graphtemp\hbox to 0pt{\hss Auth.\hss}}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 600 975}%
+    \special{pa 700 1000}%
+    \special{pa 600 1025}%
+    \special{pa 600 975}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 0 1000}%
+    \special{pa 600 1000}%
+    \special{fp}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by -1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 1.000in
+    \rlap{\kern 0.350in\lower\graphtemp\hbox to 0pt{\hss Message}}%
+    \special{sh 1.000}%
+    \special{pn 1}%
+    \special{pa 4700 975}%
+    \special{pa 4800 1000}%
+    \special{pa 4700 1025}%
+    \special{pa 4700 975}%
+    \special{fp}%
+    \special{pn 8}%
+    \special{pa 4100 1000}%
+    \special{pa 4700 1000}%
+    \special{fp}%
+    \graphtemp=\baselineskip
+    \multiply\graphtemp by -1
+    \divide\graphtemp by 2
+    \advance\graphtemp by .5ex
+    \advance\graphtemp by 1.000in
+    \rlap{\kern 4.450in\lower\graphtemp\hbox to 0pt{Message\hss}}%
+    \hbox{\vrule depth1.400in width0pt height 0pt}%
+    \kern 4.800in
+  }%
+}%

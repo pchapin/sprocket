@@ -8,8 +8,10 @@ Sprocket-Out
 Sprocket-Tmp
 
 # Files generated when compiling papers.
-main.aux
+*.aux
 main.bbl
 main.blg
 main.log
+main.dvi
+main.ps
 main.pdf
